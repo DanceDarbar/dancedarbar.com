@@ -272,13 +272,6 @@ function renderApp() {
   } else if (route === '/faq') {
     appRoot.innerHTML = renderFAQPage();
     initFAQPageEvents();
-  } else if (route === '/admin') {
-    if (isAdminLoggedIn()) {
-      appRoot.innerHTML = renderAdminPage();
-    } else {
-      appRoot.innerHTML = renderAdminLoginPage();
-      initAdminLoginEvents();
-    }
   } else if (route === '/privacy') {
     appRoot.innerHTML = renderPrivacyPage();
   } else if (route === '/terms') {
