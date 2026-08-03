@@ -3,6 +3,37 @@
    ========================================================================== */
 
 // --------------------------------------------------------------------------
+// 0. EMAIL NOTIFICATION CONFIG (Web3Forms - Free, No Backend Needed)
+// --------------------------------------------------------------------------
+const EMAIL_CONFIG = {
+  accessKey: '5af062c1-d87e-408c-803e-d1c0e9c8e962',
+  adminEmail: 'dancedarbar96@gmail.com'
+};
+
+async function sendEmailNotification(subject, formData) {
+  try {
+    const payload = {
+      access_key: EMAIL_CONFIG.accessKey,
+      subject: subject,
+      from_name: 'Dance Darbar Website',
+      to: EMAIL_CONFIG.adminEmail,
+      ...formData
+    };
+    const res = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    console.log('Email sent:', data.success);
+    return data.success;
+  } catch (err) {
+    console.warn('Email notification failed:', err);
+    return false;
+  }
+}
+
+// --------------------------------------------------------------------------
 // 1. DATA MODELS & CONTENT REGISTRY
 // --------------------------------------------------------------------------
 const DANCE_DATA = {
@@ -1427,6 +1458,18 @@ function initTrialFormEvents() {
       list.unshift(newEntry);
       saveTrialRegistrations(list);
 
+      // Send email notification to admin
+      sendEmailNotification('🎯 New Free Trial Seat Claimed!', {
+        'Registration ID': newEntry.id,
+        'Student Name': newEntry.studentName,
+        'Age Group': newEntry.ageGroup,
+        'Interested Class': newEntry.interestedClass,
+        'Phone Number': newEntry.phone,
+        'Address': newEntry.address,
+        'Submitted At': newEntry.submittedAt,
+        'Message': `New trial seat claimed by ${newEntry.studentName} for ${newEntry.interestedClass} class. Phone: ${newEntry.phone}`
+      });
+
       form.style.display = 'none';
       successBox.style.display = 'block';
     }
@@ -2005,6 +2048,19 @@ function initAmrapaliModalEvents() {
         const bookings = getAmrapaliBookings();
         bookings.push(activeBooking);
         saveAmrapaliBookings(bookings);
+
+        // Send email notification to admin
+        sendEmailNotification('🎟️ New AMRAPALI 2026 Seat Reserved!', {
+          'Booking Ref': activeBooking.bookingRef,
+          'Guest Name': activeBooking.fullName,
+          'Phone': activeBooking.phone,
+          'Email': activeBooking.email,
+          'Seats': activeBooking.seatCount,
+          'Total Amount': '₹' + activeBooking.totalAmount,
+          'Attendee Type': activeBooking.attendeeType,
+          'Status': activeBooking.status,
+          'Message': `New event reservation by ${activeBooking.fullName}. ${activeBooking.seatCount} seats, ₹${activeBooking.totalAmount}. Phone: ${activeBooking.phone}`
+        });
 
         setTimeout(() => {
           // Update Step 2 UI
