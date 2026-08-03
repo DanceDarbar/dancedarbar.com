@@ -1,0 +1,12 @@
+node_modules/
+PortableGit-installer.exe
+install-git.ps1
+git-setup.ps1
+git-push.ps1
+server.ps1
+package.json
+vite.config.js
+src/
+*.log
+assets/hero-video.mp4
+assets/kathak-vid.mp4

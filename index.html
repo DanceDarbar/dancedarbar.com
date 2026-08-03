@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dance Darbar Kala Sansthan | Dance, Yoga, Music and Fine Arts Academy</title>
+  <meta name="description" content="Learn Kathak, Bollywood, Yoga, Vocal Music and Fine Arts at Dance Darbar Kala Sansthan. Explore programmes, schedules, performances and claim your free trial seat.">
+  <meta name="keywords" content="Dance classes in Dwarka, Kathak classes in Dwarka, Bollywood dance classes, Yoga classes in Dwarka, Vocal music classes, Fine arts classes, Dance academy in Delhi">
+  
+  <!-- Satoshi Font (Fontshare CDN) -->
+  <link rel="preconnect" href="https://api.fontshare.com">
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,600,500,400&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Custom Pointer Cursor for Desktop -->
+  <div id="custom-cursor" class="custom-cursor">
+    <span class="cursor-text" id="cursor-text"></span>
+  </div>
+
+  <!-- Global Header Navigation -->
+  <header id="site-header" class="site-header">
+    <div class="header-container">
+      <!-- Logo Container with 68% artwork sizing rule -->
+      <a href="#/" class="logo-link" id="header-logo-link">
+        <div class="logo-circle-frame">
+          <img src="assets/logo.png" alt="Dance Darbar Kala Sansthan Logo" class="logo-img">
+        </div>
+        <div class="logo-text-block">
+          <span class="brand-title">Dance Darbar</span>
+          <span class="brand-subtitle">KALA SANSTHAN</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav class="desktop-nav">
+        <a href="#/" class="nav-link" data-route="/">Home</a>
+        <a href="#/programs" class="nav-link" data-route="/programs">Classes</a>
+        <a href="#/schedule" class="nav-link" data-route="/schedule">View Schedule</a>
+        <a href="#/events" class="nav-link" data-route="/events">Events</a>
+        <a href="#/gallery" class="nav-link" data-route="/gallery">Gallery</a>
+      </nav>
+
+      <!-- Header Primary CTA -->
+      <div class="header-cta-wrap">
+        <a href="#/claim-free-seat" class="btn btn-primary nav-cta">
+          <span>Claim Free Seat</span>
+          <svg class="btn-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle Navigation Menu">
+          <span class="bar bar-1"></span>
+          <span class="bar bar-2"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Full-Screen Overlay Menu -->
+  <div id="mobile-menu-overlay" class="mobile-menu-overlay">
+    <div class="mobile-menu-content">
+      <div class="mobile-menu-header">
+        <div class="logo-circle-frame sm">
+          <img src="assets/logo.png" alt="Dance Darbar Logo" class="logo-img">
+        </div>
+        <button class="mobile-menu-close" id="mobile-menu-close" aria-label="Close Menu">&times;</button>
+      </div>
+      <nav class="mobile-nav-links">
+        <a href="#/" class="mobile-link" data-route="/">Home</a>
+        <a href="#/programs" class="mobile-link" data-route="/programs">Classes</a>
+        <a href="#/schedule" class="mobile-link" data-route="/schedule">View Schedule</a>
+        <a href="#/events" class="mobile-link" data-route="/events">Events</a>
+        <a href="#/gallery" class="mobile-link" data-route="/gallery">Gallery</a>
+        <a href="#/contact" class="mobile-link" data-route="/contact">Contact</a>
+      </nav>
+      <div class="mobile-menu-footer">
+        <a href="#/claim-free-seat" class="btn btn-primary full-width mobile-cta">Claim Free Seat</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dynamic Page Content Container -->
+  <main id="app-root" class="app-root"></main>
+
+  <!-- Global Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-grid">
+        <div class="footer-brand-col">
+          <div class="logo-circle-frame footer-logo">
+            <img src="assets/logo.png" alt="Dance Darbar Kala Sansthan Logo" class="logo-img">
+          </div>
+          <h3 class="footer-brand-name">Dance Darbar Kala Sansthan</h3>
+          <p class="footer-brand-tagline">Where Movement Becomes Art. Disciplined training, Indian culture, and stage performance for every age.</p>
+          <div class="footer-socials">
+            <a href="https://www.instagram.com/dance_darbar?igsh=MWl6bW4za3NreHhrOA==" target="_blank" rel="noopener" aria-label="Instagram" class="social-icon">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            </a>
+            <a href="https://www.youtube.com/@dance_darbar" target="_blank" rel="noopener" aria-label="YouTube" class="social-icon">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="footer-heading">Explore</h4>
+          <ul class="footer-links">
+            <li><a href="#/">Home</a></li>
+            <li><a href="#/programs">Classes</a></li>
+            <li><a href="#/schedule">Schedule</a></li>
+            <li><a href="#/events">Events</a></li>
+            <li><a href="#/gallery">Gallery</a></li>
+            <li><a href="#/admin" style="color: var(--color-primary);">Admin Panel</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="footer-heading">Classes</h4>
+          <ul class="footer-links">
+            <li><a href="#/programs/kathak">Kathak</a></li>
+            <li><a href="#/programs/bollywood">Bollywood</a></li>
+            <li><a href="#/programs/vocal-music">Vocals</a></li>
+            <li><a href="#/programs/fine-arts">Fine Arts</a></li>
+            <li><a href="#/programs/yoga">Yoga</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="footer-heading">Academy</h4>
+          <ul class="footer-links">
+            <li><a href="#/about">About Us</a></li>
+            <li><a href="#/contact">Contact Us</a></li>
+            <li><a href="#/claim-free-seat">Claim Free Seat</a></li>
+            <li><a href="#/privacy">Privacy Policy</a></li>
+            <li><a href="#/terms">Terms & Conditions</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col contact-col">
+          <h4 class="footer-heading">Contact Us</h4>
+          <p class="contact-info-item">📍 <a href="https://maps.app.goo.gl/oC6b7UmrGXwJxt4E6" target="_blank" rel="noopener" style="color: inherit; text-decoration: underline;">Dance Darbar Kala Sansthan, New Delhi</a></p>
+          <p class="contact-info-item">📞 <a href="tel:+919958659933" style="color: inherit;">+91 99586 59933</a></p>
+          <p class="contact-info-item">✉️ <a href="mailto:dancedarbar96@gmail.com" style="color: inherit; text-decoration: underline;">dancedarbar96@gmail.com</a></p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 Dance Darbar Kala Sansthan. All rights reserved.</p>
+        <div class="legal-mini-links">
+          <a href="#/privacy">Privacy Policy</a>
+          <span>•</span>
+          <a href="#/terms">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Lightbox Modal Container -->
+  <div id="lightbox-modal" class="lightbox-modal" aria-hidden="true">
+    <div class="lightbox-backdrop" id="lightbox-backdrop"></div>
+    <div class="lightbox-content">
+      <button class="lightbox-close" id="lightbox-close" aria-label="Close Lightbox">&times;</button>
+      <div class="lightbox-media-wrap" id="lightbox-media-wrap"></div>
+      <p class="lightbox-caption" id="lightbox-caption"></p>
+    </div>
+  </div>
+
+  <!-- FAQ Modal Container -->
+  <div id="faq-modal" class="lightbox-modal" aria-hidden="true">
+    <div class="lightbox-backdrop" id="faq-backdrop"></div>
+    <div class="lightbox-content" style="max-width: 820px; text-align: left; background: var(--color-white); border-radius: var(--radius-large); padding: 44px; border: 1px solid var(--color-border); box-shadow: 0 30px 60px rgba(0,0,0,0.5);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <div>
+          <span class="eyebrow">Frequently Asked Questions</span>
+          <h2 style="font-size: 32px; color: var(--color-navy);">Everything You Need to Know</h2>
+        </div>
+        <button id="faq-modal-close" style="background: transparent; border: none; font-size: 36px; cursor: pointer; color: var(--color-navy); line-height: 1;">&times;</button>
+      </div>
+      <div class="faq-list" id="faq-modal-list"></div>
+    </div>
+  </div>
+
+  <!-- AMRAPALI 2026 Seat Reservation Modal Container -->
+  <div id="amrapali-modal" class="lightbox-modal" aria-hidden="true">
+    <div class="lightbox-backdrop" id="amrapali-backdrop"></div>
+    <div class="lightbox-content amrapali-modal-card">
+      <button class="lightbox-close" id="amrapali-modal-close" aria-label="Close Reservation Modal">&times;</button>
+      
+      <div id="amrapali-modal-form-wrap">
+        <span class="eyebrow">AMRAPALI 2026 Seat Reservation</span>
+        <h2 style="font-size: 26px; color: var(--color-navy); margin-bottom: 6px;">Reserve Your Seat</h2>
+        <p style="font-size: 13.5px; color: var(--color-muted-text); margin-bottom: 20px; line-height: 1.5;">
+          Book your seat for AMRAPALI 2026 and join us for an evening of student performances, creativity, discipline, and artistic expression.
+        </p>
+
+        <!-- Event Summary Box -->
+        <div class="amrapali-event-summary">
+          <div class="summary-item"><strong>Event:</strong> AMRAPALI 2026</div>
+          <div class="summary-item"><strong>Date:</strong> 23 August 2026, Sunday</div>
+          <div class="summary-item"><strong>Time:</strong> 4:00 PM to 9:00 PM</div>
+          <div class="summary-item"><strong>Venue:</strong> CCRT Auditorium, Dwarka Sector 7, New Delhi</div>
+        </div>
+
+        <form id="amrapali-reservation-form" novalidate style="margin-top: 18px;">
+          <div class="form-group" style="margin-bottom: 14px;">
+            <label class="form-label" for="amp_full_name" style="font-size: 12px; font-weight: 600; margin-bottom: 4px; display: block;">Full Name *</label>
+            <input type="text" id="amp_full_name" name="full_name" class="form-control" placeholder="Enter your full name" required>
+            <span class="error-text" id="err-amp_full_name" style="color: #e53e3e; font-size: 11.5px; display: none; margin-top: 4px;">Please enter your full name.</span>
+          </div>
+
+          <div class="form-row-grid">
+            <div class="form-group" style="margin-bottom: 14px;">
+              <label class="form-label" for="amp_phone" style="font-size: 12px; font-weight: 600; margin-bottom: 4px; display: block;">Phone Number *</label>
+              <input type="tel" id="amp_phone" name="phone" class="form-control" placeholder="Enter 10-digit phone number" required>
+              <span class="error-text" id="err-amp_phone" style="color: #e53e3e; font-size: 11.5px; display: none; margin-top: 4px;">Please enter a valid 10-digit phone number.</span>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 14px;">
+              <label class="form-label" for="amp_email" style="font-size: 12px; font-weight: 600; margin-bottom: 4px; display: block;">Email Address *</label>
+              <input type="email" id="amp_email" name="email" class="form-control" placeholder="name@example.com" required>
+              <span class="error-text" id="err-amp_email" style="color: #e53e3e; font-size: 11.5px; display: none; margin-top: 4px;">Please enter a valid email address.</span>
+            </div>
+          </div>
+
+          <div class="form-row-grid">
+            <div class="form-group" style="margin-bottom: 14px;">
+              <label class="form-label" for="amp_seats" style="font-size: 12px; font-weight: 600; margin-bottom: 4px; display: block;">Number of Seats *</label>
+              <select id="amp_seats" name="seats" class="form-control" required>
+                <option value="">Select Seats</option>
+                <option value="1 Seat">1 Seat</option>
+                <option value="2 Seats">2 Seats</option>
+                <option value="3 Seats">3 Seats</option>
+                <option value="4 Seats">4 Seats</option>
+                <option value="5 Seats">5 Seats</option>
+              </select>
+              <span class="error-text" id="err-amp_seats" style="color: #e53e3e; font-size: 11.5px; display: none; margin-top: 4px;">Please select number of seats.</span>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 14px;">
+              <label class="form-label" for="amp_attendee_type" style="font-size: 12px; font-weight: 600; margin-bottom: 4px; display: block;">Attendee Type (Optional)</label>
+              <select id="amp_attendee_type" name="attendee_type" class="form-control">
+                <option value="">Select Attendee Type</option>
+                <option value="Student">Student</option>
+                <option value="Parent">Parent</option>
+                <option value="Guest">Guest</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" id="amp-submit-btn" class="btn btn-primary full-width" style="margin-top: 8px; width: 100%;">
+            <span>Confirm Reservation</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Step 2: Payment QR Screen Container (Initially Hidden) -->
+      <div id="amrapali-payment-wrap" style="display: none; padding: 4px 0;">
+        <span class="eyebrow">Step 2 of 3 — Payment</span>
+        <h2 style="font-size: 24px; color: var(--color-navy); margin-bottom: 6px;">Complete Your Payment</h2>
+        <p style="font-size: 13.5px; color: var(--color-muted-text); margin-bottom: 16px;">
+          Scan the QR code below to complete your seat reservation for AMRAPALI 2026.
+        </p>
+
+        <!-- Booking & Price Breakdown Card -->
+        <div class="amrapali-event-summary" style="margin-bottom: 16px;">
+          <div class="summary-item"><strong>Booking Reference:</strong> <span id="pay_booking_ref" style="font-family: monospace; font-weight: 700; color: var(--color-primary-dark);">AMR-2026-0001</span></div>
+          <div class="summary-item"><strong>Guest Name:</strong> <span id="pay_guest_name">Guest</span></div>
+          <div class="summary-item"><strong>Seats Reserved:</strong> <span id="pay_seat_count">1 Seat</span></div>
+          <div class="summary-item"><strong>Amount Payable:</strong> <span id="pay_total_amount" style="font-weight: 700; color: #166534; font-size: 14px;">₹500</span></div>
+          <div class="summary-item" style="grid-column: span 2;"><strong>Payment Status:</strong> <span class="badge badge-warning" id="pay_status_badge">Payment Pending</span></div>
+        </div>
+
+        <!-- Payment QR Placeholder -->
+        <div class="qr-box-wrap">
+          <div class="qr-code-square">
+            <svg id="amrapali-qr-image" viewBox="0 0 200 200" width="100%" height="100%">
+              <rect width="200" height="200" fill="#FFFFFF"/>
+              <!-- Outer QR Position Patterns -->
+              <rect x="15" y="15" width="50" height="50" fill="#08121E" rx="6"/>
+              <rect x="25" y="25" width="30" height="30" fill="#FFFFFF" rx="4"/>
+              <rect x="33" y="33" width="14" height="14" fill="#08121E" rx="2"/>
+
+              <rect x="135" y="15" width="50" height="50" fill="#08121E" rx="6"/>
+              <rect x="145" y="25" width="30" height="30" fill="#FFFFFF" rx="4"/>
+              <rect x="153" y="33" width="14" height="14" fill="#08121E" rx="2"/>
+
+              <rect x="15" y="135" width="50" height="50" fill="#08121E" rx="6"/>
+              <rect x="25" y="145" width="30" height="30" fill="#FFFFFF" rx="4"/>
+              <rect x="33" y="153" width="14" height="14" fill="#08121E" rx="2"/>
+
+              <!-- QR Data Modules Matrix Pattern -->
+              <rect x="75" y="20" width="12" height="12" fill="#08121E"/>
+              <rect x="95" y="20" width="12" height="12" fill="#08121E"/>
+              <rect x="110" y="35" width="12" height="12" fill="#08121E"/>
+              <rect x="75" y="50" width="12" height="12" fill="#08121E"/>
+              <rect x="20" y="75" width="12" height="12" fill="#08121E"/>
+              <rect x="40" y="90" width="12" height="12" fill="#08121E"/>
+              <rect x="75" y="75" width="50" height="50" fill="#5EBBEA" rx="4"/>
+              <text x="100" y="105" font-family="sans-serif" font-size="11" font-weight="bold" fill="#08121E" text-anchor="middle">UPI QR</text>
+              <rect x="140" y="75" width="12" height="12" fill="#08121E"/>
+              <rect x="165" y="90" width="12" height="12" fill="#08121E"/>
+              <rect x="75" y="135" width="12" height="12" fill="#08121E"/>
+              <rect x="95" y="150" width="12" height="12" fill="#08121E"/>
+              <rect x="115" y="135" width="12" height="12" fill="#08121E"/>
+              <rect x="140" y="140" width="22" height="22" fill="#08121E" rx="3"/>
+              <rect x="168" y="168" width="16" height="16" fill="#08121E" rx="2"/>
+            </svg>
+          </div>
+          <span style="font-size: 12px; font-weight: 700; color: var(--color-navy); text-transform: uppercase; letter-spacing: 0.06em;">Payment QR Code</span>
+          <span style="font-size: 11.5px; color: var(--color-muted-text); margin-top: 2px;">UPI ID: dancedarbar@upi</span>
+        </div>
+
+        <!-- Verification Proof Form -->
+        <form id="amrapali-payment-proof-form" novalidate>
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label class="form-label" for="amp_txn_id" style="font-size: 12px; font-weight: 600; margin-bottom: 4px; display: block;">UPI Transaction ID / Payment Ref *</label>
+            <input type="text" id="amp_txn_id" class="form-control" placeholder="Enter 12-digit UPI Ref or Txn ID" required>
+            <span class="error-text" id="err-amp_txn_id" style="color: #e53e3e; font-size: 11.5px; display: none; margin-top: 4px;">Please enter transaction reference or upload screenshot.</span>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 16px;">
+            <label class="form-label" for="amp_screenshot" style="font-size: 12px; font-weight: 600; margin-bottom: 4px; display: block;">Upload Payment Screenshot (Optional, Max 5MB)</label>
+            <input type="file" id="amp_screenshot" accept="image/jpeg,image/png,image/webp,application/pdf" class="form-control" style="padding: 6px 12px; font-size: 12px;">
+          </div>
+
+          <button type="submit" id="amp-pay-complete-btn" class="btn btn-primary full-width" style="width: 100%;">
+            <span>I Have Completed the Payment</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Step 3: Payment Verification Pending Screen (Initially Hidden) -->
+      <div id="amrapali-verification-pending-wrap" style="display: none; text-align: center; padding: 16px 0;">
+        <div style="width: 56px; height: 56px; background: #E0F2FE; color: #075985; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 26px; font-weight: bold;">⏳</div>
+        <span class="badge badge-info" style="margin-bottom: 12px;">Verification in Progress</span>
+        <h2 style="font-size: 24px; color: var(--color-navy); margin-bottom: 10px;">Payment Details Submitted</h2>
+        <p style="font-size: 14px; color: var(--color-muted-text); margin-bottom: 20px; line-height: 1.55;">
+          Your payment details have been submitted for verification. Your reservation will be confirmed after payment verification.
+        </p>
+
+        <div class="amrapali-event-summary" style="margin-bottom: 24px; text-align: left;">
+          <div class="summary-item"><strong>Booking Reference:</strong> <span id="ver_booking_ref" style="font-family: monospace; font-weight: 700;">AMR-2026-0001</span></div>
+          <div class="summary-item"><strong>Guest Name:</strong> <span id="ver_guest_name">Guest</span></div>
+          <div class="summary-item"><strong>Status:</strong> <span class="badge badge-info">Verification Pending</span></div>
+          <div class="summary-item"><strong>Amount Paid:</strong> <span id="ver_amount">₹500</span></div>
+        </div>
+
+        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+          <button class="btn btn-secondary" onclick="window.closeAmrapaliModal()">Close</button>
+          <button class="btn btn-primary" onclick="window.simulateAdminApproval()">Simulate Admin Instant Approval</button>
+        </div>
+      </div>
+
+      <!-- Step 4: Final Verified Confirmation Screen (Initially Hidden) -->
+      <div id="amrapali-confirmed-wrap" style="display: none; text-align: center; padding: 16px 0;">
+        <div style="width: 56px; height: 56px; background: #DCFCE7; color: #166534; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 28px; font-weight: bold;">✓</div>
+        <span class="badge badge-success" style="margin-bottom: 10px;">Reservation Confirmed</span>
+        <h2 style="font-size: 24px; color: var(--color-navy); margin-bottom: 8px;">Your Reservation Is Confirmed</h2>
+        <p style="font-size: 13.5px; color: var(--color-muted-text); margin-bottom: 20px; line-height: 1.55;">
+          Your seats for AMRAPALI 2026 have been successfully reserved. A confirmation message and invitation card have been sent to your registered phone number and email address.
+        </p>
+
+        <!-- Final Confirmation Summary Box -->
+        <div class="amrapali-event-summary" style="margin-bottom: 20px; text-align: left;">
+          <div class="summary-item"><strong>Booking Reference:</strong> <span id="conf_booking_ref" style="font-family: monospace; font-weight: 700; color: var(--color-primary-dark);">AMR-2026-0001</span></div>
+          <div class="summary-item"><strong>Guest Name:</strong> <span id="conf_guest_name">Guest</span></div>
+          <div class="summary-item"><strong>Seats Reserved:</strong> <span id="conf_seat_count">1 Seat</span></div>
+          <div class="summary-item"><strong>Event Name:</strong> AMRAPALI 2026</div>
+          <div class="summary-item"><strong>Date:</strong> 23 August 2026, Sunday</div>
+          <div class="summary-item"><strong>Time:</strong> 4:00 PM to 9:00 PM</div>
+          <div class="summary-item" style="grid-column: span 2;"><strong>Venue:</strong> CCRT Auditorium, Dwarka Sector 7, New Delhi</div>
+          <div class="summary-item"><strong>Payment Status:</strong> <span class="badge badge-success">Paid</span></div>
+          <div class="summary-item"><strong>Reservation Status:</strong> <span class="badge badge-success">Confirmed</span></div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+          <button id="amp-download-invitation-btn" class="btn btn-primary" style="gap: 6px;">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            <span>Download Invitation Card</span>
+          </button>
+          <a id="amp-confirmed-cal-btn" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=AMRAPALI+2026+-+Dance+Darbar+Annual+Ballet&dates=20260823T103000Z/20260823T153000Z&details=Annual+Student+Dance+Ballet+by+Dance+Darbar+Kala+Sansthan&location=CCRT+Auditorium,+Dwarka+Sector+7,+New+Delhi" target="_blank" rel="noopener" class="btn btn-secondary">Add to Calendar</a>
+          <button class="btn btn-secondary" onclick="window.closeAmrapaliModal()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
