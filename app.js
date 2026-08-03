@@ -273,7 +273,12 @@ function renderApp() {
     appRoot.innerHTML = renderFAQPage();
     initFAQPageEvents();
   } else if (route === '/admin') {
-    appRoot.innerHTML = renderAdminPage();
+    if (isAdminLoggedIn()) {
+      appRoot.innerHTML = renderAdminPage();
+    } else {
+      appRoot.innerHTML = renderAdminLoginPage();
+      initAdminLoginEvents();
+    }
   } else if (route === '/privacy') {
     appRoot.innerHTML = renderPrivacyPage();
   } else if (route === '/terms') {
@@ -1586,6 +1591,87 @@ function downloadPersonalizedInvitation(booking) {
   link.click();
 }
 
+// --- Admin Authentication System ---
+const ADMIN_CREDENTIALS = {
+  email: 'admin@dancedarbar.com',
+  passwordHash: 'dd2026admin'
+};
+
+function isAdminLoggedIn() {
+  return sessionStorage.getItem('dd_admin_session') === 'authenticated';
+}
+
+function adminLogin(email, password) {
+  if (email === ADMIN_CREDENTIALS.email && password === ADMIN_CREDENTIALS.passwordHash) {
+    sessionStorage.setItem('dd_admin_session', 'authenticated');
+    return true;
+  }
+  return false;
+}
+
+window.adminLogout = function() {
+  sessionStorage.removeItem('dd_admin_session');
+  location.hash = '#/';
+};
+
+function renderAdminLoginPage() {
+  return `
+    <div style="padding-top: 140px; padding-bottom: 100px; min-height: 80vh; display: flex; align-items: center; justify-content: center;">
+      <div style="width: 100%; max-width: 420px; padding: 0 20px;">
+        <div style="background: var(--color-white); border-radius: var(--radius-large); padding: 44px 36px; border: 1px solid var(--color-border); box-shadow: 0 25px 60px rgba(8,18,30,0.12);">
+          <div style="width: 60px; height: 60px; background: var(--color-navy); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#5EBBEA" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <h2 style="font-size: 24px; color: var(--color-navy); text-align: center; margin-bottom: 6px;">Admin Login</h2>
+          <p style="font-size: 13px; color: var(--color-muted-text); text-align: center; margin-bottom: 28px;">This area is restricted to Dance Darbar administrators only.</p>
+          <form id="admin-login-form" novalidate>
+            <div class="form-group" style="margin-bottom: 16px;">
+              <label class="form-label" for="admin_email" style="font-size: 12px; font-weight: 600; margin-bottom: 4px; display: block;">Email Address</label>
+              <input type="email" id="admin_email" class="form-control" placeholder="admin@dancedarbar.com" required autocomplete="email">
+            </div>
+            <div class="form-group" style="margin-bottom: 20px;">
+              <label class="form-label" for="admin_password" style="font-size: 12px; font-weight: 600; margin-bottom: 4px; display: block;">Password</label>
+              <input type="password" id="admin_password" class="form-control" placeholder="Enter admin password" required autocomplete="current-password">
+            </div>
+            <div id="admin-login-error" style="display: none; background: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5; border-radius: var(--radius-small); padding: 10px 14px; font-size: 12.5px; font-weight: 600; margin-bottom: 16px; text-align: center;">
+              Invalid email or password. Please try again.
+            </div>
+            <button type="submit" id="admin-login-btn" class="btn btn-primary" style="width: 100%; padding: 13px;">
+              <span>Sign In to Admin Panel</span>
+            </button>
+          </form>
+          <p style="font-size: 11px; color: var(--color-muted-text); text-align: center; margin-top: 24px; line-height: 1.5;">
+            If you are not an authorized administrator, please <a href="#/" style="color: var(--color-primary-dark); font-weight: 600;">return to the website</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function initAdminLoginEvents() {
+  const form = document.getElementById('admin-login-form');
+  if (!form) return;
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = document.getElementById('admin_email').value.trim();
+    const password = document.getElementById('admin_password').value;
+    const errorBox = document.getElementById('admin-login-error');
+    const loginBtn = document.getElementById('admin-login-btn');
+    loginBtn.disabled = true;
+    loginBtn.innerHTML = '<span>Authenticating...</span>';
+    setTimeout(() => {
+      if (adminLogin(email, password)) {
+        window.renderApp();
+      } else {
+        errorBox.style.display = 'block';
+        loginBtn.disabled = false;
+        loginBtn.innerHTML = '<span>Sign In to Admin Panel</span>';
+      }
+    }, 400);
+  });
+}
+
 // --- Admin Dashboard Page Template ---
 function renderAdminPage() {
   const bookings = getAmrapaliBookings();
@@ -1600,10 +1686,13 @@ function renderAdminPage() {
             <h1 class="section-heading">Master Control Dashboard</h1>
           </div>
           <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-            <button class="btn btn-secondary" onclick="location.reload()">Refresh Data</button>
-            <button class="btn btn-secondary" style="border-color: #991B1B; color: #991B1B;" onclick="window.clearAllReservations()">Clear All Event Reservations</button>
-            <button class="btn btn-secondary" style="border-color: #991B1B; color: #991B1B;" onclick="window.clearAllTrialRegistrations()">Clear All Trial Submissions</button>
-            <a href="#/claim-free-seat" class="btn btn-primary">Test Claim Free Seat</a>
+            <button class="btn btn-secondary" onclick="location.reload()">Refresh</button>
+            <button class="btn btn-secondary" style="border-color: #991B1B; color: #991B1B;" onclick="window.clearAllReservations()">Clear Reservations</button>
+            <button class="btn btn-secondary" style="border-color: #991B1B; color: #991B1B;" onclick="window.clearAllTrialRegistrations()">Clear Trials</button>
+            <button class="btn btn-secondary" onclick="window.adminLogout()" style="gap: 6px;">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+              Logout
+            </button>
           </div>
         </div>
 
