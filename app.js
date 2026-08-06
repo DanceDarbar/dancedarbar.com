@@ -2171,6 +2171,17 @@ function initAmrapaliModalEvents() {
     }, 150);
   };
 
+  // Auto-scroll focused input field into view when mobile virtual keyboard pops up
+  modal.querySelectorAll('.modal-input-field').forEach(input => {
+    input.addEventListener('focus', () => {
+      if (window.innerWidth <= 767) {
+        setTimeout(() => {
+          input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 300);
+      }
+    });
+  });
+
   window.closeAmrapaliModal = function() {
     modal.classList.remove('active');
     document.body.classList.remove('modal-open');
