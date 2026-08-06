@@ -18,7 +18,7 @@
   <!-- Satoshi Font (Fontshare CDN) -->
   <link href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,600,500,400&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="style.css?v=12">
+  <link rel="stylesheet" href="style.css?v=13">
 </head>
 <body>
   <!-- Custom Pointer Cursor for Desktop -->
@@ -375,15 +375,19 @@
       <!-- Step 4: Final Verified Confirmation Screen (Initially Hidden) -->
       <div id="amrapali-confirmed-wrap" style="display: none; text-align: center; padding: 16px 0;">
         <div style="width: 56px; height: 56px; background: #DCFCE7; color: #166534; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 28px; font-weight: bold;">✓</div>
-        <span class="badge badge-success" style="margin-bottom: 10px;">Reservation Confirmed</span>
+        <span class="badge badge-success" style="margin-bottom: 10px; font-size: 13px;">✅ Payment Successful</span>
         <h2 style="font-size: 24px; color: var(--color-navy); margin-bottom: 8px;">Your Reservation Is Confirmed</h2>
-        <p style="font-size: 14px; color: var(--color-navy); font-weight: 500; margin-bottom: 20px; line-height: 1.55; background: #DCFCE7; padding: 14px 18px; border-radius: 12px; border: 1px solid #86EFAC;">
-          ✅ Your seat has been successfully reserved. A confirmation email and invitation card have been sent to your registered email address. We look forward to welcoming you at AMRAPALI 2026.
-        </p>
+        <div style="background: #F0FDF4; padding: 16px 20px; border-radius: 16px; border: 1px solid #86EFAC; margin-bottom: 20px; text-align: center;">
+          <p style="font-size: 14.5px; color: #166534; font-weight: 700; margin-bottom: 8px;">Your reservation has been confirmed.</p>
+          <div style="font-family: monospace; font-size: 16px; font-weight: 800; color: var(--color-navy); margin-bottom: 8px;">Reservation ID: <span id="conf_booking_ref">AMR-2026-0001</span></div>
+          <p style="font-size: 13.5px; color: #15803D; margin-bottom: 4px;">A confirmation email has been sent to your email address.</p>
+          <p style="font-size: 13.5px; color: #15803D; margin-bottom: 8px;">Your digital invitation has also been emailed.</p>
+          <p style="font-size: 13.5px; font-weight: 600; color: var(--color-navy);">We look forward to welcoming you at AMRAPALI 2026.</p>
+        </div>
 
         <!-- Final Confirmation Summary Box -->
         <div class="amrapali-event-summary" style="margin-bottom: 20px; text-align: left;">
-          <div class="summary-item"><strong>Booking Reference:</strong> <span id="conf_booking_ref" style="font-family: monospace; font-weight: 700; color: var(--color-primary-dark);">AMR-2026-0001</span></div>
+          <div class="summary-item"><strong>Booking Reference:</strong> <span id="conf_booking_ref_sub" style="font-family: monospace; font-weight: 700; color: var(--color-primary-dark);">AMR-2026-0001</span></div>
           <div class="summary-item"><strong>Guest Name:</strong> <span id="conf_guest_name">Guest</span></div>
           <div class="summary-item"><strong>Seats Reserved:</strong> <span id="conf_seat_count">1 Seat</span></div>
           <div class="summary-item"><strong>Event Name:</strong> AMRAPALI 2026</div>
@@ -404,9 +408,23 @@
           <button class="btn btn-secondary" onclick="window.closeAmrapaliModal()">Close</button>
         </div>
       </div>
+
+      <!-- Payment Failed Screen (Initially Hidden) -->
+      <div id="amrapali-failed-wrap" style="display: none; text-align: center; padding: 24px 16px;">
+        <div style="width: 56px; height: 56px; background: #FEE2E2; color: #991B1B; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 28px; font-weight: bold;">✕</div>
+        <span class="badge" style="background: #FEE2E2; color: #991B1B; margin-bottom: 10px; font-weight: 700;">Payment Failed</span>
+        <h2 style="font-size: 24px; color: var(--color-navy); margin-bottom: 8px;">Payment Failed</h2>
+        <p style="font-size: 14.5px; color: var(--color-muted-text); margin-bottom: 20px; line-height: 1.55;">
+          Your reservation has not been confirmed.<br>Please try again.
+        </p>
+        <div style="display: flex; gap: 12px; justify-content: center;">
+          <button class="btn btn-primary" onclick="window.retryAmrapaliPayment()">Try Again</button>
+          <button class="btn btn-secondary" onclick="window.closeAmrapaliModal()">Close</button>
+        </div>
+      </div>
     </div>
   </div>
 
-  <script src="app.js?v=12"></script>
+  <script src="app.js?v=13"></script>
 </body>
 </html>

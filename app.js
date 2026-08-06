@@ -2010,20 +2010,72 @@ function renderAdminPage() {
   `;
 }
 
-// Global Admin Action Handlers
+// Global Admin Action Handlers & Payment Verification Processors
+window.processVerifiedPaymentSuccess = function(target) {
+  if (!target) return;
+  target.status = 'Confirmed';
+  target.paymentStatus = 'SUCCESS';
+  target.verifiedAt = new Date().toLocaleString();
+
+  const bookings = getAmrapaliBookings();
+  const idx = bookings.findIndex(b => b.bookingRef === target.bookingRef);
+  if (idx !== -1) {
+    bookings[idx] = target;
+    saveAmrapaliBookings(bookings);
+  }
+
+  // 1. Send Admin Email ONLY AFTER Verified Successful Payment
+  sendEmailNotification('✅ New AMRAPALI 2026 Seat Reservation (Payment Received)', {
+    'Reservation ID': target.bookingRef,
+    'Payment Status': 'SUCCESS',
+    'Payment Transaction ID': target.txnId || `TXN-${target.bookingRef}`,
+    'Payment Amount': `₹${target.totalAmount}`,
+    'Payment Time': target.verifiedAt,
+    'Full Name': target.fullName,
+    'Phone Number': target.phone,
+    'Email Address': target.email,
+    'Number of Seats': target.seatCount,
+    'Attendee Type': target.attendeeType,
+    'Event Name': 'AMRAPALI 2026 - Annual Student Dance Ballet',
+    'Date & Time': '23 August 2026 (Sunday), 4:00 PM - 9:00 PM',
+    'Venue': 'CCRT Auditorium, Dwarka Sector 7, New Delhi',
+    'User Device': navigator.userAgent,
+    'Message': `Confirmed reservation for ${target.fullName} (${target.seatCount}, ₹${target.totalAmount}). Payment Verified. Txn: ${target.txnId}`
+  });
+
+  // 2. Send Customer Confirmation Email ONLY AFTER Verified Successful Payment
+  sendCustomerConfirmationEmail(target.email, 'Your AMRAPALI 2026 Seat is Confirmed 🎉', {
+    'Reservation ID': target.bookingRef,
+    'Payment Status': 'Payment Successful (SUCCESS)',
+    'Event Details': 'AMRAPALI 2026 (23 Aug 2026, CCRT Auditorium Dwarka)',
+    'Seat Count': target.seatCount,
+    'Transaction ID': target.txnId || `TXN-${target.bookingRef}`,
+    'Digital Invitation Card': 'Downloadable from website dashboard',
+    'Contact Information': 'dancedarbar96@gmail.com | +91 98711 39600'
+  });
+};
+
+window.processPaymentFailure = function(target) {
+  if (!target) return;
+  target.status = 'Failed';
+  target.paymentStatus = 'FAILED';
+
+  const bookings = getAmrapaliBookings();
+  const idx = bookings.findIndex(b => b.bookingRef === target.bookingRef);
+  if (idx !== -1) {
+    bookings[idx] = target;
+    saveAmrapaliBookings(bookings);
+  }
+  // DO NOT SEND ANY EMAIL OR SMS ON FAILED PAYMENT
+};
+
 window.adminApproveBooking = function(ref) {
   const bookings = getAmrapaliBookings();
   const target = bookings.find(b => b.bookingRef === ref);
   if (target) {
-    target.status = 'Confirmed';
-    target.paymentStatus = 'Paid';
-    saveAmrapaliBookings(bookings);
-
-    alert(`Payment Verified! Booking ${ref} confirmed.\n\nSMS Sent to: ${target.phone}\nEmail & Invitation Pass sent to: ${target.email}`);
-    
-    // Automatically trigger invitation download if current user
+    window.processVerifiedPaymentSuccess(target);
+    alert(`Payment Verified! Booking ${ref} confirmed.\n\nAdmin email & User confirmation email sent to ${target.email}.`);
     downloadPersonalizedInvitation(target);
-    
     if (location.hash.includes('admin')) {
       window.renderApp();
     }
@@ -2092,10 +2144,12 @@ function initAmrapaliModalEvents() {
   if (!modal) return;
 
   function showModalStep(step) {
+    const failedWrap = document.getElementById('amrapali-failed-wrap');
     if (formWrap) formWrap.style.display = step === 1 ? 'block' : 'none';
     if (paymentWrap) paymentWrap.style.display = step === 2 ? 'block' : 'none';
     if (verWrap) verWrap.style.display = step === 3 ? 'block' : 'none';
     if (confWrap) confWrap.style.display = step === 4 ? 'block' : 'none';
+    if (failedWrap) failedWrap.style.display = step === 5 ? 'block' : 'none';
   }
 
   window.openAmrapaliModal = function() {
@@ -2141,7 +2195,7 @@ function initAmrapaliModalEvents() {
     }
   });
 
-  // Step 1: Submit Form -> Payment Pending -> Step 2 Payment QR Screen
+  // Step 1: Submit Form -> Payment Pending -> Step 2 Payment QR Screen (NO EMAIL SENT)
   if (form) {
     form.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -2187,13 +2241,13 @@ function initAmrapaliModalEvents() {
 
         activeBooking = {
           bookingRef: refCode,
-          fullName: name.value.trim(),
-          phone: phone.value.trim(),
-          email: email.value.trim(),
+          fullName: sanitizeInput(name.value.trim()),
+          phone: sanitizeInput(phone.value.trim()),
+          email: sanitizeInput(email.value.trim()),
           seatCount: seats.value,
           numSeats: numSeats,
           totalAmount: totalAmount,
-          attendeeType: attendeeType ? attendeeType.value : 'Guest',
+          attendeeType: attendeeType ? sanitizeInput(attendeeType.value) : 'Guest',
           status: 'Payment Pending',
           paymentStatus: 'Pending',
           createdAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -2203,21 +2257,8 @@ function initAmrapaliModalEvents() {
         bookings.push(activeBooking);
         saveAmrapaliBookings(bookings);
 
-        // Send email notification to admin
-        sendEmailNotification('🎟️ New AMRAPALI 2026 Seat Reserved!', {
-          'Booking Ref': activeBooking.bookingRef,
-          'Guest Name': activeBooking.fullName,
-          'Phone': activeBooking.phone,
-          'Email': activeBooking.email,
-          'Seats': activeBooking.seatCount,
-          'Total Amount': '₹' + activeBooking.totalAmount,
-          'Attendee Type': activeBooking.attendeeType,
-          'Status': activeBooking.status,
-          'Message': `New event reservation by ${activeBooking.fullName}. ${activeBooking.seatCount} seats, ₹${activeBooking.totalAmount}. Phone: ${activeBooking.phone}`
-        });
-
+        // DO NOT SEND ANY EMAIL ON FORM SUBMISSION OR WHEN REACHING QR PAGE!
         setTimeout(() => {
-          // Update Step 2 UI
           document.getElementById('pay_booking_ref').textContent = activeBooking.bookingRef;
           document.getElementById('pay_guest_name').textContent = activeBooking.fullName;
           document.getElementById('pay_seat_count').textContent = activeBooking.seatCount;
@@ -2229,7 +2270,7 @@ function initAmrapaliModalEvents() {
     });
   }
 
-  // Step 2: Submit Payment Proof / Txn ID -> Step 3 Verification Pending
+  // Step 2: Submit Payment Proof / Txn ID -> Step 3 Verification Pending (NO EMAIL SENT YET)
   if (proofForm) {
     proofForm.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -2251,7 +2292,7 @@ function initAmrapaliModalEvents() {
         activeBooking.txnId = sanitizeInput(txnIdInput.value.trim());
         activeBooking.screenshotName = fileInput.files[0] ? sanitizeInput(fileInput.files[0].name) : '';
         activeBooking.status = 'Verification Pending';
-        activeBooking.paymentStatus = 'Successful (Pending Verification)';
+        activeBooking.paymentStatus = 'Pending Verification';
         
         const bookings = getAmrapaliBookings();
         const idx = bookings.findIndex(b => b.bookingRef === activeBooking.bookingRef);
@@ -2260,38 +2301,7 @@ function initAmrapaliModalEvents() {
           saveAmrapaliBookings(bookings);
         }
 
-        // Send Detailed Email Notification to Admin (dancedarbar96@gmail.com)
-        sendEmailNotification('✅ New AMRAPALI 2026 Seat Reservation', {
-          'Reservation ID': activeBooking.bookingRef,
-          'Full Name': activeBooking.fullName,
-          'Phone Number': activeBooking.phone,
-          'Email Address': activeBooking.email,
-          'Number of Seats': activeBooking.seatCount,
-          'Attendee Type': activeBooking.attendeeType,
-          'Event Name': 'AMRAPALI 2026 - Annual Student Dance Ballet',
-          'Date': '23 August 2026 (Sunday)',
-          'Time': '4:00 PM - 9:00 PM',
-          'Venue': 'CCRT Auditorium, Dwarka Sector 7, New Delhi',
-          'Payment Status': activeBooking.paymentStatus,
-          'Payment ID / Transaction ID': activeBooking.txnId,
-          'Booking Date & Time': new Date().toLocaleString(),
-          'User Device': navigator.userAgent,
-          'Message': `New verified seat reservation by ${activeBooking.fullName} for AMRAPALI 2026 (${activeBooking.seatCount}, ₹${activeBooking.totalAmount}). Txn Ref: ${activeBooking.txnId}`
-        });
-
-        // Send Automated Confirmation Email to Customer
-        sendCustomerConfirmationEmail(activeBooking.email, `🎟️ Confirmation: AMRAPALI 2026 Seat Reservation (${activeBooking.bookingRef})`, {
-          'Booking ID': activeBooking.bookingRef,
-          'Guest Name': activeBooking.fullName,
-          'Event Name': 'AMRAPALI 2026 - Annual Student Dance Ballet',
-          'Date & Time': '23 August 2026 (Sunday), 4:00 PM to 9:00 PM',
-          'Venue': 'CCRT Auditorium, Dwarka Sector 7, New Delhi',
-          'Seats Reserved': activeBooking.seatCount,
-          'Payment Status': 'Successful',
-          'Payment Receipt': `₹${activeBooking.totalAmount}`,
-          'Invitation Card': 'Downloadable from website dashboard',
-          'Contact': 'dancedarbar96@gmail.com | +91 98711 39600'
-        });
+        // DO NOT SEND EMAIL YET WHILE PAYMENT VERIFICATION IS PENDING!
       }
 
       // Update Step 3 UI
@@ -2303,17 +2313,31 @@ function initAmrapaliModalEvents() {
     });
   }
 
-  // Simulate Admin Instant Approval Helper
+  // Simulate Admin Instant Approval Helper (Triggers Emails ONLY on Verified Success)
   window.simulateAdminApproval = function() {
     if (activeBooking) {
-      window.adminApproveBooking(activeBooking.bookingRef);
+      window.processVerifiedPaymentSuccess(activeBooking);
 
-      // Update Step 4 Confirmation UI
-      document.getElementById('conf_booking_ref').textContent = activeBooking.bookingRef;
-      document.getElementById('conf_guest_name').textContent = activeBooking.fullName;
-      document.getElementById('conf_seat_count').textContent = activeBooking.seatCount;
+      const refMain = document.getElementById('conf_booking_ref');
+      const refSub = document.getElementById('conf_booking_ref_sub');
+      if (refMain) refMain.textContent = activeBooking.bookingRef;
+      if (refSub) refSub.textContent = activeBooking.bookingRef;
+
+      const guestName = document.getElementById('conf_guest_name');
+      if (guestName) guestName.textContent = activeBooking.fullName;
+
+      const seatCount = document.getElementById('conf_seat_count');
+      if (seatCount) seatCount.textContent = activeBooking.seatCount;
 
       showModalStep(4);
+    }
+  };
+
+  window.retryAmrapaliPayment = function() {
+    if (activeBooking) {
+      showModalStep(2);
+    } else {
+      showModalStep(1);
     }
   };
 
