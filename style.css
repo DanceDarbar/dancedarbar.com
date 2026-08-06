@@ -1978,205 +1978,406 @@ h1, h2, h3, h4, h5, h6 {
     display: flex;
   }
 
-  /* Mobile Hero Video Scaling & Layout */
+  /* Header 70px Height */
+  .site-header {
+    height: 70px !important;
+  }
+
+  .header-container {
+    height: 70px !important;
+  }
+
+  .logo-circle-frame {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .brand-title {
+    font-size: 16px !important;
+  }
+
+  .brand-subtitle {
+    font-size: 9px !important;
+  }
+
+  /* Navigation Drawer (300ms Smooth Animation, 20px Links) */
+  .mobile-menu-overlay {
+    transition: opacity 300ms cubic-bezier(0.16, 1, 0.3, 1), visibility 300ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+
+  .mobile-nav-links {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+    margin-top: 24px !important;
+  }
+
+  .mobile-link {
+    font-size: 20px !important;
+    font-weight: 600 !important;
+    padding: 10px 0 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  }
+
+  .mobile-menu-footer {
+    position: sticky;
+    bottom: 0;
+    padding-top: 16px;
+    background: var(--color-navy);
+  }
+
+  /* Hero Section: 80vh Height, Max 2 Lines Heading, Max 3 Lines Subtitle */
   .hero-section {
-    min-height: 100svh;
-    padding-top: 130px;
-    padding-bottom: 36px;
-    display: flex;
-    align-items: flex-end;
+    height: 80vh !important;
+    min-height: 500px !important;
+    max-height: 760px !important;
+    padding-top: 80px !important;
+    padding-bottom: 32px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
   }
 
   .hero-video-iframe {
-    width: 280vw;
-    height: 157.5vw;
-    min-height: 100vh;
-    min-width: 177.77vh;
-    transform: translate(-50%, -50%) scale(1.4);
-    opacity: 1;
+    width: 320vw !important;
+    height: 180vw !important;
+    min-height: 100vh !important;
+    min-width: 177.77vh !important;
+    transform: translate(-50%, -50%) scale(1.4) !important;
+    opacity: 1 !important;
   }
 
   .hero-heading {
-    font-size: clamp(28px, 8.5vw, 42px);
-    line-height: 1.12;
-    letter-spacing: -0.02em;
-    margin-bottom: 14px;
+    font-size: clamp(30px, 8.5vw, 38px) !important;
+    line-height: 1.15 !important;
+    margin-bottom: 12px !important;
+    max-height: 2.4em;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
   }
 
   .hero-subheading {
-    font-size: 15px;
-    line-height: 1.55;
-    margin-bottom: 24px;
+    font-size: 15px !important;
+    line-height: 1.5 !important;
+    margin-bottom: 24px !important;
     opacity: 0.92;
+    max-height: 4.6em;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
   }
 
   .hero-cta-group {
-    flex-direction: column;
-    width: 100%;
-    gap: 12px;
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 12px !important;
   }
 
-  .hero-cta-group .btn {
-    width: 100%;
-    justify-content: center;
-    padding: 14px 20px;
-    font-size: 15px;
+  /* 52px Minimum Height & Pill Radius for All Mobile Buttons */
+  .btn {
+    min-height: 52px !important;
+    height: 52px !important;
+    border-radius: 999px !important;
+    width: 100% !important;
+    justify-content: center !important;
+    font-size: 15px !important;
+    padding: 0 24px !important;
   }
 
-  /* Section Spacing & Headings */
+  .btn:active {
+    transform: scale(0.98);
+  }
+
+  /* About Brand Section: 32px Top, 24px Bottom, 20px Horizontal, Max 4 Lines */
+  .about-brand-section {
+    padding: 32px 20px 24px !important;
+    text-align: center !important;
+  }
+
+  .about-brand-text {
+    font-size: 15px !important;
+    line-height: 1.55 !important;
+    max-height: 6.2em;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+  }
+
+  /* Typography Scale */
+  h1, .display-heading {
+    font-size: 38px !important;
+    line-height: 1.2 !important;
+  }
+
+  h2, .section-heading {
+    font-size: 30px !important;
+    line-height: 1.25 !important;
+  }
+
+  h3 {
+    font-size: 22px !important;
+    line-height: 1.3 !important;
+  }
+
   .section-padding {
-    padding: 64px 0;
-  }
-
-  .section-heading {
-    font-size: clamp(24px, 6.5vw, 32px);
-    line-height: 1.2;
-  }
-
-  .display-heading {
-    font-size: clamp(28px, 7.5vw, 38px);
+    padding: 48px 0 !important;
   }
 
   .eyebrow {
-    font-size: 11px;
-    letter-spacing: 0.12em;
+    font-size: 11px !important;
+    letter-spacing: 0.12em !important;
   }
 
   /* Mobile Grid Adaptations */
   .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
   }
 
   .stat-number {
-    font-size: 32px;
+    font-size: 32px !important;
   }
 
   .stat-label {
-    font-size: 12px;
+    font-size: 12px !important;
   }
 
   .experience-panels-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
   }
 
+  /* 2-Column Masonry Gallery for Mobile */
   .masonry-gallery {
-    grid-template-columns: 1fr;
-    gap: 16px;
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  .gallery-card {
+    border-radius: 16px !important;
   }
 
   .gallery-card.tall {
-    height: 280px;
+    height: 220px !important;
   }
 
   .mentors-grid {
-    grid-template-columns: 1fr;
-    gap: 24px;
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
   }
 
   .mentor-card {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
   }
 
+  /* Event Banner: ~30% Reduced Card Height */
   .event-banner-card {
-    grid-template-columns: 1fr;
-    padding: 24px 20px;
+    grid-template-columns: 1fr !important;
+    max-height: none !important;
+    padding: 0 !important;
+    border-radius: 24px !important;
+  }
+
+  .event-media-side {
+    min-height: 180px !important;
+    height: 180px !important;
+    max-height: 180px !important;
+  }
+
+  .event-info-side {
+    padding: 20px !important;
   }
 
   .trial-page-layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
   }
 
   .trial-visual-side {
-    height: 220px;
+    height: 200px !important;
   }
 
   .trial-form-side {
-    padding: 32px 20px;
+    padding: 24px 20px !important;
   }
 
+  /* Testimonials: 1 Card at a Time Horizontal Swipe Slider */
   .testimonials-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
+    display: flex !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    gap: 16px !important;
+    padding-bottom: 16px !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .testimonial-card {
+    flex: 0 0 88% !important;
+    min-width: 88% !important;
+    scroll-snap-align: start !important;
+    border-radius: 24px !important;
+    padding: 24px 20px !important;
   }
 
   .dual-banner-grid {
-    grid-template-columns: 1fr;
-    gap: 0;
+    grid-template-columns: 1fr !important;
+    gap: 0 !important;
   }
 
   .dual-divider {
-    width: 100%;
-    height: 1px;
-    background: rgba(255, 255, 255, 0.12);
+    width: 100% !important;
+    height: 1px !important;
+    background: rgba(255, 255, 255, 0.12) !important;
   }
 
   .dual-banner-item {
-    padding: 40px 20px;
+    padding: 32px 20px !important;
   }
 
+  /* Classes Mobile Cards (24px Radius, Soft Shadow, 20px Spacing) */
   .program-list {
-    gap: 16px;
+    gap: 20px !important;
   }
 
   .program-item {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: var(--radius-medium);
-    gap: 10px;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    padding: 20px !important;
+    background: rgba(255, 255, 255, 0.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.14) !important;
+    border-radius: 24px !important;
+    box-shadow: 0 12px 32px rgba(8, 18, 30, 0.18) !important;
+    gap: 12px !important;
     transform: none !important;
   }
 
   .program-desc {
     display: block !important;
-    font-size: 13.5px;
-    color: rgba(255, 255, 255, 0.8);
-    padding-right: 0;
-    line-height: 1.5;
+    font-size: 14px !important;
+    color: rgba(255, 255, 255, 0.85) !important;
+    padding-right: 0 !important;
+    line-height: 1.5 !important;
   }
 
   .program-action {
     display: flex !important;
-    width: 100%;
-    margin-top: 6px;
-    justify-self: stretch;
+    width: 100% !important;
+    gap: 10px !important;
+    margin-top: 8px !important;
   }
 
-  .program-action .btn {
-    width: 100%;
-    justify-content: center;
+  /* Schedule Cards for Mobile */
+  .schedule-desktop-view {
+    display: none !important;
   }
 
-  .event-banner-card {
-    grid-template-columns: 1fr;
-    max-height: none !important;
-    padding: 0;
+  .schedule-mobile-view {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
   }
 
-  .event-media-side {
-    min-height: 200px;
-    height: 220px;
-    max-height: 220px;
+  .schedule-mobile-card {
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(8, 18, 30, 0.04);
   }
 
-  .event-info-side {
-    padding: 24px 20px;
+  .schedule-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+
+  .schedule-card-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-navy);
+  }
+
+  .schedule-card-details p {
+    font-size: 14px;
+    color: var(--color-muted-text);
+    margin-bottom: 6px;
+  }
+
+  .schedule-filter-bar {
+    flex-direction: column !important;
+    padding: 20px !important;
+    gap: 12px !important;
+    margin: 24px 0 !important;
+  }
+
+  /* Compressed Mobile Footer Accordions (40% Reduced Padding) */
+  .site-footer {
+    padding: 32px 0 24px !important;
   }
 
   .footer-grid {
-    grid-template-columns: 1fr;
-    gap: 32px;
+    grid-template-columns: 1fr !important;
+    gap: 0 !important;
+  }
+
+  .footer-brand-col {
+    padding-bottom: 20px !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    margin-bottom: 12px !important;
+  }
+
+  .footer-accordion {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  }
+
+  .footer-accordion-toggle {
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 16px 0 !important;
+    color: var(--color-white) !important;
+    font-family: var(--font-heading) !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+    text-align: left !important;
+  }
+
+  .accordion-arrow {
+    transition: transform 0.3s ease !important;
+  }
+
+  .footer-accordion.active .accordion-arrow {
+    transform: rotate(180deg) !important;
+  }
+
+  .footer-accordion-content {
+    max-height: 0 !important;
+    overflow: hidden !important;
+    transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), padding 0.3s ease !important;
+    padding: 0 0 !important;
+  }
+
+  .footer-accordion.active .footer-accordion-content {
+    max-height: 320px !important;
+    padding: 0 0 16px !important;
   }
 
   .footer-bottom {
-    flex-direction: column;
-    gap: 16px;
-    text-align: center;
+    flex-direction: column !important;
+    gap: 12px !important;
+    text-align: center !important;
+    margin-top: 24px !important;
+    padding-top: 20px !important;
   }
 
   .custom-cursor {
@@ -2186,101 +2387,51 @@ h1, h2, h3, h4, h5, h6 {
   /* Form iOS Zoom Prevention */
   .form-control, .form-select, input[type="text"], input[type="email"], input[type="tel"], select, textarea {
     font-size: 16px !important;
-    padding: 13px 16px;
+    padding: 14px 16px !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .schedule-mobile-view {
+    display: none !important;
+  }
+  .schedule-desktop-view {
+    display: block !important;
+  }
+  .accordion-arrow {
+    display: none !important;
+  }
+  .footer-accordion-toggle {
+    background: transparent !important;
+    border: none !important;
+    cursor: default !important;
+    pointer-events: none !important;
+    padding: 0 0 16px 0 !important;
+    color: var(--color-white) !important;
+  }
+  .footer-accordion-content {
+    max-height: none !important;
+    display: block !important;
   }
 }
 
 /* Extra Small Screens (< 480px) */
 @media (max-width: 480px) {
   .header-container {
-    padding-left: 16px;
-    padding-right: 16px;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
   }
 
   .brand-title {
-    font-size: 18px;
+    font-size: 17px !important;
   }
 
   .brand-subtitle {
-    font-size: 9px;
+    font-size: 9px !important;
   }
 
   .logo-circle-frame {
-    width: 38px;
-    height: 38px;
-  }
-
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* --------------------------------------------------------------------------
-   AMRAPALI 2026 RESERVATION MODAL STYLES
-   -------------------------------------------------------------------------- */
-body.modal-open {
-  overflow: hidden !important;
-}
-
-.amrapali-modal-card {
-  max-width: 620px;
-  width: 90%;
-  text-align: left;
-  background: var(--color-white);
-  border-radius: var(--radius-large);
-  padding: 36px 40px;
-  border: 1px solid var(--color-border);
-  box-shadow: 0 25px 60px rgba(8, 18, 30, 0.25);
-  position: relative;
-  max-height: 90vh;
-  overflow-y: auto;
-  transform: scale(0.94);
-  opacity: 0;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
-}
-
-.lightbox-modal.active .amrapali-modal-card {
-  transform: scale(1);
-  opacity: 1;
-}
-
-.amrapali-event-summary {
-  background: rgba(8, 18, 30, 0.03);
-  border: 1px solid rgba(8, 18, 30, 0.08);
-  border-radius: var(--radius-medium);
-  padding: 14px 18px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px 16px;
-  font-size: 13px;
-  color: var(--color-navy);
-}
-
-.amrapali-event-summary .summary-item {
-  line-height: 1.4;
-}
-
-.form-row-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-
-@media (max-width: 640px) {
-  .amrapali-modal-card {
-    width: 100%;
-    max-height: 88vh;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-    padding: 24px 20px 32px;
-    position: fixed;
-    bottom: 0;
-    margin-bottom: 0;
-    border-top-left-radius: 24px;
-    border-top-right-radius: 24px;
-    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.35);
-  }
-  .form-row-grid, .amrapali-event-summary {
-    grid-template-columns: 1fr;
+    width: 38px !important;
+    height: 38px !important;
   }
 }

@@ -359,11 +359,11 @@ function renderHomePage() {
     </section>
 
     <!-- BRAND STORY / PHILOSOPHY -->
-    <section class="section-padding" style="padding: 40px 0;">
+    <section class="about-brand-section section-padding">
       <div class="section-container">
         <div style="text-align: center; max-width: 980px; margin: 0 auto;">
-          <h2 class="section-heading" style="font-size: clamp(32px, 4vw, 56px); line-height: 1.08; letter-spacing: -0.035em; margin-bottom: 24px;">Every Step Tells a Story.</h2>
-          <p style="margin: 0 auto; max-width: 900px; font-size: clamp(15px, 1.5vw, 18px); line-height: 1.55; color: var(--color-muted-text); font-weight: 400;">
+          <h2 class="section-heading" style="margin-bottom: 16px;">Every Step Tells a Story.</h2>
+          <p class="about-brand-text" style="margin: 0 auto; color: var(--color-muted-text); font-weight: 400;">
             Dance Darbar Kala Sansthan is a premier performing arts sanctuary where artistic discipline, Indian culture, and creative expression unite. Through structured mentorship in Kathak, Bollywood, Vocal Music, Fine Arts, and Yoga, we empower learners of all ages to build posture, confidence, and stage poise. Every step at Dance Darbar nurtures self-belief, grace, and a lifelong passion for artistic mastery.
           </p>
         </div>
@@ -399,9 +399,11 @@ function renderHomePage() {
               <div>
                 <p class="program-desc">${p.shortDescription}</p>
                 <span style="font-size: 11px; font-weight: 600; color: ${p.onlineAvailable ? '#5EBBEA' : 'rgba(255,255,255,0.5)'}; margin-top: 4px; display: inline-block;">${p.modeBadge}</span>
+                <p style="font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 4px;">👤 ${p.instructor} • 🎓 ${p.ageGroups[0]}</p>
               </div>
               <div class="program-action">
-                <a href="#/programs/${p.slug}" class="btn btn-secondary light">Explore &rarr;</a>
+                <a href="#/programs/${p.slug}" class="btn btn-secondary light" style="flex: 1;">View Details</a>
+                <a href="#/claim-free-seat" class="btn btn-primary" style="flex: 1;">Claim Free Seat</a>
               </div>
             </div>
           `).join('')}
@@ -638,6 +640,7 @@ function renderProgramDetailPage(slug) {
 
 // --- SCHEDULE PAGE TEMPLATE ---
 function renderSchedulePage() {
+  const schedData = renderScheduleRows(DANCE_DATA.schedules);
   return `
     <div style="padding-top: 140px; padding-bottom: 100px;">
       <div class="section-container">
@@ -672,8 +675,8 @@ function renderSchedulePage() {
           </div>
         </div>
 
-        <!-- SCHEDULE TABLE -->
-        <div class="schedule-table-wrap">
+        <!-- SCHEDULE DESKTOP TABLE -->
+        <div class="schedule-table-wrap schedule-desktop-view">
           <table class="schedule-table">
             <thead>
               <tr>
@@ -687,9 +690,14 @@ function renderSchedulePage() {
               </tr>
             </thead>
             <tbody id="schedule-table-body">
-              ${renderScheduleRows(DANCE_DATA.schedules)}
+              ${schedData.table}
             </tbody>
           </table>
+        </div>
+
+        <!-- SCHEDULE MOBILE CARDS -->
+        <div class="schedule-mobile-view" id="schedule-mobile-cards-body">
+          ${schedData.cards}
         </div>
       </div>
     </div>
@@ -698,16 +706,14 @@ function renderSchedulePage() {
 
 function renderScheduleRows(items) {
   if (items.length === 0) {
-    return `
-      <tr>
-        <td colspan="7" style="text-align: center; padding: 40px; color: var(--color-muted-text);">
-          No matching batch currently listed. <a href="#/claim-free-seat" style="color: var(--color-primary-dark); font-weight: 700;">Submit a trial request</a> to request custom batch timings.
-        </td>
-      </tr>
-    `;
+    const emptyMsg = `No matching batch currently listed. <a href="#/claim-free-seat" style="color: var(--color-primary-dark); font-weight: 700;">Submit a trial request</a>`;
+    return {
+      table: `<tr><td colspan="7" style="text-align: center; padding: 40px; color: var(--color-muted-text);">${emptyMsg}</td></tr>`,
+      cards: `<div style="text-align: center; padding: 32px 16px; color: var(--color-muted-text);">${emptyMsg}</div>`
+    };
   }
 
-  return items.map(s => `
+  const tableHtml = items.map(s => `
     <tr>
       <td style="font-weight: 700; color: var(--color-navy);">${s.program}</td>
       <td>${s.level}</td>
@@ -716,10 +722,30 @@ function renderScheduleRows(items) {
       <td>${s.instructor}</td>
       <td><span class="status-badge">${s.availability}</span></td>
       <td>
-        <a href="#/claim-free-seat" class="btn btn-primary" style="padding: 8px 16px; font-size: 12px;">Claim Seat</a>
+        <a href="#/claim-free-seat" class="btn btn-primary" style="padding: 8px 16px; font-size: 12px; min-height: 40px; border-radius: 999px;">Claim Seat</a>
       </td>
     </tr>
   `).join('');
+
+  const cardsHtml = items.map(s => `
+    <div class="schedule-mobile-card">
+      <div class="schedule-card-top">
+        <div>
+          <span class="eyebrow">${s.level} • ${s.ageGroup}</span>
+          <h3 class="schedule-card-title">${s.program}</h3>
+        </div>
+        <span class="status-badge">${s.availability}</span>
+      </div>
+      <div class="schedule-card-details">
+        <p><strong>Instructor:</strong> ${s.instructor}</p>
+        <p><strong>Days:</strong> ${s.day}</p>
+        <p><strong>Timing:</strong> Evening Batch</p>
+      </div>
+      <a href="#/claim-free-seat" class="btn btn-primary full-width" style="margin-top: 14px;">Claim Seat</a>
+    </div>
+  `).join('');
+
+  return { table: tableHtml, cards: cardsHtml };
 }
 
 // --- EVENTS PAGE TEMPLATE ---
@@ -1327,7 +1353,10 @@ function initScheduleFilterEvents() {
       return matchProg && matchDay;
     });
 
-    tableBody.innerHTML = renderScheduleRows(filtered);
+    const res = renderScheduleRows(filtered);
+    if (tableBody) tableBody.innerHTML = res.table;
+    const mobileWrap = document.getElementById('schedule-mobile-cards-body');
+    if (mobileWrap) mobileWrap.innerHTML = res.cards;
   }
 
   if (progFilter) progFilter.addEventListener('change', applyFilters);
@@ -2214,6 +2243,27 @@ window.addEventListener('DOMContentLoaded', () => {
       link.addEventListener('click', closeMenu);
     });
   }
+
+  // Mobile Footer Accordions (Only 1 expanded at a time)
+  document.querySelectorAll('.footer-accordion-toggle').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      if (window.innerWidth > 767) return;
+      e.preventDefault();
+      const parent = btn.closest('.footer-accordion');
+      const isOpen = parent.classList.contains('active');
+
+      document.querySelectorAll('.footer-accordion').forEach(col => {
+        col.classList.remove('active');
+        const t = col.querySelector('.footer-accordion-toggle');
+        if (t) t.setAttribute('aria-expanded', 'false');
+      });
+
+      if (!isOpen) {
+        parent.classList.add('active');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
 
   // Custom Cursor
   const cursor = document.getElementById('custom-cursor');
