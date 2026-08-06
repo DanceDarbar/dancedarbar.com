@@ -1673,6 +1673,20 @@ h1, h2, h3, h4, h5, h6 {
   background-color: var(--color-white);
 }
 
+.trial-form-heading {
+  font-family: var(--font-heading);
+  font-size: 40px;
+  margin-bottom: 12px;
+  color: var(--color-navy);
+}
+
+.trial-form-desc {
+  color: var(--color-muted-text);
+  margin-bottom: 36px;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
 .form-group {
   margin-bottom: 24px;
 }
@@ -2307,6 +2321,106 @@ h1, h2, h3, h4, h5, h6 {
     box-sizing: border-box !important;
     overflow-y: auto !important;
     -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* CLAIM FREE SEAT / TRIAL FORM MOBILE SINGLE COLUMN REDESIGN */
+  .trial-page-layout {
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: auto !important;
+    padding-top: 90px !important;
+    padding-bottom: 48px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    background-color: var(--color-white) !important;
+  }
+
+  .trial-visual-side {
+    display: none !important;
+  }
+
+  .trial-form-side {
+    padding: 32px 20px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    background-color: var(--color-white) !important;
+    display: block !important;
+    margin: 0 auto !important;
+    border-radius: 0 !important;
+  }
+
+  .trial-eyebrow {
+    text-align: center !important;
+    display: block !important;
+    margin-bottom: 8px !important;
+  }
+
+  .trial-form-heading {
+    font-size: clamp(26px, 7vw, 34px) !important;
+    text-align: center !important;
+    margin-bottom: 10px !important;
+    line-height: 1.2 !important;
+  }
+
+  .trial-form-desc {
+    font-size: 14.5px !important;
+    text-align: center !important;
+    margin-bottom: 28px !important;
+    color: var(--color-muted-text) !important;
+    line-height: 1.5 !important;
+  }
+
+  .form-group {
+    margin-bottom: 18px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .form-label {
+    display: block !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    text-align: left !important;
+    margin-bottom: 6px !important;
+    color: var(--color-navy) !important;
+  }
+
+  .form-control, select.form-control {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    height: 52px !important;
+    min-height: 52px !important;
+    padding: 14px 16px !important;
+    font-size: 16px !important;
+    border-radius: 12px !important;
+    background: var(--color-off-white) !important;
+    border: 1px solid var(--color-border) !important;
+    color: var(--color-navy) !important;
+  }
+
+  select.form-control {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%2308121E' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 14px center !important;
+    background-size: 20px !important;
+    padding-right: 40px !important;
+  }
+
+  .trial-form-side .btn-primary {
+    width: 100% !important;
+    height: 52px !important;
+    min-height: 52px !important;
+    border-radius: 999px !important;
+    font-size: 15px !important;
+    justify-content: center !important;
+    margin-top: 12px !important;
+    box-sizing: border-box !important;
   }
 
   .amrapali-modal-card {

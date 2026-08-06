@@ -904,9 +904,9 @@ function renderClaimFreeSeatPage() {
       </div>
 
       <div class="trial-form-side">
-        <span class="eyebrow">Free Trial Registration</span>
-        <h1 style="font-size: 40px; margin-bottom: 12px;">Claim Your Free Trial Seat.</h1>
-        <p style="color: var(--color-muted-text); margin-bottom: 36px;">Tell us who the class is for and which class interests you. Our team will contact you with batch availability.</p>
+        <span class="eyebrow trial-eyebrow">Free Trial Registration</span>
+        <h1 class="trial-form-heading">Claim Your Free Trial Seat.</h1>
+        <p class="trial-form-desc">Tell us who the class is for and which class interests you. Our team will contact you with batch availability.</p>
 
         <form id="trial-seat-form" novalidate>
           <div class="form-group">
@@ -955,7 +955,7 @@ function renderClaimFreeSeatPage() {
             <span class="error-text" id="err-address">Please enter your address or locality.</span>
           </div>
 
-          <button type="submit" class="btn btn-primary full-width" style="padding: 18px; margin-top: 12px;" id="trial-submit-btn">
+          <button type="submit" class="btn btn-primary full-width" style="margin-top: 12px;" id="trial-submit-btn">
             <span>Claim Free Seat</span>
             <svg class="btn-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </button>
