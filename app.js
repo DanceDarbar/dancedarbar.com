@@ -507,8 +507,7 @@ function renderHomePage() {
                 <p style="font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 4px;">👤 ${p.instructor} • 🎓 ${p.ageGroups[0]}</p>
               </div>
               <div class="program-card-actions">
-                <a href="#/programs/${p.slug}" class="btn btn-secondary light">View Details</a>
-                <a href="#/claim-free-seat" class="btn btn-primary">Claim Free Seat</a>
+                <a href="#/programs/${p.slug}" class="btn btn-secondary light">View Details &rarr;</a>
               </div>
             </div>
           `).join('')}
@@ -655,7 +654,6 @@ function renderProgramsPage() {
                 </div>
                 <div class="program-card-actions">
                   <a href="#/programs/${p.slug}" class="btn btn-secondary">View Details &rarr;</a>
-                  <a href="#/claim-free-seat" class="btn btn-primary">Claim Free Seat</a>
                 </div>
               </div>
               <div class="editorial-media" style="border-radius: var(--radius-medium);">
