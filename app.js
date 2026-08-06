@@ -10,25 +10,127 @@ const EMAIL_CONFIG = {
   adminEmail: 'dancedarbar96@gmail.com'
 };
 
-async function sendEmailNotification(subject, formData) {
+const EMAIL_QUEUE_KEY = 'dance_darbar_email_queue_v1';
+
+function sanitizeInput(str) {
+  if (typeof str !== 'string') return '';
+  return str.replace(/[&<>"']/g, function(m) {
+    return {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#039;'
+    }[m];
+  });
+}
+
+function getEmailQueue() {
   try {
-    const payload = {
-      access_key: EMAIL_CONFIG.accessKey,
-      subject: subject,
-      from_name: 'Dance Darbar Website',
-      to: EMAIL_CONFIG.adminEmail,
-      ...formData
-    };
+    const q = localStorage.getItem(EMAIL_QUEUE_KEY);
+    return q ? JSON.parse(q) : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveEmailQueue(q) {
+  try {
+    localStorage.setItem(EMAIL_QUEUE_KEY, JSON.stringify(q));
+  } catch (e) {}
+}
+
+function queueEmailForRetry(payload) {
+  const queue = getEmailQueue();
+  const exists = queue.some(item => JSON.stringify(item) === JSON.stringify(payload));
+  if (!exists) {
+    queue.push(payload);
+    saveEmailQueue(queue);
+  }
+}
+
+async function processEmailQueue() {
+  const queue = getEmailQueue();
+  if (queue.length === 0) return;
+
+  console.log(`Processing email retry queue (${queue.length} item(s))...`);
+  const remaining = [];
+
+  for (const payload of queue) {
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (!data.success) remaining.push(payload);
+    } catch (err) {
+      remaining.push(payload);
+    }
+  }
+
+  saveEmailQueue(remaining);
+}
+
+// Auto-retry emails on internet reconnection
+window.addEventListener('online', processEmailQueue);
+
+async function sendEmailNotification(subject, formData) {
+  const sanitizedForm = {};
+  for (const key in formData) {
+    sanitizedForm[key] = sanitizeInput(String(formData[key]));
+  }
+
+  const payload = {
+    access_key: EMAIL_CONFIG.accessKey,
+    subject: subject,
+    from_name: 'Dance Darbar Backend System',
+    to: EMAIL_CONFIG.adminEmail,
+    ...sanitizedForm
+  };
+
+  try {
     const res = await fetch('https://api.web3forms.com/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
     const data = await res.json();
-    console.log('Email sent:', data.success);
+    if (data.success) {
+      console.log('Admin email notification delivered:', subject);
+      return true;
+    } else {
+      console.warn('Web3Forms returned failure, queueing email for retry.');
+      queueEmailForRetry(payload);
+      return false;
+    }
+  } catch (err) {
+    console.warn('Network error during email dispatch, queueing for retry.', err);
+    queueEmailForRetry(payload);
+    return false;
+  }
+}
+
+async function sendCustomerConfirmationEmail(toEmail, subject, details) {
+  const payload = {
+    access_key: EMAIL_CONFIG.accessKey,
+    subject: subject,
+    from_name: 'Dance Darbar Kala Sansthan',
+    to: sanitizeInput(toEmail),
+    ...details
+  };
+
+  try {
+    const res = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
     return data.success;
   } catch (err) {
-    console.warn('Email notification failed:', err);
+    queueEmailForRetry(payload);
     return false;
   }
 }
@@ -307,6 +409,9 @@ function renderApp() {
     appRoot.innerHTML = renderPrivacyPage();
   } else if (route === '/terms') {
     appRoot.innerHTML = renderTermsPage();
+  } else if (route === '/admin') {
+    appRoot.innerHTML = renderAdminPage();
+    initAdminPageEvents();
   } else {
     appRoot.innerHTML = renderHomePage();
     initHomePageEvents();
@@ -1493,16 +1598,17 @@ function initTrialFormEvents() {
       list.unshift(newEntry);
       saveTrialRegistrations(list);
 
-      // Send email notification to admin
-      sendEmailNotification('🎯 New Free Trial Seat Claimed!', {
+      // Send email notification to admin (dancedarbar96@gmail.com)
+      sendEmailNotification('🎓 New Free Trial Registration', {
         'Registration ID': newEntry.id,
         'Student Name': newEntry.studentName,
         'Age Group': newEntry.ageGroup,
         'Interested Class': newEntry.interestedClass,
         'Phone Number': newEntry.phone,
-        'Address': newEntry.address,
-        'Submitted At': newEntry.submittedAt,
-        'Message': `New trial seat claimed by ${newEntry.studentName} for ${newEntry.interestedClass} class. Phone: ${newEntry.phone}`
+        'Residential Address': newEntry.address,
+        'Submission Date & Time': newEntry.submittedAt,
+        'Browser / Device': navigator.userAgent,
+        'Message': `New Free Trial Registration submitted by ${newEntry.studentName} for ${newEntry.interestedClass}. Phone: ${newEntry.phone}`
       });
 
       form.style.display = 'none';
@@ -2144,9 +2250,10 @@ function initAmrapaliModalEvents() {
       if (errEl) errEl.style.display = 'none';
 
       if (activeBooking) {
-        activeBooking.txnId = txnIdInput.value.trim();
-        activeBooking.screenshotName = fileInput.files[0] ? fileInput.files[0].name : '';
+        activeBooking.txnId = sanitizeInput(txnIdInput.value.trim());
+        activeBooking.screenshotName = fileInput.files[0] ? sanitizeInput(fileInput.files[0].name) : '';
         activeBooking.status = 'Verification Pending';
+        activeBooking.paymentStatus = 'Successful (Pending Verification)';
         
         const bookings = getAmrapaliBookings();
         const idx = bookings.findIndex(b => b.bookingRef === activeBooking.bookingRef);
@@ -2154,6 +2261,39 @@ function initAmrapaliModalEvents() {
           bookings[idx] = activeBooking;
           saveAmrapaliBookings(bookings);
         }
+
+        // Send Detailed Email Notification to Admin (dancedarbar96@gmail.com)
+        sendEmailNotification('✅ New AMRAPALI 2026 Seat Reservation', {
+          'Reservation ID': activeBooking.bookingRef,
+          'Full Name': activeBooking.fullName,
+          'Phone Number': activeBooking.phone,
+          'Email Address': activeBooking.email,
+          'Number of Seats': activeBooking.seatCount,
+          'Attendee Type': activeBooking.attendeeType,
+          'Event Name': 'AMRAPALI 2026 - Annual Student Dance Ballet',
+          'Date': '23 August 2026 (Sunday)',
+          'Time': '4:00 PM - 9:00 PM',
+          'Venue': 'CCRT Auditorium, Dwarka Sector 7, New Delhi',
+          'Payment Status': activeBooking.paymentStatus,
+          'Payment ID / Transaction ID': activeBooking.txnId,
+          'Booking Date & Time': new Date().toLocaleString(),
+          'User Device': navigator.userAgent,
+          'Message': `New verified seat reservation by ${activeBooking.fullName} for AMRAPALI 2026 (${activeBooking.seatCount}, ₹${activeBooking.totalAmount}). Txn Ref: ${activeBooking.txnId}`
+        });
+
+        // Send Automated Confirmation Email to Customer
+        sendCustomerConfirmationEmail(activeBooking.email, `🎟️ Confirmation: AMRAPALI 2026 Seat Reservation (${activeBooking.bookingRef})`, {
+          'Booking ID': activeBooking.bookingRef,
+          'Guest Name': activeBooking.fullName,
+          'Event Name': 'AMRAPALI 2026 - Annual Student Dance Ballet',
+          'Date & Time': '23 August 2026 (Sunday), 4:00 PM to 9:00 PM',
+          'Venue': 'CCRT Auditorium, Dwarka Sector 7, New Delhi',
+          'Seats Reserved': activeBooking.seatCount,
+          'Payment Status': 'Successful',
+          'Payment Receipt': `₹${activeBooking.totalAmount}`,
+          'Invitation Card': 'Downloadable from website dashboard',
+          'Contact': 'dancedarbar96@gmail.com | +91 98711 39600'
+        });
       }
 
       // Update Step 3 UI
@@ -2212,6 +2352,245 @@ function initAmrapaliModalEvents() {
 // --------------------------------------------------------------------------
 // 5. GLOBAL HEADER & CURSOR CONTROLLER
 // --------------------------------------------------------------------------
+// --- ADMIN DASHBOARD TEMPLATE & LOGIC ---
+function renderAdminPage() {
+  const trialList = getTrialRegistrations();
+  const bookingList = getAmrapaliBookings();
+  const totalSeats = bookingList.reduce((acc, b) => acc + (b.numSeats || parseInt(b.seatCount) || 1), 0);
+  const totalPaid = bookingList.filter(b => b.status === 'Paid' || b.paymentStatus === 'Successful' || b.paymentStatus === 'Successful (Pending Verification)').reduce((acc, b) => acc + (b.totalAmount || 0), 0);
+
+  return `
+    <div style="padding-top: 120px; padding-bottom: 80px; min-height: 85vh; background: var(--color-off-white);">
+      <div class="section-container">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 32px;">
+          <div>
+            <span class="eyebrow">Backend Management</span>
+            <h1 class="section-heading" style="font-size: 32px; margin-top: 4px;">Admin Dashboard</h1>
+            <p style="font-size: 14px; color: var(--color-muted-text);">Primary Admin Email: <strong>dancedarbar96@gmail.com</strong></p>
+          </div>
+          <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <button id="admin-export-trials" class="btn btn-secondary" style="font-size: 13px; min-height: 44px; padding: 0 18px;">📥 Export Trials CSV</button>
+            <button id="admin-export-bookings" class="btn btn-primary" style="font-size: 13px; min-height: 44px; padding: 0 18px;">📥 Export Bookings CSV</button>
+          </div>
+        </div>
+
+        <!-- STATS OVERVIEW -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px;">
+          <div style="background: var(--color-white); border-radius: var(--radius-medium); padding: 20px; border: 1px solid var(--color-border); box-shadow: 0 4px 12px rgba(8,18,30,0.03);">
+            <span style="font-size: 11px; font-weight: 700; color: var(--color-muted-text); text-transform: uppercase; letter-spacing: 0.08em;">Trial Registrations</span>
+            <h3 style="font-size: 28px; font-weight: 800; color: var(--color-navy); margin-top: 4px;">${trialList.length}</h3>
+          </div>
+          <div style="background: var(--color-white); border-radius: var(--radius-medium); padding: 20px; border: 1px solid var(--color-border); box-shadow: 0 4px 12px rgba(8,18,30,0.03);">
+            <span style="font-size: 11px; font-weight: 700; color: var(--color-muted-text); text-transform: uppercase; letter-spacing: 0.08em;">AMRAPALI Event Bookings</span>
+            <h3 style="font-size: 28px; font-weight: 800; color: var(--color-navy); margin-top: 4px;">${bookingList.length}</h3>
+          </div>
+          <div style="background: var(--color-white); border-radius: var(--radius-medium); padding: 20px; border: 1px solid var(--color-border); box-shadow: 0 4px 12px rgba(8,18,30,0.03);">
+            <span style="font-size: 11px; font-weight: 700; color: var(--color-muted-text); text-transform: uppercase; letter-spacing: 0.08em;">Total Seats Reserved</span>
+            <h3 style="font-size: 28px; font-weight: 800; color: var(--color-primary-dark); margin-top: 4px;">${totalSeats}</h3>
+          </div>
+          <div style="background: var(--color-white); border-radius: var(--radius-medium); padding: 20px; border: 1px solid var(--color-border); box-shadow: 0 4px 12px rgba(8,18,30,0.03);">
+            <span style="font-size: 11px; font-weight: 700; color: var(--color-muted-text); text-transform: uppercase; letter-spacing: 0.08em;">Total Revenue Collected</span>
+            <h3 style="font-size: 28px; font-weight: 800; color: #10B981; margin-top: 4px;">₹${totalPaid}</h3>
+          </div>
+        </div>
+
+        <!-- FILTERS -->
+        <div style="background: var(--color-white); border-radius: var(--radius-medium); padding: 20px; border: 1px solid var(--color-border); margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: center;">
+          <div style="flex: 1; min-width: 260px;">
+            <input type="text" id="admin-search-input" class="form-control" placeholder="🔍 Search by Name, Phone, Email, or Booking Ref..." style="padding: 12px 16px; font-size: 14px;">
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button id="admin-btn-trials" class="btn btn-primary admin-tab-btn" style="font-size: 13px; min-height: 40px; padding: 0 16px;">Free Trials (${trialList.length})</button>
+            <button id="admin-btn-bookings" class="btn btn-secondary admin-tab-btn" style="font-size: 13px; min-height: 40px; padding: 0 16px;">Event Bookings (${bookingList.length})</button>
+          </div>
+        </div>
+
+        <!-- TABLE CONTAINER -->
+        <div style="background: var(--color-white); border-radius: var(--radius-medium); border: 1px solid var(--color-border); overflow-x: auto; box-shadow: 0 10px 30px rgba(8,18,30,0.04);">
+          <div id="admin-table-container">
+            ${renderAdminTrialsTable(trialList)}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderAdminTrialsTable(list) {
+  if (!list || list.length === 0) {
+    return `<div style="padding: 40px; text-align: center; color: var(--color-muted-text);">No trial registrations found.</div>`;
+  }
+  return `
+    <table class="schedule-table" style="min-width: 800px; width: 100%;">
+      <thead>
+        <tr>
+          <th>Reg ID</th>
+          <th>Student Name</th>
+          <th>Age Group</th>
+          <th>Interested Class</th>
+          <th>Phone</th>
+          <th>Address</th>
+          <th>Submitted At</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${list.map(item => `
+          <tr>
+            <td style="font-family: monospace; font-weight: 700; color: var(--color-primary-dark);">${sanitizeInput(item.id)}</td>
+            <td style="font-weight: 600;">${sanitizeInput(item.studentName)}</td>
+            <td><span class="status-badge">${sanitizeInput(item.ageGroup)}</span></td>
+            <td><strong>${sanitizeInput(item.interestedClass)}</strong></td>
+            <td><a href="tel:${sanitizeInput(item.phone)}" style="color: var(--color-navy); font-weight: 600;">${sanitizeInput(item.phone)}</a></td>
+            <td style="max-width: 200px; font-size: 13.5px;">${sanitizeInput(item.address)}</td>
+            <td style="font-size: 13px; color: var(--color-muted-text);">${sanitizeInput(item.submittedAt)}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+}
+
+function renderAdminBookingsTable(list) {
+  if (!list || list.length === 0) {
+    return `<div style="padding: 40px; text-align: center; color: var(--color-muted-text);">No event bookings found.</div>`;
+  }
+  return `
+    <table class="schedule-table" style="min-width: 900px; width: 100%;">
+      <thead>
+        <tr>
+          <th>Booking Ref</th>
+          <th>Guest Name</th>
+          <th>Phone</th>
+          <th>Email</th>
+          <th>Seats</th>
+          <th>Amount</th>
+          <th>Txn Ref ID</th>
+          <th>Payment Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${list.map(item => `
+          <tr>
+            <td style="font-family: monospace; font-weight: 700; color: var(--color-primary-dark);">${sanitizeInput(item.bookingRef)}</td>
+            <td style="font-weight: 600;">${sanitizeInput(item.fullName)}</td>
+            <td><a href="tel:${sanitizeInput(item.phone)}" style="color: var(--color-navy); font-weight: 600;">${sanitizeInput(item.phone)}</a></td>
+            <td style="font-size: 13px;">${sanitizeInput(item.email)}</td>
+            <td><strong>${sanitizeInput(String(item.seatCount))}</strong></td>
+            <td style="font-weight: 700; color: #10B981;">₹${item.totalAmount}</td>
+            <td style="font-family: monospace; font-size: 12.5px;">${sanitizeInput(item.txnId || 'Pending')}</td>
+            <td><span class="status-badge">${sanitizeInput(item.status || item.paymentStatus || 'Pending')}</span></td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+}
+
+function initAdminPageEvents() {
+  let activeTab = 'trials';
+  const container = document.getElementById('admin-table-container');
+  const searchInput = document.getElementById('admin-search-input');
+  const btnTrials = document.getElementById('admin-btn-trials');
+  const btnBookings = document.getElementById('admin-btn-bookings');
+  const btnExportTrials = document.getElementById('admin-export-trials');
+  const btnExportBookings = document.getElementById('admin-export-bookings');
+
+  function updateTable() {
+    const q = (searchInput.value || '').toLowerCase().trim();
+    if (activeTab === 'trials') {
+      let list = getTrialRegistrations();
+      if (q) {
+        list = list.filter(t => 
+          (t.studentName || '').toLowerCase().includes(q) ||
+          (t.phone || '').toLowerCase().includes(q) ||
+          (t.interestedClass || '').toLowerCase().includes(q) ||
+          (t.id || '').toLowerCase().includes(q)
+        );
+      }
+      container.innerHTML = renderAdminTrialsTable(list);
+    } else {
+      let list = getAmrapaliBookings();
+      if (q) {
+        list = list.filter(b => 
+          (b.fullName || '').toLowerCase().includes(q) ||
+          (b.phone || '').toLowerCase().includes(q) ||
+          (b.email || '').toLowerCase().includes(q) ||
+          (b.bookingRef || '').toLowerCase().includes(q) ||
+          (b.txnId || '').toLowerCase().includes(q)
+        );
+      }
+      container.innerHTML = renderAdminBookingsTable(list);
+    }
+  }
+
+  if (btnTrials) {
+    btnTrials.addEventListener('click', () => {
+      activeTab = 'trials';
+      btnTrials.className = 'btn btn-primary admin-tab-btn';
+      btnBookings.className = 'btn btn-secondary admin-tab-btn';
+      updateTable();
+    });
+  }
+
+  if (btnBookings) {
+    btnBookings.addEventListener('click', () => {
+      activeTab = 'bookings';
+      btnBookings.className = 'btn btn-primary admin-tab-btn';
+      btnTrials.className = 'btn btn-secondary admin-tab-btn';
+      updateTable();
+    });
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener('input', updateTable);
+  }
+
+  if (btnExportTrials) {
+    btnExportTrials.addEventListener('click', () => {
+      const list = getTrialRegistrations();
+      exportToCSV('dance_darbar_trial_registrations.csv', list);
+    });
+  }
+
+  if (btnExportBookings) {
+    btnExportBookings.addEventListener('click', () => {
+      const list = getAmrapaliBookings();
+      exportToCSV('dance_darbar_amrapali_bookings.csv', list);
+    });
+  }
+}
+
+function exportToCSV(filename, rows) {
+  if (!rows || !rows.length) return;
+  const separator = ',';
+  const keys = Object.keys(rows[0]);
+  const csvContent =
+    keys.join(separator) +
+    '\n' +
+    rows.map(row => {
+      return keys.map(k => {
+        let cell = row[k] === null || row[k] === undefined ? '' : row[k];
+        cell = cell.toString().replace(/"/g, '""');
+        if (cell.search(/("|,|\n)/g) >= 0) {
+          cell = `"${cell}"`;
+        }
+        return cell;
+      }).join(separator);
+    }).join('\n');
+
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  if (link.download !== undefined) {
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   initAmrapaliModalEvents();
 
