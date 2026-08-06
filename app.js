@@ -376,7 +376,7 @@ function renderHomePage() {
         ${DANCE_DATA.programs.map((p, idx) => p.video ? `
           <video src="${p.video}" autoplay loop muted playsinline class="program-bg-preview ${idx === 0 ? 'active' : ''}" data-prog-bg="${p.slug}"></video>
         ` : `
-          <img src="${p.image}" alt="${p.name}" class="program-bg-preview ${idx === 0 ? 'active' : ''}" data-prog-bg="${p.slug}">
+          <img src="${p.image}" alt="${p.name}" loading="lazy" decoding="async" class="program-bg-preview ${idx === 0 ? 'active' : ''}" data-prog-bg="${p.slug}">
         `).join('')}
       </div>
       <div class="program-index-content">
@@ -415,7 +415,7 @@ function renderHomePage() {
         <span class="eyebrow light">Upcoming Performance</span>
         <div class="event-banner-card">
           <div class="event-media-side cursor-target-view">
-            <img src="${amrapaliEvent.image}" alt="${amrapaliEvent.title}" class="event-img">
+            <img src="${amrapaliEvent.image}" alt="${amrapaliEvent.title}" loading="lazy" decoding="async" class="event-img">
           </div>
           <div class="event-info-side">
             <span class="eyebrow light">${amrapaliEvent.tagline}</span>
@@ -555,7 +555,7 @@ function renderProgramsPage() {
                 ${p.video ? `
                   <video src="${p.video}" autoplay loop muted playsinline class="editorial-img" style="height: 380px; width: 100%; object-fit: cover;"></video>
                 ` : `
-                  <img src="${p.image}" alt="${p.name}" class="editorial-img" style="height: 380px;">
+                  <img src="${p.image}" alt="${p.name}" loading="lazy" decoding="async" class="editorial-img" style="height: 380px;">
                 `}
               </div>
             </div>
@@ -592,7 +592,7 @@ function renderProgramDetailPage(slug) {
             ${prog.video ? `
               <video src="${prog.video}" autoplay loop muted playsinline class="editorial-img" style="height: 440px; width: 100%; object-fit: cover;"></video>
             ` : `
-              <img src="${prog.image}" alt="${prog.name}" class="editorial-img" style="height: 440px;">
+              <img src="${prog.image}" alt="${prog.name}" loading="lazy" decoding="async" class="editorial-img" style="height: 440px;">
             `}
           </div>
         </div>
@@ -734,7 +734,7 @@ function renderEventsPage() {
 
         <div class="event-banner-card">
           <div class="event-media-side">
-            <img src="${ev.image}" alt="${ev.title}" class="event-img">
+            <img src="${ev.image}" alt="${ev.title}" loading="lazy" decoding="async" class="event-img">
           </div>
           <div class="event-info-side">
             <span class="eyebrow light">${ev.tagline}</span>
@@ -789,7 +789,7 @@ function renderEventDetailPage(slug) {
             <a href="#/claim-free-seat" class="btn btn-primary">Reserve Seat</a>
           </div>
           <div class="editorial-media">
-            <img src="${ev.image}" alt="${ev.title}" class="editorial-img" style="height: 480px;">
+            <img src="${ev.image}" alt="${ev.title}" loading="lazy" decoding="async" class="editorial-img" style="height: 480px;">
           </div>
         </div>
       </div>
@@ -841,7 +841,7 @@ function renderGalleryItems(category) {
 
   return filtered.map((item, idx) => `
     <div class="gallery-card ${item.tall ? 'tall' : ''} motion-graphic-card cursor-target-view" data-src="${item.image}" data-title="${item.title}" data-subtitle="${item.subtitle}" data-url="${item.instagramUrl}" style="animation-delay: ${idx * 0.08}s">
-      <img src="${item.image}" alt="${item.title}" class="gallery-thumb">
+      <img src="${item.image}" alt="${item.title}" loading="lazy" decoding="async" class="gallery-thumb">
       <div class="reel-badge">
         <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
         <span>Reel</span>
@@ -865,7 +865,7 @@ function renderClaimFreeSeatPage() {
   return `
     <div class="trial-page-layout">
       <div class="trial-visual-side">
-        <img src="assets/hero-bg.jpg" alt="Dance Darbar Rehearsal" class="trial-visual-img">
+        <img src="assets/hero-bg.jpg" alt="Dance Darbar Rehearsal" loading="lazy" decoding="async" class="trial-visual-img">
         <div style="position: absolute; bottom: 60px; left: 60px; right: 60px; z-index: 2; color: var(--color-white);">
           <span class="eyebrow light">Trial Class Admission</span>
           <h2 style="font-size: 36px; color: var(--color-white); margin-bottom: 12px;">Experience Dance Darbar.</h2>
@@ -958,7 +958,7 @@ function renderAboutPage() {
             <p>Our vision is to nurture confident, expressive artists who embody poise, cultural literacy, and creative self-assurance on stage and in life.</p>
           </div>
           <div class="editorial-media">
-            <img src="assets/amrapali.jpg" alt="Academy Milestone" class="editorial-img" style="height: 400px;">
+            <img src="assets/amrapali.jpg" alt="Academy Milestone" loading="lazy" decoding="async" class="editorial-img" style="height: 400px;">
           </div>
         </div>
       </div>
@@ -1493,8 +1493,23 @@ function initContactFormEvents() {
   if (form) {
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      alert('Thank you for contacting Dance Darbar. We will reach out to you shortly!');
-      form.reset();
+      const submitBtn = form.querySelector('button[type="submit"]');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span>Sending...</span>';
+      }
+
+      sendEmailNotification('📩 New Contact Message Received!', {
+        'Submitted At': new Date().toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }),
+        'Message': 'A new contact form inquiry was submitted on Dance Darbar website.'
+      }).then(() => {
+        alert('Thank you for contacting Dance Darbar Kala Sansthan! We will reach out to you shortly.');
+        form.reset();
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<span>Send Message</span>';
+        }
+      });
     });
   }
 }
