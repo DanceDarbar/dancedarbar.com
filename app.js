@@ -2177,17 +2177,26 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Mobile Drawer Toggle
+  // Mobile Drawer Toggle & Scroll Lock
   const toggle = document.getElementById('mobile-menu-toggle');
   const closeBtn = document.getElementById('mobile-menu-close');
   const overlay = document.getElementById('mobile-menu-overlay');
 
   if (toggle && overlay) {
-    toggle.addEventListener('click', () => overlay.classList.add('active'));
-    closeBtn.addEventListener('click', () => overlay.classList.remove('active'));
+    const openMenu = () => {
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    };
+    const closeMenu = () => {
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+    };
 
-    document.querySelectorAll('.mobile-link').forEach(link => {
-      link.addEventListener('click', () => overlay.classList.remove('active'));
+    toggle.addEventListener('click', openMenu);
+    if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+
+    document.querySelectorAll('.mobile-link, .mobile-cta').forEach(link => {
+      link.addEventListener('click', closeMenu);
     });
   }
 
