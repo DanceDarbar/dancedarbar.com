@@ -1965,17 +1965,19 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @media (max-width: 767px) {
+  /* Global Container Padding & Box Model Safety */
   .header-container, .section-container, .hero-content, .program-index-content, .footer-container {
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    box-sizing: border-box !important;
   }
 
   .desktop-nav, .header-cta-wrap .nav-cta {
-    display: none;
+    display: none !important;
   }
 
   .mobile-menu-toggle {
-    display: flex;
+    display: flex !important;
   }
 
   /* Header 70px Height */
@@ -2076,7 +2078,7 @@ h1, h2, h3, h4, h5, h6 {
     gap: 12px !important;
   }
 
-  /* 52px Minimum Height & Pill Radius for All Mobile Buttons */
+  /* 52px Minimum Height & Pill Radius for Mobile Touch Buttons */
   .btn {
     min-height: 52px !important;
     height: 52px !important;
@@ -2084,14 +2086,216 @@ h1, h2, h3, h4, h5, h6 {
     width: 100% !important;
     justify-content: center !important;
     font-size: 15px !important;
-    padding: 0 24px !important;
+    padding: 0 20px !important;
+    box-sizing: border-box !important;
   }
 
   .btn:active {
     transform: scale(0.98);
   }
 
-  /* About Brand Section: 32px Top, 24px Bottom, 20px Horizontal, Max 4 Lines */
+  /* 1. EVENTS SECTION - Apple/Stripe Style Two-Column Meta Alignment */
+  .event-banner-card {
+    grid-template-columns: 1fr !important;
+    max-height: none !important;
+    padding: 0 !important;
+    border-radius: 24px !important;
+    overflow: hidden !important;
+    box-shadow: 0 12px 36px rgba(8, 18, 30, 0.25) !important;
+  }
+
+  .event-media-side {
+    min-height: 180px !important;
+    height: 180px !important;
+    max-height: 180px !important;
+  }
+
+  .event-info-side {
+    padding: 24px 20px !important;
+  }
+
+  .event-meta-list {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    margin-bottom: 24px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+    padding-top: 16px !important;
+  }
+
+  .meta-row {
+    display: grid !important;
+    grid-template-columns: 65px 1fr !important;
+    align-items: baseline !important;
+    gap: 12px !important;
+    font-size: 13.5px !important;
+  }
+
+  .meta-label {
+    color: rgba(255, 255, 255, 0.5) !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    font-size: 11px !important;
+    letter-spacing: 0.1em !important;
+    white-space: nowrap !important;
+    text-align: left !important;
+  }
+
+  .meta-val {
+    color: var(--color-white) !important;
+    font-weight: 600 !important;
+    line-height: 1.4 !important;
+    text-align: right !important;
+    word-break: break-word !important;
+  }
+
+  /* 2. CLASSES CARDS & BUTTON ALIGNMENT */
+  .editorial-split {
+    grid-template-columns: 1fr !important;
+    padding: 24px 20px !important;
+    border-radius: 24px !important;
+    gap: 20px !important;
+    box-sizing: border-box !important;
+  }
+
+  .program-card-actions {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 8px !important;
+    width: 100% !important;
+    margin-top: 20px !important;
+    box-sizing: border-box !important;
+  }
+
+  .program-card-actions .btn {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    font-size: 12.5px !important;
+    padding: 0 8px !important;
+    height: 46px !important;
+    min-height: 46px !important;
+    border-radius: 999px !important;
+    justify-content: center !important;
+    white-space: nowrap !important;
+    box-sizing: border-box !important;
+  }
+
+  .program-list {
+    gap: 20px !important;
+  }
+
+  .program-item {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    padding: 20px !important;
+    background: rgba(255, 255, 255, 0.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.14) !important;
+    border-radius: 24px !important;
+    box-shadow: 0 12px 32px rgba(8, 18, 30, 0.18) !important;
+    gap: 12px !important;
+    transform: none !important;
+    box-sizing: border-box !important;
+  }
+
+  .program-desc {
+    display: block !important;
+    font-size: 14px !important;
+    color: rgba(255, 255, 255, 0.85) !important;
+    padding-right: 0 !important;
+    line-height: 1.5 !important;
+  }
+
+  /* 3. MOMENTS OF MOVEMENT & EXPRESSION (Gallery & Filter Chips) */
+  .gallery-filter-bar {
+    display: flex !important;
+    gap: 8px !important;
+    margin: 20px 0 24px !important;
+    justify-content: flex-start !important;
+    overflow-x: auto !important;
+    flex-wrap: nowrap !important;
+    padding-bottom: 8px !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .filter-btn {
+    flex: 0 0 auto !important;
+    padding: 8px 16px !important;
+    font-size: 13px !important;
+    min-height: 40px !important;
+    white-space: nowrap !important;
+    border-radius: 999px !important;
+  }
+
+  .masonry-gallery {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+    width: 100% !important;
+  }
+
+  .gallery-card, .gallery-card.tall {
+    grid-row: span 1 !important;
+    height: 240px !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
+  }
+
+  .gallery-thumb {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    border-radius: 16px !important;
+  }
+
+  /* 4. STATISTICS SECTION */
+  .stats-section {
+    padding: 32px 0 !important;
+  }
+
+  .stats-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .stat-item {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    padding: 16px 6px !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 16px !important;
+    box-sizing: border-box !important;
+  }
+
+  .stat-number, .stat-value {
+    font-family: var(--font-heading) !important;
+    font-size: clamp(16px, 4.5vw, 22px) !important;
+    font-weight: 800 !important;
+    color: var(--color-primary) !important;
+    line-height: 1.1 !important;
+    margin-bottom: 4px !important;
+    white-space: nowrap !important;
+    text-align: center !important;
+  }
+
+  .stat-label {
+    font-size: 10px !important;
+    font-weight: 600 !important;
+    color: rgba(255, 255, 255, 0.75) !important;
+    line-height: 1.25 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+    text-align: center !important;
+  }
+
+  /* About Brand Section */
   .about-brand-section {
     padding: 32px 20px 24px !important;
     text-align: center !important;
@@ -2109,22 +2313,22 @@ h1, h2, h3, h4, h5, h6 {
 
   /* Typography Scale */
   h1, .display-heading {
-    font-size: 38px !important;
-    line-height: 1.2 !important;
+    font-size: 34px !important;
+    line-height: 1.18 !important;
   }
 
   h2, .section-heading {
-    font-size: 30px !important;
-    line-height: 1.25 !important;
+    font-size: 28px !important;
+    line-height: 1.22 !important;
   }
 
   h3 {
-    font-size: 22px !important;
+    font-size: 20px !important;
     line-height: 1.3 !important;
   }
 
   .section-padding {
-    padding: 48px 0 !important;
+    padding: 44px 0 !important;
   }
 
   .eyebrow {
@@ -2132,80 +2336,7 @@ h1, h2, h3, h4, h5, h6 {
     letter-spacing: 0.12em !important;
   }
 
-  /* Mobile Grid Adaptations */
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 16px !important;
-  }
-
-  .stat-number {
-    font-size: 32px !important;
-  }
-
-  .stat-label {
-    font-size: 12px !important;
-  }
-
-  .experience-panels-grid {
-    grid-template-columns: 1fr !important;
-    gap: 20px !important;
-  }
-
-  /* 2-Column Masonry Gallery for Mobile */
-  .masonry-gallery {
-    display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 12px !important;
-  }
-
-  .gallery-card {
-    border-radius: 16px !important;
-  }
-
-  .gallery-card.tall {
-    height: 220px !important;
-  }
-
-  .mentors-grid {
-    grid-template-columns: 1fr !important;
-    gap: 24px !important;
-  }
-
-  .mentor-card {
-    grid-template-columns: 1fr !important;
-  }
-
-  /* Event Banner: ~30% Reduced Card Height */
-  .event-banner-card {
-    grid-template-columns: 1fr !important;
-    max-height: none !important;
-    padding: 0 !important;
-    border-radius: 24px !important;
-  }
-
-  .event-media-side {
-    min-height: 180px !important;
-    height: 180px !important;
-    max-height: 180px !important;
-  }
-
-  .event-info-side {
-    padding: 20px !important;
-  }
-
-  .trial-page-layout {
-    grid-template-columns: 1fr !important;
-  }
-
-  .trial-visual-side {
-    height: 200px !important;
-  }
-
-  .trial-form-side {
-    padding: 24px 20px !important;
-  }
-
-  /* Testimonials: 1 Card at a Time Horizontal Swipe Slider */
+  /* Testimonials: Horizontal Touch Swipe Slider */
   .testimonials-grid {
     display: flex !important;
     overflow-x: auto !important;
@@ -2221,54 +2352,6 @@ h1, h2, h3, h4, h5, h6 {
     scroll-snap-align: start !important;
     border-radius: 24px !important;
     padding: 24px 20px !important;
-  }
-
-  .dual-banner-grid {
-    grid-template-columns: 1fr !important;
-    gap: 0 !important;
-  }
-
-  .dual-divider {
-    width: 100% !important;
-    height: 1px !important;
-    background: rgba(255, 255, 255, 0.12) !important;
-  }
-
-  .dual-banner-item {
-    padding: 32px 20px !important;
-  }
-
-  /* Classes Mobile Cards (24px Radius, Soft Shadow, 20px Spacing) */
-  .program-list {
-    gap: 20px !important;
-  }
-
-  .program-item {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    padding: 20px !important;
-    background: rgba(255, 255, 255, 0.06) !important;
-    border: 1px solid rgba(255, 255, 255, 0.14) !important;
-    border-radius: 24px !important;
-    box-shadow: 0 12px 32px rgba(8, 18, 30, 0.18) !important;
-    gap: 12px !important;
-    transform: none !important;
-  }
-
-  .program-desc {
-    display: block !important;
-    font-size: 14px !important;
-    color: rgba(255, 255, 255, 0.85) !important;
-    padding-right: 0 !important;
-    line-height: 1.5 !important;
-  }
-
-  .program-action {
-    display: flex !important;
-    width: 100% !important;
-    gap: 10px !important;
-    margin-top: 8px !important;
   }
 
   /* Schedule Cards for Mobile */
@@ -2288,32 +2371,6 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: 20px;
     padding: 20px;
     box-shadow: 0 10px 30px rgba(8, 18, 30, 0.04);
-  }
-
-  .schedule-card-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 12px;
-  }
-
-  .schedule-card-title {
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--color-navy);
-  }
-
-  .schedule-card-details p {
-    font-size: 14px;
-    color: var(--color-muted-text);
-    margin-bottom: 6px;
-  }
-
-  .schedule-filter-bar {
-    flex-direction: column !important;
-    padding: 20px !important;
-    gap: 12px !important;
-    margin: 24px 0 !important;
   }
 
   /* Compressed Mobile Footer Accordions (40% Reduced Padding) */
@@ -2415,23 +2472,31 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-/* Extra Small Screens (< 480px) */
-@media (max-width: 480px) {
-  .header-container {
-    padding-left: 16px !important;
-    padding-right: 16px !important;
+/* Extra Small Screens (320px - 360px) */
+@media (max-width: 360px) {
+  .header-container, .section-container, .hero-content, .program-index-content, .footer-container {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
   }
 
-  .brand-title {
-    font-size: 17px !important;
+  .meta-row {
+    grid-template-columns: 58px 1fr !important;
+    gap: 8px !important;
   }
 
-  .brand-subtitle {
+  .meta-label {
+    font-size: 10px !important;
+  }
+
+  .meta-val {
+    font-size: 12.5px !important;
+  }
+
+  .stat-number, .stat-value {
+    font-size: 15px !important;
+  }
+
+  .stat-label {
     font-size: 9px !important;
-  }
-
-  .logo-circle-frame {
-    width: 38px !important;
-    height: 38px !important;
   }
 }

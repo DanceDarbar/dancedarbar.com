@@ -401,9 +401,9 @@ function renderHomePage() {
                 <span style="font-size: 11px; font-weight: 600; color: ${p.onlineAvailable ? '#5EBBEA' : 'rgba(255,255,255,0.5)'}; margin-top: 4px; display: inline-block;">${p.modeBadge}</span>
                 <p style="font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 4px;">👤 ${p.instructor} • 🎓 ${p.ageGroups[0]}</p>
               </div>
-              <div class="program-action">
-                <a href="#/programs/${p.slug}" class="btn btn-secondary light" style="flex: 1;">View Details</a>
-                <a href="#/claim-free-seat" class="btn btn-primary" style="flex: 1;">Claim Free Seat</a>
+              <div class="program-card-actions">
+                <a href="#/programs/${p.slug}" class="btn btn-secondary light">View Details</a>
+                <a href="#/claim-free-seat" class="btn btn-primary">Claim Free Seat</a>
               </div>
             </div>
           `).join('')}
@@ -548,7 +548,7 @@ function renderProgramsPage() {
                     <span style="font-weight: 600;">${p.levels.join(', ')}</span>
                   </div>
                 </div>
-                <div style="display: flex; gap: 16px;">
+                <div class="program-card-actions">
                   <a href="#/programs/${p.slug}" class="btn btn-secondary">View Details &rarr;</a>
                   <a href="#/claim-free-seat" class="btn btn-primary">Claim Free Seat</a>
                 </div>
