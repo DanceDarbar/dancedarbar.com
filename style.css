@@ -545,8 +545,7 @@ h1, h2, h3, h4, h5, h6 {
   pointer-events: none;
   border: none;
   z-index: 1;
-  opacity: 0.88;
-  filter: brightness(0.92) contrast(1.02);
+  opacity: 1;
 }
 
 .hero-bg-img {
@@ -1988,6 +1987,7 @@ h1, h2, h3, h4, h5, h6 {
     min-height: 100vh;
     min-width: 177.77vh;
     transform: translate(-50%, -50%) scale(1.4);
+    opacity: 1;
   }
 
   .hero-heading {
