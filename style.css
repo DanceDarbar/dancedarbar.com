@@ -2760,3 +2760,194 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 9px !important;
   }
 }
+
+/* --------------------------------------------------------------------------
+   RESERVE SEAT POPUP / MODAL REDESIGN
+   -------------------------------------------------------------------------- */
+#amrapali-modal .lightbox-backdrop {
+  background-color: rgba(8, 18, 30, 0.65) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  transition: opacity 250ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.amrapali-modal-card {
+  background: var(--color-white) !important;
+  border-radius: 24px !important;
+  width: 100% !important;
+  max-width: 740px !important;
+  max-height: 90vh !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  box-shadow: 0 25px 60px rgba(8, 18, 30, 0.35) !important;
+  position: relative !important;
+  text-align: left !important;
+  box-sizing: border-box !important;
+  transform: scale(0.96) translateY(10px) !important;
+  transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1), opacity 250ms ease !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+#amrapali-modal.active .amrapali-modal-card {
+  transform: scale(1) translateY(0) !important;
+}
+
+.modal-header-banner {
+  padding: 24px 32px 18px 32px !important;
+  border-bottom: 1px solid var(--color-border) !important;
+  position: relative !important;
+  background: var(--color-white) !important;
+  flex-shrink: 0 !important;
+}
+
+.modal-close-btn {
+  position: absolute !important;
+  top: 20px !important;
+  right: 24px !important;
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 50% !important;
+  background: rgba(8, 18, 30, 0.04) !important;
+  border: 1px solid var(--color-border) !important;
+  color: var(--color-navy) !important;
+  font-size: 22px !important;
+  line-height: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all var(--transition-fast) !important;
+  z-index: 12 !important;
+}
+
+.modal-close-btn:hover {
+  background: var(--color-navy) !important;
+  color: var(--color-white) !important;
+}
+
+.modal-event-pill-bar {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 12px !important;
+  margin-top: 10px !important;
+  background: var(--color-off-white) !important;
+  padding: 10px 14px !important;
+  border-radius: 12px !important;
+  border: 1px solid var(--color-border) !important;
+  font-size: 12.5px !important;
+  color: var(--color-navy) !important;
+  font-weight: 600 !important;
+}
+
+.modal-scroll-body {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  padding: 24px 32px 32px 32px !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+.modal-input-field {
+  width: 100% !important;
+  height: 56px !important;
+  min-height: 56px !important;
+  border-radius: 16px !important;
+  border: 1px solid var(--color-border) !important;
+  background: var(--color-off-white) !important;
+  padding: 16px 20px !important;
+  font-family: var(--font-body) !important;
+  font-size: 16px !important;
+  color: var(--color-navy) !important;
+  box-sizing: border-box !important;
+  transition: all var(--transition-fast) !important;
+}
+
+.modal-input-field:focus {
+  outline: none !important;
+  border-color: var(--color-primary-dark) !important;
+  background: var(--color-white) !important;
+  box-shadow: 0 0 0 4px var(--color-primary-light) !important;
+}
+
+select.modal-input-field {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%2308121E' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 18px center !important;
+  background-size: 20px !important;
+  padding-right: 48px !important;
+}
+
+.modal-cta-btn {
+  width: 100% !important;
+  height: 56px !important;
+  min-height: 56px !important;
+  border-radius: 999px !important;
+  font-family: var(--font-heading) !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  margin-top: 12px !important;
+  box-sizing: border-box !important;
+}
+
+.modal-footer-note {
+  font-size: 12.5px !important;
+  color: var(--color-muted-text) !important;
+  text-align: center !important;
+  margin-top: 12px !important;
+}
+
+/* MOBILE FULL-SCREEN MODAL SCREEN (< 767px) */
+@media (max-width: 767px) {
+  #amrapali-modal.lightbox-modal {
+    align-items: flex-end !important;
+    padding: 0 !important;
+  }
+
+  .amrapali-modal-card {
+    width: 100vw !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    transform: translateY(100%) !important;
+    transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+    background: var(--color-white) !important;
+  }
+
+  #amrapali-modal.active .amrapali-modal-card {
+    transform: translateY(0) !important;
+  }
+
+  .modal-header-banner {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 10 !important;
+    background: var(--color-white) !important;
+    padding: max(16px, env(safe-area-inset-top)) 20px 14px 20px !important;
+    border-bottom: 1px solid var(--color-border) !important;
+  }
+
+  .modal-close-btn {
+    top: max(16px, env(safe-area-inset-top)) !important;
+    right: 16px !important;
+    width: 36px !important;
+    height: 36px !important;
+  }
+
+  .modal-scroll-body {
+    flex: 1 !important;
+    overflow-y: auto !important;
+    padding: 20px 20px max(24px, env(safe-area-inset-bottom)) 20px !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+}

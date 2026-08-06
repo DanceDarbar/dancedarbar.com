@@ -2159,11 +2159,16 @@ function initAmrapaliModalEvents() {
     if (proofForm) proofForm.reset();
     if (submitBtn) {
       submitBtn.disabled = false;
-      submitBtn.innerHTML = '<span>Confirm Reservation</span>';
+      submitBtn.innerHTML = '<span>Continue to Payment &rarr;</span>';
     }
     showModalStep(1);
     modal.classList.add('active');
     document.body.classList.add('modal-open');
+
+    setTimeout(() => {
+      const firstInput = document.getElementById('amp_full_name');
+      if (firstInput) firstInput.focus();
+    }, 150);
   };
 
   window.closeAmrapaliModal = function() {
