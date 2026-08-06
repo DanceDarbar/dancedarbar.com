@@ -326,14 +326,16 @@ function renderHomePage() {
     <!-- HERO SECTION -->
     <section class="hero-section">
       <div class="hero-video-wrap">
-        <video 
-          class="hero-video-element" 
-          autoplay 
-          muted 
-          loop 
-          playsinline>
-          <source src="assets/hero-video.mp4" type="video/mp4">
-        </video>
+        <iframe
+          class="hero-video-iframe"
+          src="https://player.vimeo.com/video/1215238851?autoplay=1&loop=1&muted=1&background=1&autopause=0"
+          width="3840"
+          height="2160"
+          frameborder="0"
+          allow="autoplay; fullscreen; picture-in-picture"
+          referrerpolicy="strict-origin-when-cross-origin"
+          title="Nritya Mahotsav 2025 Guru Vandana Choreographed By Guru Bhagwan Singh_2160p">
+        </iframe>
         <div class="hero-overlay-gradient"></div>
       </div>
       <div class="hero-content">
