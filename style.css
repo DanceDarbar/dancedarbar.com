@@ -1923,8 +1923,51 @@ h1, h2, h3, h4, h5, h6 {
   gap: 12px;
 }
 
-.legal-mini-links a:hover {
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+.batch-overview-card {
+  background: var(--color-navy);
+  color: var(--color-white);
+  border-radius: var(--radius-medium);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-shadow: 0 12px 36px rgba(8, 18, 30, 0.15);
+}
+
+.overview-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.overview-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
   color: var(--color-primary);
+  letter-spacing: 0.08em;
+  display: block;
+}
+
+.overview-val {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.overview-val.main {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-white);
+}
+
+.overview-val.timing {
+  font-size: 14px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.85);
 }
 
 /* --------------------------------------------------------------------------
@@ -2204,6 +2247,79 @@ h1, h2, h3, h4, h5, h6 {
     color: rgba(255, 255, 255, 0.85) !important;
     padding-right: 0 !important;
     line-height: 1.5 !important;
+  }
+
+  /* CLASS DETAIL PAGES MOBILE STYLES */
+  .program-detail-page {
+    padding-top: 90px !important;
+    padding-bottom: 48px !important;
+  }
+
+  .program-detail-hero {
+    margin-bottom: 32px !important;
+    gap: 20px !important;
+  }
+
+  .program-detail-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 32px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .curriculum-section, .batch-overview-section {
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .detail-section-title {
+    font-size: 20px !important;
+    margin-bottom: 14px !important;
+  }
+
+  .curriculum-card {
+    padding: 24px 20px !important;
+    border-radius: 20px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .curriculum-item {
+    font-size: 14.5px !important;
+    line-height: 1.5 !important;
+    gap: 12px !important;
+  }
+
+  .batch-overview-card {
+    padding: 24px 20px !important;
+    border-radius: 20px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    gap: 16px !important;
+  }
+
+  /* RESERVATION POPUP / MODAL TOP SAFE SPACING */
+  #amrapali-modal.lightbox-modal, #faq-modal.lightbox-modal {
+    align-items: flex-start !important;
+    padding-top: max(80px, env(safe-area-inset-top)) !important;
+    padding-bottom: 32px !important;
+    box-sizing: border-box !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .amrapali-modal-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 0 32px 0 !important;
+    position: relative !important;
+    bottom: auto !important;
+    border-radius: 24px !important;
+    padding: 32px 20px 28px !important;
+    max-height: none !important;
+    box-sizing: border-box !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4) !important;
   }
 
   /* 3. MOMENTS OF MOVEMENT & EXPRESSION (Gallery & Filter Chips) */

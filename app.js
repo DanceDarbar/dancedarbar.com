@@ -573,40 +573,40 @@ function renderProgramDetailPage(slug) {
   const prog = DANCE_DATA.programs.find(p => p.slug === slug) || DANCE_DATA.programs[0];
 
   return `
-    <div style="padding-top: 140px; padding-bottom: 100px;">
+    <div class="program-detail-page">
       <div class="section-container">
-        <a href="#/programs" style="font-size: 14px; font-weight: 600; color: var(--color-primary-dark); margin-bottom: 24px; display: inline-block;">&larr; Back to All Classes</a>
-        <div class="editorial-split" style="margin-bottom: 80px;">
-          <div>
-            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+        <a href="#/programs" class="back-link">&larr; Back to All Classes</a>
+        <div class="editorial-split program-detail-hero">
+          <div class="editorial-content">
+            <div class="badge-row">
               <span class="eyebrow">${prog.number} — Detailed Curriculum</span>
               ${prog.onlineAvailable ? `<span class="online-pill-badge">Online Available</span>` : `<span class="offline-pill-badge">Offline Classes Only</span>`}
             </div>
-            <h1 class="section-heading" style="font-size: 48px; margin-bottom: 12px;">${prog.name}</h1>
-            <p style="font-size: 14px; font-weight: 700; color: ${prog.onlineAvailable ? 'var(--color-primary-dark)' : 'var(--color-muted-text)'}; margin-bottom: 16px;">${prog.modeBadge}</p>
-            <p class="lead-text" style="margin-bottom: 28px;">${prog.onlineNote ? `${prog.onlineNote}` : prog.fullDescription}</p>
-            <div style="display: flex; gap: 16px;">
+            <h1 class="section-heading">${prog.name}</h1>
+            <p class="mode-subtitle">${prog.modeBadge}</p>
+            <p class="lead-text">${prog.onlineNote ? `${prog.onlineNote}` : prog.fullDescription}</p>
+            <div class="program-card-actions">
               <a href="#/claim-free-seat" class="btn btn-primary">Claim Free Trial Seat</a>
               <a href="#/schedule" class="btn btn-secondary">Check Class Timings</a>
             </div>
           </div>
           <div class="editorial-media">
             ${prog.video ? `
-              <video src="${prog.video}" autoplay loop muted playsinline class="editorial-img" style="height: 440px; width: 100%; object-fit: cover;"></video>
+              <video src="${prog.video}" autoplay loop muted playsinline class="editorial-img"></video>
             ` : `
-              <img src="${prog.image}" alt="${prog.name}" loading="lazy" decoding="async" class="editorial-img" style="height: 440px;">
+              <img src="${prog.image}" alt="${prog.name}" loading="lazy" decoding="async" class="editorial-img">
             `}
           </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 48px;">
-          <div>
-            <h3 style="font-size: 28px; margin-bottom: 24px;">Curriculum & Learning Highlights</h3>
-            <div style="background: var(--color-white); border-radius: var(--radius-medium); padding: 36px; border: 1px solid var(--color-border); margin-bottom: 40px;">
-              <ul style="list-style: none; display: flex; flex-direction: column; gap: 16px;">
+        <div class="program-detail-grid">
+          <div class="curriculum-section">
+            <h3 class="detail-section-title">Curriculum & Learning Highlights</h3>
+            <div class="curriculum-card">
+              <ul class="curriculum-list">
                 ${prog.curriculum.map(item => `
-                  <li style="display: flex; align-items: center; gap: 14px; font-size: 17px;">
-                    <span style="width: 24px; height: 24px; border-radius: 50%; background: var(--color-primary-light); color: var(--color-primary-dark); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700;">✓</span>
+                  <li class="curriculum-item">
+                    <span class="check-icon">✓</span>
                     <span>${item}</span>
                   </li>
                 `).join('')}
@@ -614,22 +614,26 @@ function renderProgramDetailPage(slug) {
             </div>
           </div>
 
-          <div>
-            <h3 style="font-size: 24px; margin-bottom: 24px;">Batch Overview</h3>
-            <div style="background: var(--color-navy); color: var(--color-white); border-radius: var(--radius-medium); padding: 32px;">
-              <div style="margin-bottom: 20px;">
-                <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--color-primary);">Mentor</span>
-                <p style="font-size: 18px; font-weight: 600;">${prog.instructor}</p>
+          <div class="batch-overview-section">
+            <h3 class="detail-section-title">Batch Overview</h3>
+            <div class="batch-overview-card">
+              <div class="overview-group">
+                <span class="overview-label">Mentor</span>
+                <p class="overview-val main">${prog.instructor}</p>
               </div>
-              <div style="margin-bottom: 20px;">
-                <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--color-primary);">Age Groups</span>
-                <p style="font-size: 16px;">${prog.ageGroups.join(', ')}</p>
+              <div class="overview-group">
+                <span class="overview-label">Age Groups</span>
+                <p class="overview-val">${prog.ageGroups.join(', ')}</p>
               </div>
-              <div style="margin-bottom: 24px;">
-                <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--color-primary);">Timings</span>
-                <p style="font-size: 15px; color: rgba(255,255,255,0.85);">${prog.schedulePreview}</p>
+              <div class="overview-group">
+                <span class="overview-label">Levels</span>
+                <p class="overview-val">${prog.levels.join(', ')}</p>
               </div>
-              <a href="#/claim-free-seat" class="btn btn-primary full-width">Claim Trial Seat</a>
+              <div class="overview-group">
+                <span class="overview-label">Timings</span>
+                <p class="overview-val timing">${prog.schedulePreview}</p>
+              </div>
+              <a href="#/claim-free-seat" class="btn btn-primary full-width" style="margin-top: 8px;">Claim Trial Seat</a>
             </div>
           </div>
         </div>
