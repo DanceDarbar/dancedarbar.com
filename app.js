@@ -326,6 +326,7 @@ function renderHomePage() {
     <!-- HERO SECTION -->
     <section class="hero-section">
       <div class="hero-video-wrap">
+        <img src="assets/hero-bg.jpg" class="hero-bg-img" alt="Dance Darbar Kathak Performance Background" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;">
         <iframe
           class="hero-video-iframe"
           src="https://player.vimeo.com/video/1215238851?autoplay=1&loop=1&muted=1&background=1&autopause=0"

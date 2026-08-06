@@ -2090,6 +2090,78 @@ h1, h2, h3, h4, h5, h6 {
     padding: 32px 20px;
   }
 
+  .testimonials-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .dual-banner-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .dual-divider {
+    width: 100%;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  .dual-banner-item {
+    padding: 40px 20px;
+  }
+
+  .program-list {
+    gap: 16px;
+  }
+
+  .program-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius-medium);
+    gap: 10px;
+    transform: none !important;
+  }
+
+  .program-desc {
+    display: block !important;
+    font-size: 13.5px;
+    color: rgba(255, 255, 255, 0.8);
+    padding-right: 0;
+    line-height: 1.5;
+  }
+
+  .program-action {
+    display: flex !important;
+    width: 100%;
+    margin-top: 6px;
+    justify-self: stretch;
+  }
+
+  .program-action .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .event-banner-card {
+    grid-template-columns: 1fr;
+    max-height: none !important;
+    padding: 0;
+  }
+
+  .event-media-side {
+    min-height: 200px;
+    height: 220px;
+    max-height: 220px;
+  }
+
+  .event-info-side {
+    padding: 24px 20px;
+  }
+
   .footer-grid {
     grid-template-columns: 1fr;
     gap: 32px;
