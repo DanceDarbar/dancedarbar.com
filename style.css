@@ -1982,19 +1982,141 @@ h1, h2, h3, h4, h5, h6 {
   gap: 12px;
 }
 
+/* --------------------------------------------------------------------------
+   CLASS DETAIL / VIEW DETAILS PAGE STYLES (DESKTOP)
+   -------------------------------------------------------------------------- */
+.program-detail-page {
+  padding-top: 140px;
+  padding-bottom: 100px;
+  background-color: var(--color-off-white);
+  min-height: 100vh;
+}
+
+.program-detail-page .back-link {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-primary-dark);
+  margin-bottom: 24px;
+  text-decoration: none;
+  transition: transform var(--transition-fast);
+}
+
+.program-detail-page .back-link:hover {
+  transform: translateX(-4px);
+}
+
+.program-detail-hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+  margin-bottom: 48px;
+  background: var(--color-white);
+  padding: 48px;
+  border-radius: var(--radius-large);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 10px 30px rgba(8, 18, 30, 0.03);
+}
+
+.program-detail-hero .badge-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.program-detail-hero .mode-subtitle {
+  font-size: 13.5px;
   font-weight: 700;
+  color: var(--color-primary-dark);
+  margin-bottom: 14px;
+}
+
+.program-detail-hero .lead-text {
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--color-muted-text);
+  margin-bottom: 28px;
+}
+
+.program-detail-hero .editorial-img {
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+  border-radius: var(--radius-medium);
+  display: block;
+}
+
+/* 2-Column Curriculum & Batch Overview Grid */
+.program-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+  margin-top: 24px;
+}
+
+.detail-section-title {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-navy);
+  margin-bottom: 18px;
+}
+
+.curriculum-card {
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-large);
+  padding: 36px;
+  box-shadow: 0 10px 30px rgba(8, 18, 30, 0.03);
+}
+
+.curriculum-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.curriculum-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  font-size: 15px;
+  color: var(--color-navy);
+  line-height: 1.5;
+}
+
+.curriculum-item .check-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
   margin-top: 2px;
 }
 
 .batch-overview-card {
-  background: var(--color-navy);
-  color: var(--color-white);
-  border-radius: var(--radius-medium);
-  padding: 32px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  box-shadow: 0 12px 36px rgba(8, 18, 30, 0.15);
+  background: var(--color-navy) !important;
+  color: var(--color-white) !important;
+  border-radius: var(--radius-large) !important;
+  padding: 36px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 22px !important;
+  box-shadow: 0 16px 40px rgba(8, 18, 30, 0.12) !important;
+  border: 1px solid var(--color-border-dark) !important;
 }
 
 .overview-group {
@@ -2004,29 +2126,30 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .overview-label {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--color-primary);
-  letter-spacing: 0.08em;
-  display: block;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  color: #5EBBEA !important;
+  letter-spacing: 0.1em !important;
+  display: block !important;
 }
 
 .overview-val {
-  font-size: 15px;
-  color: rgba(255, 255, 255, 0.9);
+  font-size: 15px !important;
+  color: rgba(255, 255, 255, 0.92) !important;
+  margin: 0 !important;
 }
 
 .overview-val.main {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--color-white);
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  color: #FFFFFF !important;
 }
 
 .overview-val.timing {
-  font-size: 14px;
-  line-height: 1.45;
-  color: rgba(255, 255, 255, 0.85);
+  font-size: 14.5px !important;
+  line-height: 1.5 !important;
+  color: rgba(255, 255, 255, 0.88) !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -2038,9 +2161,14 @@ h1, h2, h3, h4, h5, h6 {
     padding-right: 32px;
   }
   
-  .editorial-split {
+  .editorial-split:not(.program-detail-hero) {
     grid-template-columns: 1fr;
     gap: 40px;
+  }
+
+  .program-detail-hero {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
   }
 
   .program-item {
