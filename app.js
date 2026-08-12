@@ -287,7 +287,7 @@ const DANCE_DATA = {
   ],
 
   galleryItems: [
-    { id: 1, category: 'Kathak', title: 'Kathak Classical Tarana & Footwork', subtitle: 'Watch Official Reel | @dance_darbar', image: 'assets/kathak-reel-thumb.jpg', type: 'reel', instagramUrl: 'https://www.instagram.com/reel/DYJ1ehuIzlT/?igsh=cDF0YTlrZDc3ZGN5' },
+    { id: 1, category: 'Kathak', title: 'Kathak AMRAPALI Highlight Videos', subtitle: 'Watch Exclusive Video Highlights', image: 'assets/kathak-reel-thumb.jpg', type: 'internal_video', videoRoute: '#/amrapali-highlights', instagramUrl: 'https://www.instagram.com/reel/DYJ1ehuIzlT/?igsh=cDF0YTlrZDc3ZGN5' },
     { id: 2, category: 'Bollywood', title: 'Energetic Bollywood Fusion Choreography', subtitle: 'Studio Rehearsal Reel | @dance_darbar', image: 'assets/bollywood.jpg', type: 'reel', instagramUrl: 'https://www.instagram.com/dance_darbar?igsh=MWl6bW4za3NreHhrOA==' },
     { id: 3, category: 'Events', title: 'AMRAPALI 2026 Annual Production Highlights', subtitle: 'Stage Performance Reel | @dance_darbar', image: 'assets/amrapali.jpg', type: 'reel', instagramUrl: 'https://www.instagram.com/dance_darbar?igsh=MWl6bW4za3NreHhrOA==' },
     { id: 4, category: 'Fine Arts', title: 'Fine Arts Canvas & Composition Workshop', subtitle: 'Creative Art Studio | @dance_darbar', image: 'assets/fine-arts.jpg', type: 'photo', instagramUrl: 'https://www.instagram.com/dance_darbar?igsh=MWl6bW4za3NreHhrOA==' },
@@ -394,6 +394,9 @@ function renderApp() {
   } else if (route === '/gallery') {
     appRoot.innerHTML = renderGalleryPage();
     initGalleryEvents();
+  } else if (route === '/amrapali-highlights' || route === '/gallery-video') {
+    appRoot.innerHTML = renderAmrapaliHighlightsPage();
+    initAmrapaliHighlightsEvents();
   } else if (route === '/claim-free-seat') {
     appRoot.innerHTML = renderClaimFreeSeatPage();
     initTrialFormEvents();
@@ -972,32 +975,168 @@ function renderGalleryItems(category) {
     ? DANCE_DATA.galleryItems 
     : DANCE_DATA.galleryItems.filter(item => item.category === category || (category === 'Vocals' && item.category === 'Vocal Music'));
 
-  return filtered.map((item, idx) => `
-    <a href="${item.instagramUrl || 'https://www.instagram.com/dance_darbar'}" target="_blank" rel="noopener" class="gallery-card motion-graphic-card" style="animation-delay: ${idx * 0.05}s">
-      <div class="gallery-img-container">
-        <img src="${item.image}" alt="${item.title}" loading="lazy" decoding="async" class="gallery-thumb">
-        ${item.type === 'reel' ? `
-          <div class="reel-badge">
-            <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-            <span>REEL</span>
+  return filtered.map((item, idx) => {
+    const isInternalVideo = item.type === 'internal_video' || item.videoRoute;
+    const linkHref = isInternalVideo ? item.videoRoute : (item.instagramUrl || 'https://www.instagram.com/dance_darbar');
+    const linkTarget = isInternalVideo ? '' : 'target="_blank" rel="noopener"';
+
+    return `
+      <a href="${linkHref}" ${linkTarget} class="gallery-card motion-graphic-card" style="animation-delay: ${idx * 0.05}s">
+        <div class="gallery-img-container">
+          <img src="${item.image}" alt="${item.title}" loading="lazy" decoding="async" class="gallery-thumb">
+          ${isInternalVideo ? `
+            <div class="reel-badge" style="background: var(--color-navy); border-color: rgba(94,187,234,0.4);">
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              <span style="color: #5EBBEA;">VIDEO SHOWCASE</span>
+            </div>
+          ` : item.type === 'reel' ? `
+            <div class="reel-badge">
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+              <span>REEL</span>
+            </div>
+          ` : `
+            <div class="reel-badge photo-badge">
+              <span>PHOTO</span>
+            </div>
+          `}
+          <div class="gallery-hover-overlay">
+            <span class="view-action-pill">
+              ${isInternalVideo ? 'WATCH VIDEO 🎬' : item.type === 'reel' ? 'VIEW REEL ↗' : 'VIEW PHOTO ↗'}
+            </span>
           </div>
-        ` : `
-          <div class="reel-badge photo-badge">
-            <span>PHOTO</span>
-          </div>
-        `}
-        <div class="gallery-hover-overlay">
-          <span class="view-action-pill">
-            ${item.type === 'reel' ? 'VIEW REEL ↗' : 'VIEW PHOTO ↗'}
-          </span>
         </div>
+        <div class="gallery-card-content">
+          <span class="gallery-card-tag">${item.category}</span>
+          <h4 class="gallery-card-title">${item.title}</h4>
+        </div>
+      </a>
+    `;
+  }).join('');
+}
+
+// --- AMRAPALI KATHAK HIGHLIGHT VIDEO SHOWCASE PAGE ---
+function renderAmrapaliHighlightsPage() {
+  return `
+    <div style="padding-top: 140px; padding-bottom: 100px;">
+      <div class="section-container" style="max-width: 1140px;">
+        
+        <!-- BACK TO GALLERY NAVIGATION -->
+        <div style="margin-bottom: 28px;">
+          <a href="#/gallery" class="back-to-gallery-link" style="display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-heading); font-size: 14px; font-weight: 600; color: var(--color-primary-dark); text-decoration: none;">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span>Back to Gallery</span>
+          </a>
+        </div>
+
+        <!-- HEADER / INTRO -->
+        <div style="margin-bottom: 36px;">
+          <span class="eyebrow">AMRAPALI 2026 — Kathak Video Highlights</span>
+          <h1 class="section-heading" style="font-size: clamp(28px, 4vw, 44px); margin-bottom: 10px;">Kathak Stage Performance & Rehearsal Showcase.</h1>
+          <p class="lead-text" style="max-width: 780px;">Experience classical footwork, rhythmic compositions, and behind-the-scenes moments from Dance Darbar Kala Sansthan.</p>
+        </div>
+
+        <!-- TWO-COLUMN VIDEO SHOWCASE LAYOUT -->
+        <div class="amrapali-video-showcase-grid">
+          
+          <!-- DOMINANT VIDEO PLAYER COLUMN -->
+          <div class="video-main-column">
+            <div class="video-player-container">
+              <video id="amrapali-active-player" controls controlsList="nodownload" playsinline poster="assets/kathak-reel-thumb.jpg" style="width: 100%; aspect-ratio: 16 / 9; border-radius: 18px; background: #000; object-fit: contain;">
+                <source src="assets/amrapali-highlight-01.mp4" type="video/mp4">
+                Your browser does not support HTML5 video.
+              </video>
+            </div>
+
+            <div class="video-meta-box" style="margin-top: 20px;">
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+                <span class="online-pill-badge" style="background: rgba(94, 187, 234, 0.15); color: #5EBBEA; border-color: rgba(94, 187, 234, 0.3);">Kathak Feature</span>
+                <span id="active-video-number" style="font-size: 13px; font-weight: 700; color: var(--color-muted-text);">VIDEO 01 OF 02</span>
+              </div>
+              <h2 id="active-video-title" style="font-size: clamp(22px, 3vw, 28px); color: var(--color-navy); margin-bottom: 8px;">AMRAPALI 2026 — Kathak Highlight 01</h2>
+              <p id="active-video-desc" style="font-size: 15px; color: var(--color-muted-text); line-height: 1.6;">Classical Kathak Tarana, rhythmic Tatkar, compositions, and expressional Abhinaya performed live at AMRAPALI 2026.</p>
+            </div>
+          </div>
+
+          <!-- VIDEO PLAYLIST COLUMN -->
+          <div class="video-playlist-column">
+            <h3 style="font-size: 18px; color: var(--color-navy); margin-bottom: 16px; font-family: var(--font-heading); display: flex; align-items: center; justify-content: space-between;">
+              <span>Video Playlist</span>
+              <span style="font-size: 13px; font-weight: 600; color: var(--color-muted-text);">2 Videos</span>
+            </h3>
+
+            <div class="playlist-cards-list">
+              
+              <!-- PLAYLIST ITEM 01 -->
+              <div class="playlist-item-card active" data-vid-index="0" data-src="assets/amrapali-highlight-01.mp4" data-poster="assets/kathak-reel-thumb.jpg" data-title="AMRAPALI 2026 — Kathak Highlight 01" data-subtitle="Official Stage Performance Reel" data-desc="Classical Kathak Tarana, rhythmic Tatkar, compositions, and expressional Abhinaya performed live at AMRAPALI 2026.">
+                <div class="playlist-num">01</div>
+                <div class="playlist-thumb-wrap">
+                  <img src="assets/kathak-reel-thumb.jpg" alt="Kathak Highlight 01">
+                  <div class="playlist-play-icon">▶</div>
+                </div>
+                <div class="playlist-item-info">
+                  <span class="playlist-tag">AMRAPALI 2026</span>
+                  <h4 class="playlist-item-title">Kathak Highlight 01</h4>
+                  <p class="playlist-item-sub">Stage Performance</p>
+                </div>
+              </div>
+
+              <!-- PLAYLIST ITEM 02 -->
+              <div class="playlist-item-card" data-vid-index="1" data-src="assets/amrapali-highlight-02.mp4" data-poster="assets/kathak-local.jpg" data-title="AMRAPALI 2026 — Kathak Highlight 02" data-subtitle="Studio Rehearsal & Behind-the-Scenes" data-desc="Exclusive behind-the-scenes footage and studio practice session preparing for the annual dance ballet.">
+                <div class="playlist-num">02</div>
+                <div class="playlist-thumb-wrap">
+                  <img src="assets/kathak-local.jpg" alt="Kathak Highlight 02">
+                  <div class="playlist-play-icon">▶</div>
+                </div>
+                <div class="playlist-item-info">
+                  <span class="playlist-tag">AMRAPALI 2026</span>
+                  <h4 class="playlist-item-title">Kathak Highlight 02</h4>
+                  <p class="playlist-item-sub">BTS Studio Rehearsal</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
       </div>
-      <div class="gallery-card-content">
-        <span class="gallery-card-tag">${item.category}</span>
-        <h4 class="gallery-card-title">${item.title}</h4>
-      </div>
-    </a>
-  `).join('');
+    </div>
+  `;
+}
+
+function initAmrapaliHighlightsEvents() {
+  const player = document.getElementById('amrapali-active-player');
+  const playlistItems = document.querySelectorAll('.playlist-item-card');
+  const titleElem = document.getElementById('active-video-title');
+  const descElem = document.getElementById('active-video-desc');
+  const numElem = document.getElementById('active-video-number');
+
+  if (!player || playlistItems.length === 0) return;
+
+  playlistItems.forEach((item, idx) => {
+    item.addEventListener('click', () => {
+      playlistItems.forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+
+      const src = item.getAttribute('data-src');
+      const poster = item.getAttribute('data-poster');
+      const title = item.getAttribute('data-title');
+      const desc = item.getAttribute('data-desc');
+
+      if (!player.paused) {
+        player.pause();
+      }
+
+      player.poster = poster;
+      player.src = src;
+      player.load();
+      player.play().catch(() => {});
+
+      if (titleElem) titleElem.textContent = title;
+      if (descElem) descElem.textContent = desc;
+      if (numElem) numElem.textContent = `VIDEO 0${idx + 1} OF 02`;
+    });
+  });
 }
 
 // --- CLAIM FREE SEAT PAGE TEMPLATE ---
