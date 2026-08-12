@@ -288,7 +288,7 @@ const DANCE_DATA = {
 
   galleryItems: [
     { id: 1, category: 'Kathak', title: 'Kathak Classical Tarana & Footwork', subtitle: 'Watch Official Reel | @dance_darbar', image: 'assets/kathak-reel-thumb.jpg', type: 'reel', instagramUrl: 'https://www.instagram.com/reel/DYJ1ehuIzlT/?igsh=cDF0YTlrZDc3ZGN5' },
-    { id: 2, category: 'Bollywood', title: 'Energetic Bollywood Fusion Choreography', subtitle: 'Studio Rehearsal Reel | @dance_darbar', image: 'assets/bollywood.jpg', type: 'reel', instagramUrl: 'https://www.instagram.com/dance_darbar?igsh=MWl6bW4za3NreHhrOA==' },
+    { id: 2, category: 'Bollywood', title: 'Energetic Bollywood Fusion Choreography', subtitle: 'Watch Official Reel | @dance_darbar', image: 'assets/bollywood.jpg', type: 'reel', instagramUrl: 'https://www.instagram.com/reel/DZF57CUhGEC/?igsh=dW9vdnliazIzNXV0&igsi=dW9vdnliazIzNXV0' },
     { id: 3, category: 'Events', title: 'AMRAPALI 2026 Annual Production Highlights', subtitle: 'Stage Performance Reel | @dance_darbar', image: 'assets/amrapali.jpg', type: 'reel', instagramUrl: 'https://www.instagram.com/dance_darbar?igsh=MWl6bW4za3NreHhrOA==' },
     { id: 4, category: 'Fine Arts', title: 'Fine Arts Canvas & Composition Workshop', subtitle: 'Creative Art Studio | @dance_darbar', image: 'assets/fine-arts.jpg', type: 'photo', instagramUrl: 'https://www.instagram.com/dance_darbar?igsh=MWl6bW4za3NreHhrOA==' },
     { id: 5, category: 'Yoga', title: 'Morning Asana & Mindfulness Practice', subtitle: 'Wellness Session | @dance_darbar', image: 'assets/yoga.jpg', type: 'photo', instagramUrl: 'https://www.instagram.com/dance_darbar?igsh=MWl6bW4za3NreHhrOA==' },
