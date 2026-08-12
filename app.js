@@ -282,6 +282,7 @@ const DANCE_DATA = {
       time: '4:00 PM – 9:00 PM',
       venue: 'CCRT Auditorium, Dwarka Sector 7, New Delhi',
       image: 'assets/amrapali.jpg',
+      instagramUrl: 'https://www.instagram.com/reel/DbiBr0UpjrT/?igsh=MXAyM2RocGpuaW5yYQ==&igsi=MXAyM2RocGpuaW5yYQ==',
       description: 'Witness the remarkable performances of Dance Darbar students as they present AMRAPALI 2026, an annual showcase celebrating passion, discipline, and artistic expression through Kathak, Bollywood, Vocal Music, Fine Arts, and Yoga.'
     }
   ],
@@ -289,7 +290,7 @@ const DANCE_DATA = {
   galleryItems: [
     { id: 1, category: 'Kathak', title: 'Kathak Classical Tarana & Footwork', subtitle: 'Watch Official Reel | @dance_darbar', image: 'assets/kathak-reel-thumb.jpg', type: 'reel', instagramUrl: 'https://www.instagram.com/reel/DYJ1ehuIzlT/?igsh=cDF0YTlrZDc3ZGN5' },
     { id: 2, category: 'Bollywood', title: 'Energetic Bollywood Fusion Choreography', subtitle: 'Watch Official Reel | @dance_darbar', image: 'assets/bollywood.jpg', type: 'reel', instagramUrl: 'https://www.instagram.com/reel/DZF57CUhGEC/?igsh=dW9vdnliazIzNXV0&igsi=dW9vdnliazIzNXV0' },
-    { id: 3, category: 'Events', title: 'AMRAPALI 2026 Annual Production Highlights', subtitle: 'Stage Performance Reel | @dance_darbar', image: 'assets/amrapali.jpg', type: 'reel', instagramUrl: 'https://www.instagram.com/dance_darbar?igsh=MWl6bW4za3NreHhrOA==' },
+    { id: 3, category: 'Events', title: 'AMRAPALI 2026 Annual Production Highlights', subtitle: 'Stage Performance Reel | @dance_darbar', image: 'assets/amrapali.jpg', type: 'reel', instagramUrl: 'https://www.instagram.com/reel/DbiBr0UpjrT/?igsh=MXAyM2RocGpuaW5yYQ==&igsi=MXAyM2RocGpuaW5yYQ==' },
     { id: 4, category: 'Fine Arts', title: 'Fine Arts Canvas & Composition Workshop', subtitle: 'Creative Art Studio | @dance_darbar', image: 'assets/fine-arts.jpg', type: 'photo', instagramUrl: 'https://www.instagram.com/dance_darbar?igsh=MWl6bW4za3NreHhrOA==' },
     { id: 5, category: 'Yoga', title: 'Morning Asana & Mindfulness Practice', subtitle: 'Wellness Session | @dance_darbar', image: 'assets/yoga.jpg', type: 'photo', instagramUrl: 'https://www.instagram.com/dance_darbar?igsh=MWl6bW4za3NreHhrOA==' },
     { id: 6, category: 'Vocal Music', title: 'Raga Performance & Tanpura Session', subtitle: 'Vocal Sanctuary | @dance_darbar', image: 'assets/vocal-music.jpg', type: 'reel', instagramUrl: 'https://www.instagram.com/dance_darbar?igsh=MWl6bW4za3NreHhrOA==' }
@@ -520,8 +521,14 @@ function renderHomePage() {
       <div class="section-container">
         <span class="eyebrow light">Upcoming Performance</span>
         <div class="event-banner-card">
-          <div class="event-media-side cursor-target-view">
-            <img src="${amrapaliEvent.image}" alt="${amrapaliEvent.title}" loading="lazy" decoding="async" class="event-img">
+          <div class="event-media-side cursor-target-view" style="position: relative;">
+            <a href="${amrapaliEvent.instagramUrl}" target="_blank" rel="noopener" style="display: block; width: 100%; height: 100%; text-decoration: none;" title="Watch AMRAPALI 2026 Reel Highlight">
+              <img src="${amrapaliEvent.image}" alt="${amrapaliEvent.title}" loading="lazy" decoding="async" class="event-img">
+              <div class="event-video-play-badge" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(8,18,30,0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: 12px 22px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.25); color: #fff; display: flex; align-items: center; gap: 8px; font-family: var(--font-heading); font-size: 13px; font-weight: 700; white-space: nowrap;">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                <span>Watch Reel Highlight ↗</span>
+              </div>
+            </a>
           </div>
           <div class="event-info-side">
             <span class="eyebrow light">${amrapaliEvent.tagline}</span>
@@ -544,10 +551,16 @@ function renderHomePage() {
                 <span class="meta-val">${amrapaliEvent.venue}</span>
               </div>
             </div>
-            <a href="#/claim-free-seat" class="btn btn-primary">
-              <span>Reserve Seat</span>
-              <svg class="btn-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+              <a href="#/claim-free-seat" class="btn btn-primary">
+                <span>Reserve Seat</span>
+                <svg class="btn-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+              <a href="${amrapaliEvent.instagramUrl}" target="_blank" rel="noopener" class="btn btn-secondary light" style="gap: 8px;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                <span>Watch Reel ↗</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -866,8 +879,14 @@ function renderEventsPage() {
         <p class="lead-text" style="margin-bottom: 60px;">Discover upcoming annual productions, stage shows and grand cultural showcases at Dance Darbar Kala Sansthan.</p>
 
         <div class="event-banner-card">
-          <div class="event-media-side">
-            <img src="${ev.image}" alt="${ev.title}" loading="lazy" decoding="async" class="event-img">
+          <div class="event-media-side" style="position: relative;">
+            <a href="${ev.instagramUrl}" target="_blank" rel="noopener" style="display: block; width: 100%; height: 100%; text-decoration: none;" title="Watch AMRAPALI 2026 Reel Highlight">
+              <img src="${ev.image}" alt="${ev.title}" loading="lazy" decoding="async" class="event-img">
+              <div class="event-video-play-badge" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(8,18,30,0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: 12px 22px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.25); color: #fff; display: flex; align-items: center; gap: 8px; font-family: var(--font-heading); font-size: 13px; font-weight: 700; white-space: nowrap;">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                <span>Watch Reel Highlight ↗</span>
+              </div>
+            </a>
           </div>
           <div class="event-info-side">
             <span class="eyebrow light">${ev.tagline}</span>
@@ -890,10 +909,16 @@ function renderEventsPage() {
                 <span class="meta-val">${ev.venue}</span>
               </div>
             </div>
-            <a href="#/events/amrapali" class="btn btn-primary">
-              <span>View Event Details</span>
-              <svg class="btn-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+              <a href="#/events/amrapali" class="btn btn-primary">
+                <span>View Event Details</span>
+                <svg class="btn-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+              <a href="${ev.instagramUrl}" target="_blank" rel="noopener" class="btn btn-secondary light" style="gap: 8px;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                <span>Watch Reel ↗</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -919,10 +944,18 @@ function renderEventDetailPage(slug) {
               <p style="margin-bottom: 12px; font-size: 15px;"><strong>⏰ Time:</strong> ${ev.time}</p>
               <p style="font-size: 15px;"><strong>📍 Auditorium Venue:</strong> ${ev.venue}</p>
             </div>
-            <a href="#/claim-free-seat" class="btn btn-primary">Reserve Seat</a>
+            <div style="display: flex; gap: 14px; flex-wrap: wrap; align-items: center;">
+              <a href="#/claim-free-seat" class="btn btn-primary">Reserve Seat</a>
+              <a href="${ev.instagramUrl}" target="_blank" rel="noopener" class="btn btn-secondary" style="gap: 8px;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                <span>Watch Performance Reel ↗</span>
+              </a>
+            </div>
           </div>
           <div class="editorial-media">
-            <img src="${ev.image}" alt="${ev.title}" loading="lazy" decoding="async" class="editorial-img" style="height: 480px;">
+            <a href="${ev.instagramUrl}" target="_blank" rel="noopener" style="display: block; width: 100%; height: 100%; text-decoration: none;" title="Watch AMRAPALI 2026 Reel Highlight">
+              <img src="${ev.image}" alt="${ev.title}" loading="lazy" decoding="async" class="editorial-img" style="height: 480px;">
+            </a>
           </div>
         </div>
       </div>
