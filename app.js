@@ -1007,79 +1007,83 @@ function renderGalleryItems(category) {
 // --- CLAIM FREE SEAT PAGE TEMPLATE ---
 function renderClaimFreeSeatPage() {
   return `
-    <div class="trial-page-layout">
-      <div class="trial-visual-side">
-        <img src="assets/hero-bg.jpg" alt="Dance Darbar Rehearsal" loading="lazy" decoding="async" class="trial-visual-img">
-        <div style="position: absolute; bottom: 60px; left: 60px; right: 60px; z-index: 2; color: var(--color-white);">
-          <span class="eyebrow light">Trial Class Admission</span>
-          <h2 style="font-size: 36px; color: var(--color-white); margin-bottom: 12px;">Experience Dance Darbar.</h2>
-          <p style="color: rgba(255,255,255,0.85);">Join us for a free trial class in Kathak, Bollywood, Vocal Music, Fine Arts or Yoga.</p>
-        </div>
-      </div>
-
-      <div class="trial-form-side">
-        <span class="eyebrow trial-eyebrow">Free Trial Registration</span>
-        <h1 class="trial-form-heading">Claim Your Free Trial Seat.</h1>
-        <p class="trial-form-desc">Tell us who the class is for and which class interests you. Our team will contact you with batch availability.</p>
-
-        <form id="trial-seat-form" novalidate>
-          <div class="form-group">
-            <label class="form-label" for="student_name">Student Name *</label>
-            <input type="text" id="student_name" name="student_name" class="form-control" placeholder="Enter student's full name" required>
-            <span class="error-text" id="err-student_name">Please enter the student name.</span>
+    <div class="trial-main-container">
+      <div class="section-container">
+        <div class="trial-page-layout">
+          <div class="trial-visual-side">
+            <img src="assets/trial-form-image.jpg" alt="Dance Darbar Kala Sansthan Students & Guru" loading="lazy" decoding="async" class="trial-visual-img">
+            <div class="trial-visual-overlay">
+              <span class="eyebrow light">Trial Class Admission</span>
+              <h2 style="font-size: 32px; color: var(--color-white); margin-top: 4px; margin-bottom: 8px; line-height: 1.2;">Experience Dance Darbar.</h2>
+              <p style="color: rgba(255,255,255,0.9); font-size: 14.5px; line-height: 1.45;">Join us for a free trial class in Kathak, Bollywood, Vocal Music, Fine Arts or Yoga.</p>
+            </div>
           </div>
 
-          <div class="form-group">
-            <label class="form-label" for="age_group">Age Group *</label>
-            <select id="age_group" name="age_group" class="form-control" required>
-              <option value="">Select Age Group</option>
-              <option value="5–8 years">5–8 years</option>
-              <option value="9–12 years">9–12 years</option>
-              <option value="13–17 years">13–17 years</option>
-              <option value="18–30 years">18–30 years</option>
-              <option value="31–50 years">31–50 years</option>
-              <option value="51–60 years">51–60 years</option>
-              <option value="60+ years">60+ years</option>
-            </select>
-            <span class="error-text" id="err-age_group">Please select an age group.</span>
+          <div class="trial-form-side">
+            <span class="eyebrow trial-eyebrow">Free Trial Registration</span>
+            <h1 class="trial-form-heading">Claim Your Free Trial Seat.</h1>
+            <p class="trial-form-desc">Tell us who the class is for and which class interests you. Our team will contact you with batch availability.</p>
+
+            <form id="trial-seat-form" novalidate>
+              <div class="form-group">
+                <label class="form-label" for="student_name">Student Name *</label>
+                <input type="text" id="student_name" name="student_name" class="form-control" placeholder="Enter student's full name" required>
+                <span class="error-text" id="err-student_name">Please enter the student name.</span>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="age_group">Age Group *</label>
+                <select id="age_group" name="age_group" class="form-control" required>
+                  <option value="">Select Age Group</option>
+                  <option value="5–8 years">5–8 years</option>
+                  <option value="9–12 years">9–12 years</option>
+                  <option value="13–17 years">13–17 years</option>
+                  <option value="18–30 years">18–30 years</option>
+                  <option value="31–50 years">31–50 years</option>
+                  <option value="51–60 years">51–60 years</option>
+                  <option value="60+ years">60+ years</option>
+                </select>
+                <span class="error-text" id="err-age_group">Please select an age group.</span>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="interested_programme">Interested Class *</label>
+                <select id="interested_programme" name="interested_programme" class="form-control" required>
+                  <option value="">Select Class</option>
+                  <option value="Kathak">Kathak</option>
+                  <option value="Bollywood">Bollywood</option>
+                  <option value="Vocal Music">Vocal Music</option>
+                  <option value="Fine Arts">Fine Arts</option>
+                  <option value="Yoga">Yoga</option>
+                </select>
+                <span class="error-text" id="err-interested_programme">Please select a programme.</span>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="phone">Phone Number *</label>
+                <input type="tel" id="phone" name="phone" class="form-control" placeholder="10-digit mobile number" required>
+                <span class="error-text" id="err-phone">Please enter a valid phone number.</span>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="address">Residential Address / Locality *</label>
+                <input type="text" id="address" name="address" class="form-control" placeholder="Enter full address or locality (e.g. Dwarka Sec 7)" required>
+                <span class="error-text" id="err-address">Please enter your address or locality.</span>
+              </div>
+
+              <button type="submit" class="btn btn-primary full-width" style="margin-top: 12px;" id="trial-submit-btn">
+                <span>Claim Free Seat</span>
+                <svg class="btn-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </button>
+            </form>
+
+            <div id="trial-success-message" style="display: none; background: var(--color-light-surface); padding: 40px; border-radius: var(--radius-medium); text-align: center; border: 1px solid var(--color-primary);">
+              <div style="width: 60px; height: 60px; background: var(--color-primary); color: var(--color-navy); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 32px; font-weight: 700;">✓</div>
+              <h2 style="font-size: 28px; margin-bottom: 12px;">Your Request Has Been Submitted.</h2>
+              <p style="color: var(--color-muted-text); margin-bottom: 24px;">The Dance Darbar Kala Sansthan team will contact you shortly with suitable programme and batch details.</p>
+              <a href="#/programs" class="btn btn-secondary">Explore Programmes</a>
+            </div>
           </div>
-
-          <div class="form-group">
-            <label class="form-label" for="interested_programme">Interested Class *</label>
-            <select id="interested_programme" name="interested_programme" class="form-control" required>
-              <option value="">Select Class</option>
-              <option value="Kathak">Kathak</option>
-              <option value="Bollywood">Bollywood</option>
-              <option value="Vocal Music">Vocal Music</option>
-              <option value="Fine Arts">Fine Arts</option>
-              <option value="Yoga">Yoga</option>
-            </select>
-            <span class="error-text" id="err-interested_programme">Please select a programme.</span>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="phone">Phone Number *</label>
-            <input type="tel" id="phone" name="phone" class="form-control" placeholder="10-digit mobile number" required>
-            <span class="error-text" id="err-phone">Please enter a valid phone number.</span>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="address">Residential Address / Locality *</label>
-            <input type="text" id="address" name="address" class="form-control" placeholder="Enter full address or locality (e.g. Dwarka Sec 7)" required>
-            <span class="error-text" id="err-address">Please enter your address or locality.</span>
-          </div>
-
-          <button type="submit" class="btn btn-primary full-width" style="margin-top: 12px;" id="trial-submit-btn">
-            <span>Claim Free Seat</span>
-            <svg class="btn-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </button>
-        </form>
-
-        <div id="trial-success-message" style="display: none; background: var(--color-light-surface); padding: 40px; border-radius: var(--radius-medium); text-align: center; border: 1px solid var(--color-primary);">
-          <div style="width: 60px; height: 60px; background: var(--color-primary); color: var(--color-navy); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 32px; font-weight: 700;">✓</div>
-          <h2 style="font-size: 28px; margin-bottom: 12px;">Your Request Has Been Submitted.</h2>
-          <p style="color: var(--color-muted-text); margin-bottom: 24px;">The Dance Darbar Kala Sansthan team will contact you shortly with suitable programme and batch details.</p>
-          <a href="#/programs" class="btn btn-secondary">Explore Programmes</a>
         </div>
       </div>
     </div>
