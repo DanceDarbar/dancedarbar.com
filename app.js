@@ -545,10 +545,7 @@ function renderHomePage() {
                 <span class="meta-val">${amrapaliEvent.venue}</span>
               </div>
             </div>
-            <a href="#/claim-free-seat" class="btn btn-primary">
-              <span>Reserve Seat</span>
-              <svg class="btn-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
+            ${renderAmrapaliCTA()}
           </div>
         </div>
       </div>
@@ -891,10 +888,7 @@ function renderEventsPage() {
                 <span class="meta-val">${ev.venue}</span>
               </div>
             </div>
-            <a href="#/claim-free-seat" class="btn btn-primary">
-              <span>Reserve Seat</span>
-              <svg class="btn-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
+            ${renderAmrapaliCTA()}
           </div>
         </div>
       </div>
@@ -920,10 +914,7 @@ function renderEventDetailPage(slug) {
               <p style="margin-bottom: 12px; font-size: 15px;"><strong>⏰ Time:</strong> ${ev.time}</p>
               <p style="font-size: 15px;"><strong>📍 Auditorium Venue:</strong> ${ev.venue}</p>
             </div>
-            <a href="#/claim-free-seat" class="btn btn-primary">
-              <span>Reserve Seat</span>
-              <svg class="btn-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
+            ${renderAmrapaliCTA()}
           </div>
           <div class="editorial-media">
             <img src="${ev.image}" alt="${ev.title}" loading="lazy" decoding="async" class="editorial-img" style="height: 480px;">
@@ -1634,6 +1625,46 @@ const AMRAPALI_CONFIG = {
   eventVenue: 'CCRT Auditorium, Dwarka Sector 7, New Delhi'
 };
 
+function getAmrapaliReservationStatus() {
+  try {
+    const s = localStorage.getItem('amrapali_reservation_status');
+    if (s === 'open') return 'open';
+    return 'closed';
+  } catch (e) {
+    return 'closed';
+  }
+}
+
+function setAmrapaliReservationStatus(status) {
+  try {
+    localStorage.setItem('amrapali_reservation_status', status === 'open' ? 'open' : 'closed');
+  } catch (e) {}
+}
+
+function renderAmrapaliCTA(extraClass = '') {
+  const status = getAmrapaliReservationStatus();
+  if (status === 'closed') {
+    return `
+      <div class="amrapali-cta-wrap ${extraClass}">
+        <button type="button" class="btn btn-seats-full" disabled aria-disabled="true">
+          <span class="status-dot-closed">●</span>
+          <span>Seats Full</span>
+        </button>
+        <p class="amrapali-closed-note">All seats for AMRAPALI 2026 have been reserved. Seat reservations are now closed.</p>
+      </div>
+    `;
+  } else {
+    return `
+      <div class="amrapali-cta-wrap ${extraClass}">
+        <button type="button" class="btn btn-primary" onclick="window.openAmrapaliModal()">
+          <span>Reserve Seat</span>
+          <svg class="btn-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    `;
+  }
+}
+
 function getAmrapaliBookings() {
   try {
     const data = localStorage.getItem('amrapali_bookings_v2');
@@ -2126,6 +2157,10 @@ function initAmrapaliModalEvents() {
   }
 
   window.openAmrapaliModal = function() {
+    if (getAmrapaliReservationStatus() === 'closed') {
+      alert('All seats for AMRAPALI 2026 have been reserved. Seat reservations are currently closed.');
+      return;
+    }
     clearErrors();
     activeBooking = null;
     if (form) form.reset();
@@ -2172,6 +2207,13 @@ function initAmrapaliModalEvents() {
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('a, button');
     if (btn) {
+      if (btn.classList.contains('btn-seats-full') || btn.disabled) {
+        if (btn.classList.contains('btn-seats-full')) {
+          e.preventDefault();
+          e.stopPropagation();
+          return false;
+        }
+      }
       const text = btn.textContent.trim().toLowerCase();
       const href = btn.getAttribute('href') || '';
       if (
@@ -2179,6 +2221,10 @@ function initAmrapaliModalEvents() {
         !btn.closest('#amrapali-modal')
       ) {
         e.preventDefault();
+        if (getAmrapaliReservationStatus() === 'closed') {
+          alert('All seats for AMRAPALI 2026 have been reserved. Seat reservations are currently closed.');
+          return false;
+        }
         window.openAmrapaliModal();
       }
     }
@@ -2188,6 +2234,11 @@ function initAmrapaliModalEvents() {
   if (form) {
     form.addEventListener('submit', (e) => {
       e.preventDefault();
+      if (getAmrapaliReservationStatus() === 'closed') {
+        alert('Seat reservations for AMRAPALI 2026 are closed.');
+        window.closeAmrapaliModal();
+        return;
+      }
       let isValid = true;
 
       const name = document.getElementById('amp_full_name');
@@ -2363,12 +2414,14 @@ function initAmrapaliModalEvents() {
 // --------------------------------------------------------------------------
 // 5. GLOBAL HEADER & CURSOR CONTROLLER
 // --------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 // --- ADMIN DASHBOARD TEMPLATE & LOGIC ---
 function renderAdminPage() {
   const trialList = getTrialRegistrations();
   const bookingList = getAmrapaliBookings();
   const totalSeats = bookingList.reduce((acc, b) => acc + (b.numSeats || parseInt(b.seatCount) || 1), 0);
   const totalPaid = bookingList.filter(b => b.status === 'Paid' || b.paymentStatus === 'Successful' || b.paymentStatus === 'Successful (Pending Verification)').reduce((acc, b) => acc + (b.totalAmount || 0), 0);
+  const currentStatus = getAmrapaliReservationStatus();
 
   return `
     <div style="padding-top: 120px; padding-bottom: 80px; min-height: 85vh; background: var(--color-off-white);">
@@ -2382,6 +2435,34 @@ function renderAdminPage() {
           <div style="display: flex; gap: 12px; flex-wrap: wrap;">
             <button id="admin-export-trials" class="btn btn-secondary" style="font-size: 13px; min-height: 44px; padding: 0 18px;">📥 Export Trials CSV</button>
             <button id="admin-export-bookings" class="btn btn-primary" style="font-size: 13px; min-height: 44px; padding: 0 18px;">📥 Export Bookings CSV</button>
+          </div>
+        </div>
+
+        <!-- AMRAPALI RESERVATION PORTAL STATUS CONTROL PANEL -->
+        <div style="background: var(--color-white); border-radius: var(--radius-medium); padding: 24px; border: 1px solid var(--color-border); margin-bottom: 32px; box-shadow: 0 4px 16px rgba(8,18,30,0.04); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+          <div>
+            <span style="font-size: 11px; font-weight: 700; color: var(--color-muted-text); text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 4px;">AMRAPALI 2026 Reservation Setting</span>
+            <h3 style="font-size: 20px; font-weight: 700; color: var(--color-navy); margin-bottom: 4px; display: flex; align-items: center; gap: 10px;">
+              <span>Seat Reservation Portal Status:</span>
+              ${currentStatus === 'closed' 
+                ? `<span class="badge" style="background: #FEE2E2; color: #991B1B; font-weight: 700; font-size: 13px;">● Closed (Seats Full)</span>`
+                : `<span class="badge badge-success" style="font-size: 13px;">● Open (Accepting Reservations)</span>`
+              }
+            </h3>
+            <p style="font-size: 13.5px; color: var(--color-muted-text); margin: 0;">
+              ${currentStatus === 'closed'
+                ? 'Website shows "Seats Full" and disables new reservations and payment QR screen.'
+                : 'Website shows "Reserve Seat" and allows users to submit seat reservations.'
+              }
+            </p>
+          </div>
+          <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <button id="admin-toggle-status-open" class="btn ${currentStatus === 'open' ? 'btn-primary' : 'btn-secondary'}" style="font-size: 13px; padding: 10px 20px; min-height: 42px;">
+              <span>[ Open Portal ]</span>
+            </button>
+            <button id="admin-toggle-status-closed" class="btn ${currentStatus === 'closed' ? 'btn-primary' : 'btn-secondary'}" style="font-size: 13px; padding: 10px 20px; min-height: 42px; ${currentStatus === 'closed' ? 'background: #991B1B; border-color: #991B1B;' : ''}">
+              <span>[ Closed / Seats Full ]</span>
+            </button>
           </div>
         </div>
 
@@ -2505,6 +2586,27 @@ function initAdminPageEvents() {
   const btnBookings = document.getElementById('admin-btn-bookings');
   const btnExportTrials = document.getElementById('admin-export-trials');
   const btnExportBookings = document.getElementById('admin-export-bookings');
+
+  const btnToggleOpen = document.getElementById('admin-toggle-status-open');
+  const btnToggleClosed = document.getElementById('admin-toggle-status-closed');
+
+  if (btnToggleOpen) {
+    btnToggleOpen.addEventListener('click', () => {
+      setAmrapaliReservationStatus('open');
+      alert('AMRAPALI 2026 Seat Reservation Portal is now OPEN. Website will show "Reserve Seat" button and accept new bookings.');
+      if (typeof window.renderApp === 'function') window.renderApp();
+      else location.reload();
+    });
+  }
+
+  if (btnToggleClosed) {
+    btnToggleClosed.addEventListener('click', () => {
+      setAmrapaliReservationStatus('closed');
+      alert('AMRAPALI 2026 Seat Reservation Portal is now CLOSED. Website will show "Seats Full" and disable new bookings.');
+      if (typeof window.renderApp === 'function') window.renderApp();
+      else location.reload();
+    });
+  }
 
   function updateTable() {
     const q = (searchInput.value || '').toLowerCase().trim();

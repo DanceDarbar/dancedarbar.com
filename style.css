@@ -1239,6 +1239,74 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* --------------------------------------------------------------------------
+   AMRAPALI 2026 SEATS FULL / PORTAL CLOSED STYLES
+   -------------------------------------------------------------------------- */
+.amrapali-cta-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.btn-seats-full {
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: rgba(255, 255, 255, 0.72) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+  opacity: 0.85 !important;
+  box-shadow: none !important;
+  transform: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.03em !important;
+  border-radius: var(--radius-pill) !important;
+  padding: 0 28px !important;
+  height: 48px !important;
+  min-height: 48px !important;
+}
+
+.status-dot-closed {
+  color: #EF4444;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.amrapali-closed-note {
+  font-size: 13.5px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 2px;
+  line-height: 1.45;
+  max-width: 480px;
+}
+
+@media (max-width: 767px) {
+  .amrapali-cta-wrap {
+    align-items: center !important;
+    text-align: center !important;
+    width: 100% !important;
+    margin-top: 16px !important;
+  }
+
+  .btn-seats-full {
+    width: 80% !important;
+    max-width: 280px !important;
+    justify-content: center !important;
+    margin: 0 auto !important;
+  }
+
+  .amrapali-closed-note {
+    text-align: center !important;
+    margin: 8px auto 0 auto !important;
+    font-size: 12.5px !important;
+    line-height: 1.4 !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
    12. GALLERY GRID & LIGHTBOX
    -------------------------------------------------------------------------- */
 .gallery-section {
