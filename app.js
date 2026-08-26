@@ -516,37 +516,12 @@ function renderHomePage() {
       </div>
     </section>
 
-    <!-- FEATURED EVENT (AMRAPALI 2026 / UPCOMING PERFORMANCE) -->
+    <!-- FEATURED EVENT / UPCOMING PERFORMANCE (COMING SOON) -->
     <section class="featured-event-section">
       <div class="section-container">
-        <span class="eyebrow light">Upcoming Performance</span>
-        <div class="event-banner-card">
-          <div class="event-media-side">
-            <img src="${amrapaliEvent.image}" alt="${amrapaliEvent.title}" loading="lazy" decoding="async" class="event-img">
-          </div>
-          <div class="event-info-side">
-            <span class="eyebrow light">${amrapaliEvent.tagline}</span>
-            <h2 class="event-title-highlight" style="line-height: 1.1; margin: 6px 0 10px;">
-              AMRAPALI 2026
-              <span style="display: block; font-size: 0.44em; font-weight: 600; color: rgba(255,255,255,0.85); margin-top: 4px; letter-spacing: 0;">Annual Student Dance Ballet</span>
-            </h2>
-            <p style="color: rgba(255,255,255,0.8); margin-bottom: 20px; font-size: 14px; line-height: 1.55;">${amrapaliEvent.description}</p>
-            <div class="event-meta-list">
-              <div class="meta-row">
-                <span class="meta-label">Date</span>
-                <span class="meta-val">${amrapaliEvent.date} (${amrapaliEvent.day})</span>
-              </div>
-              <div class="meta-row">
-                <span class="meta-label">Time</span>
-                <span class="meta-val">${amrapaliEvent.time}</span>
-              </div>
-              <div class="meta-row">
-                <span class="meta-label">Venue</span>
-                <span class="meta-val">${amrapaliEvent.venue}</span>
-              </div>
-            </div>
-            ${renderAmrapaliCTA()}
-          </div>
+        <span class="eyebrow light" style="display: block; margin-bottom: 24px;">Upcoming Performance</span>
+        <div class="coming-soon-card">
+          <h2 class="coming-soon-heading">COMING SOON</h2>
         </div>
       </div>
     </section>
@@ -855,7 +830,6 @@ function renderScheduleRows(items) {
 
 // --- EVENTS PAGE TEMPLATE ---
 function renderEventsPage() {
-  const ev = DANCE_DATA.events[0];
   return `
     <div style="padding-top: 140px; padding-bottom: 100px;">
       <div class="section-container">
@@ -863,33 +837,8 @@ function renderEventsPage() {
         <h1 class="section-heading" style="margin-bottom: 16px;">Where Practice Meets the Stage.</h1>
         <p class="lead-text" style="margin-bottom: 60px;">Discover upcoming annual productions, stage shows and grand cultural showcases at Dance Darbar Kala Sansthan.</p>
 
-        <div class="event-banner-card">
-          <div class="event-media-side">
-            <img src="${ev.image}" alt="${ev.title}" loading="lazy" decoding="async" class="event-img">
-          </div>
-          <div class="event-info-side">
-            <span class="eyebrow light">${ev.tagline}</span>
-            <h2 class="event-title-highlight" style="line-height: 1.1; margin: 6px 0 10px;">
-              AMRAPALI 2026
-              <span style="display: block; font-size: 0.44em; font-weight: 600; color: rgba(255,255,255,0.85); margin-top: 4px; letter-spacing: 0;">Annual Student Dance Ballet</span>
-            </h2>
-            <p style="color: rgba(255,255,255,0.8); margin-bottom: 20px; font-size: 14px; line-height: 1.55;">${ev.description}</p>
-            <div class="event-meta-list">
-              <div class="meta-row">
-                <span class="meta-label">Date</span>
-                <span class="meta-val">${ev.date} (${ev.day})</span>
-              </div>
-              <div class="meta-row">
-                <span class="meta-label">Time</span>
-                <span class="meta-val">${ev.time}</span>
-              </div>
-              <div class="meta-row">
-                <span class="meta-label">Venue</span>
-                <span class="meta-val">${ev.venue}</span>
-              </div>
-            </div>
-            ${renderAmrapaliCTA()}
-          </div>
+        <div class="coming-soon-card">
+          <h2 class="coming-soon-heading">COMING SOON</h2>
         </div>
       </div>
     </div>
@@ -898,27 +847,12 @@ function renderEventsPage() {
 
 // --- EVENT DETAIL TEMPLATE ---
 function renderEventDetailPage(slug) {
-  const ev = DANCE_DATA.events[0];
   return `
     <div style="padding-top: 140px; padding-bottom: 100px;">
       <div class="section-container">
         <a href="#/events" style="font-size: 14px; font-weight: 600; color: var(--color-primary-dark); margin-bottom: 24px; display: inline-block;">&larr; Back to Events</a>
-        <div class="editorial-split" style="margin-bottom: 60px;">
-          <div>
-            <span class="eyebrow">${ev.tagline}</span>
-            <h1 class="section-heading" style="font-size: clamp(34px, 3.8vw, 54px); line-height: 1.1; margin-bottom: 6px;">AMRAPALI 2026</h1>
-            <p style="font-size: 18px; font-weight: 600; color: var(--color-primary-dark); margin-bottom: 20px;">Annual Student Dance Ballet</p>
-            <p class="lead-text" style="margin-bottom: 28px;">${ev.description}</p>
-            <div style="background: var(--color-white); padding: 28px; border-radius: var(--radius-medium); border: 1px solid var(--color-border); margin-bottom: 32px; box-shadow: 0 4px 20px rgba(8,18,30,0.03);">
-              <p style="margin-bottom: 12px; font-size: 15px;"><strong>📅 Date:</strong> ${ev.date} (${ev.day})</p>
-              <p style="margin-bottom: 12px; font-size: 15px;"><strong>⏰ Time:</strong> ${ev.time}</p>
-              <p style="font-size: 15px;"><strong>📍 Auditorium Venue:</strong> ${ev.venue}</p>
-            </div>
-            ${renderAmrapaliCTA()}
-          </div>
-          <div class="editorial-media">
-            <img src="${ev.image}" alt="${ev.title}" loading="lazy" decoding="async" class="editorial-img" style="height: 480px;">
-          </div>
+        <div class="coming-soon-card">
+          <h1 class="coming-soon-heading">COMING SOON</h1>
         </div>
       </div>
     </div>

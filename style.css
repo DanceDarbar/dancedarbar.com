@@ -1239,6 +1239,72 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* --------------------------------------------------------------------------
+   COMING SOON EVENT SECTION & BANNER STYLES
+   -------------------------------------------------------------------------- */
+.coming-soon-card {
+  background: radial-gradient(circle at center, rgba(94, 187, 234, 0.12) 0%, rgba(8, 18, 30, 0) 70%), #08121E;
+  border-radius: var(--radius-large);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 130px 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 380px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(8, 18, 30, 0.4);
+}
+
+.coming-soon-heading {
+  font-family: 'Satoshi', var(--font-primary), sans-serif;
+  font-weight: 900;
+  font-size: clamp(48px, 9.5vw, 110px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: #FFFFFF;
+  text-transform: uppercase;
+  margin: 0;
+  padding: 0;
+  animation: comingSoonEntrance 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes comingSoonEntrance {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 991px) {
+  .coming-soon-card {
+    padding: 96px 20px;
+    min-height: 320px;
+  }
+  .coming-soon-heading {
+    font-size: clamp(44px, 10vw, 84px);
+    letter-spacing: -0.025em;
+  }
+}
+
+@media (max-width: 767px) {
+  .coming-soon-card {
+    padding: 76px 16px;
+    min-height: 260px;
+    border-radius: var(--radius-medium);
+  }
+  .coming-soon-heading {
+    font-size: clamp(36px, 11vw, 58px);
+    letter-spacing: -0.02em;
+  }
+}
+
+/* --------------------------------------------------------------------------
    AMRAPALI 2026 SEATS FULL / PORTAL CLOSED STYLES
    -------------------------------------------------------------------------- */
 .amrapali-cta-wrap {
