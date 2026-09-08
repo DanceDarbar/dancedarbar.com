@@ -1,0 +1,7 @@
+﻿User-agent: *
+Allow: /
+Allow: /favicon.ico
+Allow: /favicon*.png
+Allow: /assets/
+
+Sitemap: https://www.dancedarbar.com/sitemap.xml

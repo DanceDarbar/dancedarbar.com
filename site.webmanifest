@@ -1,0 +1,21 @@
+﻿{
+  "name": "Dance Darbar Kala Sansthan",
+  "short_name": "Dance Darbar",
+  "description": "Premier dance, music, yoga and fine arts academy in Dwarka, New Delhi.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#08121E",
+  "theme_color": "#08121E",
+  "icons": [
+    {
+      "src": "/favicon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
