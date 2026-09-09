@@ -373,7 +373,11 @@ function renderApp() {
     }
   });
 
-  window.scrollTo(0, 0);
+  if (window.lenisInstance) {
+    window.lenisInstance.scrollTo(0, { immediate: true });
+  } else {
+    window.scrollTo(0, 0);
+  }
 
   // Route Dispatcher
   if (route === '/' || route === '') {
@@ -425,9 +429,6 @@ function renderApp() {
 
 // --- HOME PAGE TEMPLATE ---
 function renderHomePage() {
-  const kathakProg = DANCE_DATA.programs.find(p => p.slug === 'kathak');
-  const amrapaliEvent = DANCE_DATA.events[0];
-
   return `
     <!-- HERO SECTION -->
     <section class="hero-section">
@@ -447,14 +448,21 @@ function renderHomePage() {
       <div class="hero-content">
         <div class="hero-text-box">
           <span class="eyebrow light">Dance Darbar Kala Sansthan</span>
-          <h1 class="display-heading hero-heading">Where Movement<br>Becomes Art.</h1>
+          <h1 class="display-heading hero-heading">
+            <span class="hero-line"><span class="hero-word">Where</span> <span class="hero-word">Movement</span></span><br>
+            <span class="hero-line"><span class="hero-word">Becomes</span> <span class="hero-word">Art.</span></span>
+          </h1>
           <p class="hero-subheading">Disciplined training in Kathak, Bollywood, Vocal Music, Fine Arts and Yoga for every age and skill level.</p>
           <div class="hero-cta-group">
-            <a href="#/claim-free-seat" class="btn btn-primary">
-              <span>Claim Free Seat</span>
-              <svg class="btn-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            <a href="#/claim-free-seat" class="btn btn-primary magnetic-btn">
+              <span class="magnetic-btn-inner">
+                <span>Claim Free Seat</span>
+                <svg class="btn-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </span>
             </a>
-            <a href="#/programs" class="btn btn-secondary light">Explore Classes</a>
+            <a href="#/programs" class="btn btn-secondary light magnetic-btn">
+              <span class="magnetic-btn-inner">Explore Classes</span>
+            </a>
           </div>
         </div>
       </div>
@@ -468,47 +476,46 @@ function renderHomePage() {
     <section class="about-brand-section section-padding">
       <div class="section-container">
         <div style="text-align: center; max-width: 980px; margin: 0 auto;">
-          <h2 class="section-heading" style="margin-bottom: 16px;">Every Step Tells a Story.</h2>
-          <p class="about-brand-text" style="margin: 0 auto; color: var(--color-muted-text); font-weight: 400;">
+          <h2 class="section-heading about-brand-heading" style="margin-bottom: 24px;">Every Step Tells a Story.</h2>
+          <p class="about-brand-text" style="margin: 0 auto; font-weight: 400;">
             Dance Darbar Kala Sansthan is a premier performing arts sanctuary where artistic discipline, Indian culture, and creative expression unite. Through structured mentorship in Kathak, Bollywood, Vocal Music, Fine Arts, and Yoga, we empower learners of all ages to build posture, confidence, and stage poise. Every step at Dance Darbar nurtures self-belief, grace, and a lifelong passion for artistic mastery.
           </p>
         </div>
       </div>
     </section>
 
-    <!-- INTERACTIVE PROGRAMME INDEX -->
-    <section class="program-index-section">
-      <div class="program-bg-preview-wrap">
-        ${DANCE_DATA.programs.map((p, idx) => p.video ? `
-          <video src="${p.video}" autoplay loop muted playsinline class="program-bg-preview ${idx === 0 ? 'active' : ''}" data-prog-bg="${p.slug}"></video>
-        ` : `
-          <img src="${p.image}" alt="${p.name}" loading="lazy" decoding="async" class="program-bg-preview ${idx === 0 ? 'active' : ''}" data-prog-bg="${p.slug}">
-        `).join('')}
-      </div>
-      <div class="program-index-content">
-        <div class="program-index-header">
+    <!-- 3D PERSPECTIVE CLASSES CARDS -->
+    <section class="classes-perspective-section section-padding">
+      <div class="section-container">
+        <div style="text-align: center; max-width: 820px; margin: 0 auto 48px;">
           <span class="eyebrow light">Explore Classes</span>
-          <h2 class="section-heading" style="color: var(--color-white);">Choose the Art That Moves You.</h2>
-          <p class="lead-text light">Hover or select a class to preview the experience.</p>
+          <h2 class="section-heading" style="color: var(--color-white); margin-bottom: 12px;">Choose the Art That Moves You.</h2>
+          <p class="lead-text light" style="margin: 0 auto;">Hover or select a class to preview the experience.</p>
         </div>
 
-        <div class="program-list">
+        <div class="classes-perspective-grid">
           ${DANCE_DATA.programs.map((p, idx) => `
-            <div class="program-item ${idx === 0 ? 'active' : ''}" data-prog-target="${p.slug}">
-              <span class="program-number">${p.number}</span>
-              <div>
-                <h3 class="program-title" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                  <span>${p.name}</span>
-                  ${p.onlineAvailable ? `<span class="online-pill-badge">Online Available</span>` : ``}
-                </h3>
-              </div>
-              <div>
-                <p class="program-desc">${p.shortDescription}</p>
-                <span style="font-size: 11px; font-weight: 600; color: ${p.onlineAvailable ? '#5EBBEA' : 'rgba(255,255,255,0.5)'}; margin-top: 4px; display: inline-block;">${p.modeBadge}</span>
-                <p style="font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 4px;">👤 ${p.instructor} • 🎓 ${p.ageGroups[0]}</p>
-              </div>
-              <div class="program-card-actions">
-                <a href="#/programs/${p.slug}" class="btn btn-secondary light">View Details &rarr;</a>
+            <div class="tilt-card-container">
+              <div class="tilt-card cursor-target-view" data-tilt data-slug="${p.slug}">
+                <div class="tilt-card-media">
+                  <img src="${p.image}" alt="${p.name}" class="tilt-card-img" loading="lazy" decoding="async">
+                  <div class="tilt-card-scrim"></div>
+                  <span class="tilt-card-num">${p.number}</span>
+                </div>
+                <div class="tilt-card-body">
+                  <div class="tilt-card-top">
+                    <h3 class="tilt-card-title">${p.name}</h3>
+                    ${p.onlineAvailable ? `<span class="online-pill-badge">${p.modeBadge}</span>` : `<span class="offline-pill-badge">${p.modeBadge}</span>`}
+                  </div>
+                  <p class="tilt-card-desc">${p.shortDescription}</p>
+                  <div class="tilt-card-meta">
+                    <span>👤 ${p.instructor} • 🎓 ${p.ageGroups[0]}</span>
+                  </div>
+                  <div class="tilt-card-action">
+                    <a href="#/programs/${p.slug}" class="btn btn-secondary light">View Details &rarr;</a>
+                  </div>
+                </div>
+                <div class="tilt-card-shine"></div>
               </div>
             </div>
           `).join('')}
@@ -516,12 +523,14 @@ function renderHomePage() {
       </div>
     </section>
 
-    <!-- FEATURED EVENT / UPCOMING PERFORMANCE (COMING SOON) -->
-    <section class="featured-event-section">
+    <!-- FEATURED EVENT / UPCOMING PERFORMANCE (COMING SOON SHOWCASE) -->
+    <section class="featured-event-section section-padding">
       <div class="section-container">
-        <span class="eyebrow light" style="display: block; margin-bottom: 24px;">Upcoming Performance</span>
-        <div class="coming-soon-card">
-          <h2 class="coming-soon-heading">COMING SOON</h2>
+        <div class="performance-framed-wrap">
+          <span class="eyebrow light" style="display: block; margin-bottom: 24px;">Upcoming Performance</span>
+          <div class="coming-soon-card">
+            <h2 class="coming-soon-heading">COMING SOON</h2>
+          </div>
         </div>
       </div>
     </section>
@@ -529,7 +538,7 @@ function renderHomePage() {
     <!-- STATISTICS COUNTER -->
     <section class="stats-section">
       <div class="section-container">
-        <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="stats-grid">
           <div class="stat-item cursor-target-view">
             <span class="stat-value counter-anim" data-target="5000" data-suffix="+">0+</span>
             <span class="stat-label">Students Trained</span>
@@ -546,7 +555,7 @@ function renderHomePage() {
       </div>
     </section>
 
-    <!-- TESTIMONIALS SHOWCASE SECTION WITH MOTION GRAPHICS -->
+    <!-- TESTIMONIALS 3D COVERFLOW SHOWCASE -->
     <section class="testimonials-section section-padding">
       <div class="section-container">
         <div style="text-align: center; margin-bottom: 56px;">
@@ -555,28 +564,43 @@ function renderHomePage() {
           <p class="lead-text" style="margin: 0 auto; max-width: 600px;">Hear how Dance Darbar Kala Sansthan shapes confidence, rhythm, and artistic growth.</p>
         </div>
 
-        <div class="testimonials-grid">
-          ${DANCE_DATA.testimonials.map((t, idx) => `
-            <div class="testimonial-card motion-graphic-testimonial cursor-target-view" style="animation-delay: ${idx * 0.15}s">
-              <div class="motion-quote-mark">“</div>
-              <div class="testimonial-rating">
-                ${'★'.repeat(t.rating)}
-              </div>
-              <p class="testimonial-quote">“${t.quote}”</p>
-              <div class="testimonial-author">
-                <div>
-                  <h4 class="author-name">${t.name}</h4>
-                  <span class="author-role">${t.role}</span>
+        <div class="coverflow-wrapper">
+          <div class="coverflow-stage" id="coverflow-stage">
+            ${DANCE_DATA.testimonials.map((t, idx) => `
+              <div class="coverflow-slide cursor-target-view ${idx === 0 ? 'is-active' : (idx === 1 ? 'is-next' : 'is-prev')}" data-slide-index="${idx}">
+                <div class="coverflow-slide-inner">
+                  <div class="coverflow-quote-glyph">“</div>
+                  <div class="testimonial-rating">
+                    ${'★'.repeat(t.rating)}
+                  </div>
+                  <p class="testimonial-quote">“${t.quote}”</p>
+                  <div class="testimonial-author">
+                    <div>
+                      <h4 class="author-name">${t.name}</h4>
+                      <span class="author-role">${t.role}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="card-glow-border"></div>
+            `).join('')}
+          </div>
+
+          <div class="coverflow-controls">
+            <button class="coverflow-btn prev" id="coverflow-prev" aria-label="Previous Testimonial">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 19l-7-7 7-7"/></svg>
+            </button>
+            <div class="coverflow-dots" id="coverflow-dots">
+              ${DANCE_DATA.testimonials.map((_, idx) => `
+                <span class="coverflow-dot ${idx === 0 ? 'active' : ''}" data-index="${idx}"></span>
+              `).join('')}
             </div>
-          `).join('')}
+            <button class="coverflow-btn next" id="coverflow-next" aria-label="Next Testimonial">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
+            </button>
+          </div>
         </div>
       </div>
     </section>
-
-
 
     <!-- DUAL FAQ & CONTACT US SPLIT BANNER -->
     <section class="dual-banner-section">
@@ -591,7 +615,6 @@ function renderHomePage() {
           <h2 class="dual-title">CONTACT US</h2>
         </a>
       </div>
-    </section>
   `;
 }
 
@@ -1178,9 +1201,193 @@ function renderTermsPage() {
 // 4. INTERACTION INITIALIZERS
 // --------------------------------------------------------------------------
 
-// --- Home Page Interactive Video Switcher & FAQs ---
+// --- Home Page Interactive Engine & Motion Architecture ---
 function initHomePageEvents() {
-  // Animated Number Count-Up for Statistics Counter
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // 1. Lenis Smooth Scroll Integration
+  if (typeof Lenis !== 'undefined' && !prefersReduced) {
+    if (!window.lenisInstance) {
+      window.lenisInstance = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+        wheelMultiplier: 0.95
+      });
+
+      if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+        window.lenisInstance.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => {
+          window.lenisInstance.raf(time * 1000);
+        });
+        gsap.ticker.lagSmoothing(0);
+      } else {
+        function raf(time) {
+          window.lenisInstance.raf(time);
+          requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+      }
+    }
+  }
+
+  // 2. GSAP Split-Text Entrance & ScrollTrigger Reveals
+  if (typeof gsap !== 'undefined' && !prefersReduced) {
+    const heroWords = document.querySelectorAll('.hero-word');
+    if (heroWords.length > 0) {
+      gsap.fromTo(heroWords,
+        { y: '110%', opacity: 0 },
+        { y: '0%', opacity: 1, duration: 0.85, stagger: 0.1, ease: 'power3.out', delay: 0.15 }
+      );
+    }
+
+    const brandHeading = document.querySelector('.about-brand-heading');
+    const brandText = document.querySelector('.about-brand-text');
+    if (brandHeading && typeof ScrollTrigger !== 'undefined') {
+      gsap.from([brandHeading, brandText], {
+        scrollTrigger: {
+          trigger: '.about-brand-section',
+          start: 'top 80%'
+        },
+        y: 28,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.18,
+        ease: 'power2.out'
+      });
+    }
+
+    const classCards = document.querySelectorAll('.tilt-card-container');
+    if (classCards.length > 0 && typeof ScrollTrigger !== 'undefined') {
+      gsap.from(classCards, {
+        scrollTrigger: {
+          trigger: '.classes-perspective-section',
+          start: 'top 75%'
+        },
+        y: 40,
+        opacity: 0,
+        duration: 0.7,
+        stagger: 0.1,
+        ease: 'power2.out'
+      });
+    }
+  }
+
+  // 3. Interactive 3D Cursor-Aware Card Tilt
+  const tiltCards = document.querySelectorAll('.tilt-card');
+  if (tiltCards.length > 0 && !prefersReduced) {
+    tiltCards.forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        const rotateX = ((y - centerY) / centerY) * -9;
+        const rotateY = ((x - centerX) / centerX) * 9;
+
+        card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(1.02, 1.02, 1.02)`;
+        card.style.setProperty('--mouse-x', `${((x / rect.width) * 100).toFixed(1)}%`);
+        card.style.setProperty('--mouse-y', `${((y / rect.height) * 100).toFixed(1)}%`);
+      });
+
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+      });
+    });
+  }
+
+  // 4. Magnetic Button Hover Interaction
+  const magneticButtons = document.querySelectorAll('.magnetic-btn');
+  if (magneticButtons.length > 0 && !prefersReduced) {
+    magneticButtons.forEach(btn => {
+      const inner = btn.querySelector('.magnetic-btn-inner') || btn;
+      btn.addEventListener('mousemove', (e) => {
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        btn.style.transform = `translate(${x * 0.18}px, ${y * 0.18}px)`;
+        if (inner !== btn) {
+          inner.style.transform = `translate(${x * 0.12}px, ${y * 0.12}px)`;
+        }
+      });
+
+      btn.addEventListener('mouseleave', () => {
+        btn.style.transform = 'translate(0px, 0px)';
+        if (inner !== btn) {
+          inner.style.transform = 'translate(0px, 0px)';
+        }
+      });
+    });
+  }
+
+  // 5. 3D Coverflow Testimonials Carousel Controller
+  const slides = document.querySelectorAll('.coverflow-slide');
+  const dots = document.querySelectorAll('.coverflow-dot');
+  const prevBtn = document.getElementById('coverflow-prev');
+  const nextBtn = document.getElementById('coverflow-next');
+  const totalSlides = slides.length;
+  let currentIndex = 0;
+
+  function updateCoverflow(index) {
+    if (totalSlides === 0) return;
+    currentIndex = (index + totalSlides) % totalSlides;
+    slides.forEach((slide, idx) => {
+      slide.classList.remove('is-active', 'is-prev', 'is-next');
+      if (idx === currentIndex) {
+        slide.classList.add('is-active');
+      } else if (idx === (currentIndex - 1 + totalSlides) % totalSlides) {
+        slide.classList.add('is-prev');
+      } else {
+        slide.classList.add('is-next');
+      }
+    });
+
+    dots.forEach((dot, idx) => {
+      dot.classList.toggle('active', idx === currentIndex);
+    });
+  }
+
+  if (prevBtn && nextBtn && totalSlides > 0) {
+    prevBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      updateCoverflow(currentIndex - 1);
+    });
+
+    nextBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      updateCoverflow(currentIndex + 1);
+    });
+
+    dots.forEach((dot, idx) => {
+      dot.addEventListener('click', () => updateCoverflow(idx));
+    });
+
+    slides.forEach((slide, idx) => {
+      slide.addEventListener('click', () => {
+        if (idx !== currentIndex) updateCoverflow(idx);
+      });
+    });
+
+    // Touch swipe gestures
+    let touchStartX = 0;
+    let touchEndX = 0;
+    const stage = document.getElementById('coverflow-stage');
+    if (stage) {
+      stage.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
+
+      stage.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        if (touchEndX < touchStartX - 40) updateCoverflow(currentIndex + 1);
+        if (touchEndX > touchStartX + 40) updateCoverflow(currentIndex - 1);
+      }, { passive: true });
+    }
+  }
+
+  // 6. Animated Number Count-Up for Statistics Counter
   const counters = document.querySelectorAll('.counter-anim');
   if (counters.length > 0) {
     const observer = new IntersectionObserver((entries) => {
@@ -1190,8 +1397,8 @@ function initHomePageEvents() {
           const target = parseInt(counter.getAttribute('data-target'), 10);
           const suffix = counter.getAttribute('data-suffix') || '';
           let count = 0;
-          const duration = 2000;
-          const stepTime = 30;
+          const duration = 1800;
+          const stepTime = 25;
           const increment = Math.ceil(target / (duration / stepTime));
 
           const timer = setInterval(() => {
@@ -1212,15 +1419,14 @@ function initHomePageEvents() {
     counters.forEach(c => observer.observe(c));
   }
 
-  // Hero Video 15-Second Precise Continuous Loop
+  // 7. Hero Video 15-Second Precise Continuous Loop
   const heroVid = document.querySelector('.hero-video-element');
   if (heroVid) {
     let startPos = 0;
-    const LOOP_DURATION = 15; // Exactly 15 seconds loop
+    const LOOP_DURATION = 15;
 
     const initHeroVideoLoop = () => {
       if (heroVid.duration && !isNaN(heroVid.duration)) {
-        // Start from middle point of video
         startPos = Math.floor(heroVid.duration / 2);
         heroVid.currentTime = startPos;
         heroVid.play().catch(() => {});
@@ -1233,7 +1439,6 @@ function initHomePageEvents() {
       heroVid.addEventListener('loadedmetadata', initHeroVideoLoop, { once: true });
     }
 
-    // Reset back to startPos after exactly 15 seconds
     heroVid.addEventListener('timeupdate', () => {
       if (startPos > 0 && heroVid.currentTime >= (startPos + LOOP_DURATION)) {
         heroVid.currentTime = startPos;
@@ -1247,7 +1452,7 @@ function initHomePageEvents() {
     });
   }
 
-  // FAQ Banner Modal Trigger & Accordion Binder
+  // 8. FAQ Banner Modal Trigger & Accordion Binder
   const faqBtn = document.getElementById('faq-banner-trigger');
   const faqModal = document.getElementById('faq-modal');
   const faqClose = document.getElementById('faq-modal-close');
@@ -1270,7 +1475,6 @@ function initHomePageEvents() {
           </div>
         `).join('');
 
-        // Accordion click handler
         faqListContainer.querySelectorAll('.faq-question').forEach(q => {
           q.addEventListener('click', () => {
             const item = q.parentElement;
@@ -1287,7 +1491,7 @@ function initHomePageEvents() {
     if (faqBackdrop) faqBackdrop.onclick = () => faqModal.classList.remove('active');
   }
 
-  // Hero Background Video Controller (Seamless 15s Seek & Smooth Fade-In)
+  // 9. Hero Background Video Controller
   const heroVideo = document.querySelector('.hero-video-element');
   if (heroVideo) {
     const startTime = 15;
@@ -1332,23 +1536,7 @@ function initHomePageEvents() {
     });
   }
 
-  // Background Video/Image Switcher for Programme Index
-  const items = document.querySelectorAll('.program-item');
-  const previews = document.querySelectorAll('.program-bg-preview');
-
-  items.forEach(item => {
-    item.addEventListener('mouseenter', () => {
-      const slug = item.getAttribute('data-prog-target');
-      items.forEach(i => i.classList.remove('active'));
-      previews.forEach(p => p.classList.remove('active'));
-
-      item.classList.add('active');
-      const targetPreview = document.querySelector(`.program-bg-preview[data-prog-bg="${slug}"]`);
-      if (targetPreview) targetPreview.classList.add('active');
-    });
-  });
-
-  // FAQ Accordions
+  // 10. FAQ Accordions (Static in DOM)
   document.querySelectorAll('.faq-question').forEach(q => {
     q.addEventListener('click', () => {
       const item = q.parentElement;
