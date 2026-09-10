@@ -844,23 +844,6 @@ function renderScheduleRows(items) {
   return { table: tableHtml, cards: cardsHtml };
 }
 
-// --- RETRO THEATER MARQUEE BULB BORDER GENERATOR ---
-function renderMarqueeBorder() {
-  const topBulbs = Array.from({ length: 14 }, (_, i) => `<span class="marquee-bulb" style="--bulb-i: ${i};"></span>`).join('');
-  const rightBulbs = Array.from({ length: 6 }, (_, i) => `<span class="marquee-bulb" style="--bulb-i: ${14 + i};"></span>`).join('');
-  const bottomBulbs = Array.from({ length: 14 }, (_, i) => `<span class="marquee-bulb" style="--bulb-i: ${20 + i};"></span>`).join('');
-  const leftBulbs = Array.from({ length: 6 }, (_, i) => `<span class="marquee-bulb" style="--bulb-i: ${34 + i};"></span>`).join('');
-
-  return `
-    <div class="marquee-bulb-border" aria-hidden="true">
-      <div class="marquee-track track-top">${topBulbs}</div>
-      <div class="marquee-track track-right">${rightBulbs}</div>
-      <div class="marquee-track track-bottom">${bottomBulbs}</div>
-      <div class="marquee-track track-left">${leftBulbs}</div>
-    </div>
-  `;
-}
-
 // --- EVENTS PAGE TEMPLATE ---
 function renderEventsPage() {
   return `
@@ -870,9 +853,8 @@ function renderEventsPage() {
         <h1 class="section-heading" style="margin-bottom: 16px;">Where Practice Meets the Stage.</h1>
         <p class="lead-text" style="margin-bottom: 60px;">Discover upcoming annual productions, stage shows and grand cultural showcases at Dance Darbar Kala Sansthan.</p>
 
-        <div class="coming-soon-card marquee-card">
-          ${renderMarqueeBorder()}
-          <h2 class="coming-soon-heading marquee-heading">A NEW STORY TAKES THE STAGE</h2>
+        <div class="coming-soon-card">
+          <h2 class="coming-soon-heading">COMING SOON</h2>
         </div>
       </div>
     </div>
@@ -885,9 +867,8 @@ function renderEventDetailPage(slug) {
     <div style="padding-top: 140px; padding-bottom: 100px;">
       <div class="section-container">
         <a href="#/events" style="font-size: 14px; font-weight: 600; color: var(--color-primary-dark); margin-bottom: 24px; display: inline-block;">&larr; Back to Events</a>
-        <div class="coming-soon-card marquee-card">
-          ${renderMarqueeBorder()}
-          <h1 class="coming-soon-heading marquee-heading">A NEW STORY TAKES THE STAGE</h1>
+        <div class="coming-soon-card">
+          <h1 class="coming-soon-heading">COMING SOON</h1>
         </div>
       </div>
     </div>
