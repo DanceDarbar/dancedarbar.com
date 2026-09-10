@@ -2071,19 +2071,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* --------------------------------------------------------------------------
-   15. SCHEDULE FILTER ENGINE
+   15. SCHEDULE TABLE & CSS GRID
    -------------------------------------------------------------------------- */
-.schedule-filter-bar {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-  background: #1A1A1A;
-  padding: 24px 30px;
-  border-radius: var(--radius-medium);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  margin: 40px 0;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-}
 
 .schedule-table-wrap {
   background: #1A1A1A;

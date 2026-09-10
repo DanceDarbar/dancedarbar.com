@@ -386,7 +386,7 @@ function renderApp() {
     appRoot.innerHTML = renderProgramDetailPage(slug);
   } else if (route === '/schedule') {
     appRoot.innerHTML = renderSchedulePage();
-    initScheduleFilterEvents();
+    initSchedulePageEvents();
   } else if (route === '/events') {
     appRoot.innerHTML = renderEventsPage();
   } else if (route.startsWith('/events/')) {
@@ -736,34 +736,7 @@ function renderSchedulePage() {
       <div class="section-container">
         <span class="eyebrow">Class Schedule</span>
         <h1 class="section-heading" style="margin-bottom: 16px;">Find a Batch That Works for You.</h1>
-        <p class="lead-text">Filter available batches by class and day of week.</p>
-
-        <!-- FILTER CONTROLS -->
-        <div class="schedule-filter-bar">
-          <div style="flex: 1; min-width: 200px;">
-            <label class="form-label">Class</label>
-            <select class="form-control" id="sched-prog-filter">
-              <option value="all">All Classes</option>
-              <option value="Kathak">Kathak</option>
-              <option value="Bollywood">Bollywood</option>
-              <option value="Vocals">Vocals</option>
-              <option value="Fine Arts">Fine Arts</option>
-              <option value="Yoga">Yoga</option>
-            </select>
-          </div>
-          <div style="flex: 1; min-width: 200px;">
-            <label class="form-label">Day of Week</label>
-            <select class="form-control" id="sched-day-filter">
-              <option value="all">All Days</option>
-              <option value="Monday">Monday</option>
-              <option value="Tuesday">Tuesday</option>
-              <option value="Wednesday">Wednesday</option>
-              <option value="Thursday">Thursday</option>
-              <option value="Friday">Friday</option>
-              <option value="Saturday">Saturday</option>
-            </select>
-          </div>
-        </div>
+        <p class="lead-text" style="margin-bottom: 40px;">Explore weekly batches, timings, and available seats across all academy disciplines.</p>
 
         <!-- SCHEDULE DESKTOP TABLE (CSS Grid) -->
         <div class="schedule-table-wrap schedule-desktop-view">
@@ -1389,10 +1362,8 @@ function initHomePageEvents() {
   }
 }
 
-// --- Schedule Filter & Accordion Engine ---
-function initScheduleFilterEvents() {
-  const progFilter = document.getElementById('sched-prog-filter');
-  const dayFilter = document.getElementById('sched-day-filter');
+// --- Schedule Page Accordion Engine ---
+function initSchedulePageEvents() {
   const tableBody = document.getElementById('schedule-table-body');
 
   function toggleScheduleGroup(target) {
@@ -1435,50 +1406,6 @@ function initScheduleFilterEvents() {
       }
     });
   }
-
-  function checkDayMatch(sDay, filterDay) {
-    if (filterDay === 'all') return true;
-    const lowerSDay = sDay.toLowerCase();
-    const lowerFDay = filterDay.toLowerCase();
-
-    if (lowerSDay.includes(lowerFDay)) return true;
-
-    // Range matching (e.g. "Monday to Saturday")
-    if (lowerSDay.includes('to')) {
-      const daysOrder = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-      const parts = lowerSDay.split('to').map(p => p.trim());
-      if (parts.length === 2) {
-        const startIdx = daysOrder.indexOf(parts[0]);
-        const endIdx = daysOrder.indexOf(parts[1]);
-        const targetIdx = daysOrder.indexOf(lowerFDay);
-        if (startIdx !== -1 && endIdx !== -1 && targetIdx !== -1) {
-          return targetIdx >= startIdx && targetIdx <= endIdx;
-        }
-      }
-    }
-
-    return false;
-  }
-
-  function applyFilters() {
-    if (!tableBody) return;
-    const selectedProg = progFilter ? progFilter.value : 'all';
-    const selectedDay = dayFilter ? dayFilter.value : 'all';
-
-    const filtered = DANCE_DATA.schedules.filter(s => {
-      const matchProg = selectedProg === 'all' || s.program === selectedProg;
-      const matchDay = checkDayMatch(s.day, selectedDay);
-      return matchProg && matchDay;
-    });
-
-    const res = renderScheduleRows(filtered);
-    if (tableBody) tableBody.innerHTML = res.table;
-    const mobileWrap = document.getElementById('schedule-mobile-cards-body');
-    if (mobileWrap) mobileWrap.innerHTML = res.cards;
-  }
-
-  if (progFilter) progFilter.addEventListener('change', applyFilters);
-  if (dayFilter) dayFilter.addEventListener('change', applyFilters);
 }
 
 function getTrialRegistrations() {
