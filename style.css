@@ -286,8 +286,8 @@ h1, h2, h3, h4, h5, h6 {
    4. LOGO FRAME (PROPORTIONAL SIZING & ENHANCED VISIBILITY)
    -------------------------------------------------------------------------- */
 .logo-circle-frame {
-  width: 46px;
-  height: 46px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background: #FFFFFF;
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -331,7 +331,7 @@ h1, h2, h3, h4, h5, h6 {
   left: 0;
   width: 100%;
   z-index: 1000;
-  padding: 10px 0;
+  padding: 14px 0;
   transition: all var(--transition-normal);
   background-color: transparent;
 }
@@ -342,7 +342,7 @@ h1, h2, h3, h4, h5, h6 {
   background-color: rgba(10, 10, 10, 0.92);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  padding: 6px 0;
+  padding: 12px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
 }
@@ -371,9 +371,9 @@ h1, h2, h3, h4, h5, h6 {
 .brand-title {
   font-family: var(--font-heading);
   font-weight: 700;
-  font-size: 16px;
+  font-size: 18px;
   color: #FFFFFF !important;
-  line-height: 1.1;
+  line-height: 1.15;
   letter-spacing: -0.01em;
   transition: color var(--transition-fast);
 }
@@ -384,10 +384,12 @@ h1, h2, h3, h4, h5, h6 {
 
 .brand-subtitle {
   font-family: var(--font-heading);
-  font-size: 10px;
+  font-size: 9.5px;
   font-weight: 700;
   letter-spacing: 0.16em;
   color: #5EBBEA !important;
+  line-height: 1.1;
+  margin-top: 2px;
   transition: color var(--transition-fast);
 }
 
@@ -402,9 +404,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .nav-link {
-  font-family: var(--font-heading);
-  font-size: 14px;
-  font-weight: 600;
+  font-family: 'Satoshi', sans-serif;
+  font-size: 15px;
+  font-weight: 400;
   color: #E5E5E5;
   opacity: 0.88;
   position: relative;
@@ -424,7 +426,7 @@ h1, h2, h3, h4, h5, h6 {
 .nav-link.active {
   opacity: 1;
   color: #FFFFFF;
-  font-weight: 600;
+  font-weight: 400;
 }
 
 .nav-link::after {
@@ -447,6 +449,18 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   align-items: center;
   gap: 16px;
+}
+
+.site-header .nav-cta {
+  height: 38px;
+  padding: 0 18px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.site-header .nav-cta .btn-arrow {
+  width: 14px;
+  height: 14px;
 }
 
 .mobile-menu-toggle {
@@ -2674,8 +2688,8 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .logo-circle-frame {
-    width: 40px !important;
-    height: 40px !important;
+    width: 36px !important;
+    height: 36px !important;
   }
 
   .brand-title {
