@@ -2643,20 +2643,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // Sticky Navbar on Scroll
   const header = document.getElementById('site-header');
-  const updateHeaderScroll = () => {
-    if (!header) return;
-    const isHome = header.classList.contains('is-home');
-    const hero = document.querySelector('.hero-section');
-    const threshold = (isHome && hero) ? Math.max(hero.offsetHeight - 80, 40) : 40;
-    if (window.scrollY > threshold) {
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 40) {
       header.classList.add('scrolled');
     } else {
       header.classList.remove('scrolled');
     }
-  };
-
-  window.addEventListener('scroll', updateHeaderScroll, { passive: true });
-  window.addEventListener('resize', updateHeaderScroll, { passive: true });
+  });
 
   // Mobile Drawer Toggle & Scroll Lock
   const toggle = document.getElementById('mobile-menu-toggle');
