@@ -243,7 +243,8 @@ const DANCE_DATA = {
       onlineNote: '',
       shortDescription: 'Mindful movement, flexibility, balance, breathing and inner strength.',
       fullDescription: 'Harmonize body and mind through traditional Asanas, Pranayama breathing, and guided meditation. Designed to improve posture, joint mobility, core stability, and mental clarity for practitioners of all ages.',
-      image: 'assets/yoga-local.png',
+      image: 'assets/yoga-class.jpg',
+      imagePosition: 'center 40%',
       ageGroups: ['Adults (18–50 yrs)', 'Senior Learners (50+ yrs)', 'All Ages'],
       levels: ['Beginner', 'Regular Practice'],
       curriculum: [
@@ -637,7 +638,7 @@ function renderProgramsPage() {
                 ${p.video ? `
                   <video src="${p.video}" autoplay loop muted playsinline class="editorial-img" style="height: 380px; width: 100%; object-fit: cover;"></video>
                 ` : `
-                  <img src="${p.image}" alt="${p.name}" loading="lazy" decoding="async" class="editorial-img" style="height: 380px;">
+                  <img src="${p.image}" alt="${p.name}" loading="lazy" decoding="async" class="editorial-img" style="height: 380px;${p.imagePosition ? ` object-position: ${p.imagePosition};` : ''}">
                 `}
               </div>
             </div>
@@ -677,7 +678,7 @@ function renderProgramDetailPage(slug) {
             ${prog.video ? `
               <video src="${prog.video}" autoplay loop muted playsinline class="editorial-img"></video>
             ` : `
-              <img src="${prog.image}" alt="${prog.name}" loading="lazy" decoding="async" class="editorial-img">
+              <img src="${prog.image}" alt="${prog.name}" loading="lazy" decoding="async" class="editorial-img"${prog.imagePosition ? ` style="object-position: ${prog.imagePosition};"` : ''}>
             `}
           </div>
         </div>
