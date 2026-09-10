@@ -765,29 +765,20 @@ function renderSchedulePage() {
           </div>
         </div>
 
-        <!-- SCHEDULE DESKTOP TABLE -->
+        <!-- SCHEDULE DESKTOP TABLE (CSS Grid) -->
         <div class="schedule-table-wrap schedule-desktop-view">
-          <table class="schedule-table schedule-view-table">
-            <colgroup>
-              <col class="col-class" style="width: 16%;">
-              <col class="col-day" style="width: 22%;">
-              <col class="col-instructor" style="width: 24%;">
-              <col class="col-status" style="width: 16%;">
-              <col class="col-action" style="width: 22%;">
-            </colgroup>
-            <thead>
-              <tr>
-                <th class="col-class">Class</th>
-                <th class="col-day">Day</th>
-                <th class="col-instructor">Instructor</th>
-                <th class="col-status">Status</th>
-                <th class="col-action">Action</th>
-              </tr>
-            </thead>
-            <tbody id="schedule-table-body">
+          <div class="schedule-grid-container">
+            <div class="schedule-header">
+              <div class="col-class">Class</div>
+              <div class="col-day">Day</div>
+              <div class="col-instructor">Instructor</div>
+              <div class="col-status">Status</div>
+              <div class="col-action">Action</div>
+            </div>
+            <div class="schedule-rows-wrap" id="schedule-table-body">
               ${schedData.table}
-            </tbody>
-          </table>
+            </div>
+          </div>
         </div>
 
         <!-- SCHEDULE MOBILE CARDS -->
@@ -803,25 +794,95 @@ function renderScheduleRows(items) {
   if (items.length === 0) {
     const emptyMsg = `No matching batch currently listed. <a href="#/claim-free-seat" style="color: var(--color-primary-dark); font-weight: 700;">Submit a trial request</a>`;
     return {
-      table: `<tr><td colspan="5" style="text-align: center; padding: 40px; color: var(--color-muted-text);">${emptyMsg}</td></tr>`,
+      table: `<div style="text-align: center; padding: 48px 24px; color: var(--color-muted-text); font-size: 15px;">${emptyMsg}</div>`,
       cards: `<div style="text-align: center; padding: 32px 16px; color: var(--color-muted-text);">${emptyMsg}</div>`
     };
   }
 
-  const tableHtml = items.map(s => `
-    <tr>
-      <td class="col-class" style="font-weight: 700; color: #FFFFFF;">${s.program}</td>
-      <td class="col-day">${s.day}</td>
-      <td class="col-instructor">${s.instructor}</td>
-      <td class="col-status"><span class="status-badge">${s.availability}</span></td>
-      <td class="col-action">
-        <a href="#/claim-free-seat" class="btn btn-primary claim-seat-btn" style="padding: 8px 16px; font-size: 12px; min-height: 40px; border-radius: 999px;">
-          <span>Claim Seat</span>
-          <svg class="btn-arrow" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-      </td>
-    </tr>
-  `).join('');
+  // Group items by program (class name)
+  const groupMap = new Map();
+  items.forEach(item => {
+    if (!groupMap.has(item.program)) {
+      groupMap.set(item.program, []);
+    }
+    groupMap.get(item.program).push(item);
+  });
+
+  let groupIndex = 0;
+  const tableGroupsHtml = [];
+
+  groupMap.forEach((batches, className) => {
+    groupIndex++;
+    const groupId = `sched-group-${groupIndex}`;
+
+    // Merge logic: check if DAY and INSTRUCTOR are identical across all batches in this group
+    const uniqueDays = [...new Set(batches.map(b => (b.day || '').trim()))].filter(Boolean);
+    const summaryDay = uniqueDays.length === 1 ? uniqueDays[0] : 'Multiple Batches';
+
+    const uniqueInstructors = [...new Set(batches.map(b => (b.instructor || '').trim()))].filter(Boolean);
+    const summaryInstructor = uniqueInstructors.length === 1 ? uniqueInstructors[0] : 'Multiple Batches';
+
+    // Summary availability
+    const hasAvailable = batches.some(b => (b.availability || '').toLowerCase() === 'available');
+    const summaryStatus = hasAvailable ? 'Available' : (batches[0].availability || 'Available');
+
+    // Sub-rows HTML
+    const subRowsHtml = batches.map(batch => `
+      <div class="schedule-row schedule-sub-row">
+        <div class="col-class sub-col-class">
+          <span class="sub-branch-icon" aria-hidden="true">↳</span>
+          <span class="sub-level-badge">${batch.level}</span>
+          <span class="sub-age-text">(${batch.ageGroup})</span>
+        </div>
+        <div class="col-day">
+          <div class="sub-day-info">
+            <span>${batch.day}</span>
+            ${batch.time && batch.time !== 'Timing Coming Soon' ? `<span class="sub-time-text">${batch.time}</span>` : ''}
+          </div>
+        </div>
+        <div class="col-instructor">${batch.instructor}</div>
+        <div class="col-status">
+          <span class="status-badge">${batch.availability}</span>
+        </div>
+        <div class="col-action">
+          <a href="#/claim-free-seat" class="btn btn-primary claim-seat-btn" style="padding: 8px 16px; font-size: 12px; min-height: 40px; border-radius: 999px;">
+            <span>Claim Seat</span>
+            <svg class="btn-arrow" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+    `).join('');
+
+    tableGroupsHtml.push(`
+      <div class="schedule-group" id="${groupId}" data-class="${className}">
+        <div class="schedule-row schedule-summary-row" role="button" tabindex="0" aria-expanded="false" aria-controls="subrows-${groupId}" title="Click to view batches for ${className}">
+          <div class="col-class">
+            <span class="schedule-chevron" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </span>
+            <span class="class-title-text">${className}</span>
+            ${batches.length > 1 ? `<span class="batch-count-pill">${batches.length} Batches</span>` : ''}
+          </div>
+          <div class="col-day">${summaryDay}</div>
+          <div class="col-instructor">${summaryInstructor}</div>
+          <div class="col-status">
+            <span class="status-badge">${summaryStatus}</span>
+          </div>
+          <div class="col-action">
+            <a href="#/claim-free-seat" class="btn btn-primary claim-seat-btn" style="padding: 8px 16px; font-size: 12px; min-height: 40px; border-radius: 999px;">
+              <span>Claim Seat</span>
+              <svg class="btn-arrow" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+        <div class="schedule-sub-rows" id="subrows-${groupId}" style="display: none;">
+          ${subRowsHtml}
+        </div>
+      </div>
+    `);
+  });
 
   const cardsHtml = items.map(s => `
     <div class="schedule-mobile-card">
@@ -844,7 +905,7 @@ function renderScheduleRows(items) {
     </div>
   `).join('');
 
-  return { table: tableHtml, cards: cardsHtml };
+  return { table: tableGroupsHtml.join(''), cards: cardsHtml };
 }
 
 // --- EVENTS PAGE TEMPLATE ---
@@ -1328,11 +1389,52 @@ function initHomePageEvents() {
   }
 }
 
-// --- Schedule Filter Engine ---
+// --- Schedule Filter & Accordion Engine ---
 function initScheduleFilterEvents() {
   const progFilter = document.getElementById('sched-prog-filter');
   const dayFilter = document.getElementById('sched-day-filter');
   const tableBody = document.getElementById('schedule-table-body');
+
+  function toggleScheduleGroup(target) {
+    // If clicked on Claim Seat button or its contents, let navigation happen
+    if (target.closest('.claim-seat-btn')) return;
+
+    const summaryRow = target.closest('.schedule-summary-row');
+    if (!summaryRow) return;
+
+    const group = summaryRow.closest('.schedule-group');
+    if (!group) return;
+
+    const subRows = group.querySelector('.schedule-sub-rows');
+    if (!subRows) return;
+
+    const isExpanded = group.classList.contains('is-expanded');
+    if (isExpanded) {
+      group.classList.remove('is-expanded');
+      subRows.style.display = 'none';
+      summaryRow.setAttribute('aria-expanded', 'false');
+    } else {
+      group.classList.add('is-expanded');
+      subRows.style.display = 'block';
+      summaryRow.setAttribute('aria-expanded', 'true');
+    }
+  }
+
+  if (tableBody) {
+    tableBody.addEventListener('click', (e) => {
+      toggleScheduleGroup(e.target);
+    });
+
+    tableBody.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        const summaryRow = e.target.closest('.schedule-summary-row');
+        if (summaryRow && e.target === summaryRow) {
+          e.preventDefault();
+          toggleScheduleGroup(e.target);
+        }
+      }
+    });
+  }
 
   function checkDayMatch(sDay, filterDay) {
     if (filterDay === 'all') return true;

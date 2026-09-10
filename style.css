@@ -2094,10 +2094,9 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
 }
 
+/* Base table support for admin dashboard tables */
 .schedule-table {
   width: 100%;
-  min-width: 720px;
-  table-layout: fixed;
   border-collapse: collapse;
   text-align: left;
 }
@@ -2123,62 +2122,6 @@ h1, h2, h3, h4, h5, h6 {
   color: #E5E5E5;
   vertical-align: middle;
   text-align: left;
-  white-space: nowrap;
-}
-
-/* 5 Column Proportional Distribution (CLASS: 16%, DAY: 22%, INSTRUCTOR: 24%, STATUS: 16%, ACTION: 22%) */
-.schedule-table col.col-class,
-.schedule-table th.col-class,
-.schedule-table td.col-class,
-.schedule-table th:nth-child(1),
-.schedule-table td:nth-child(1) {
-  width: 16%;
-  text-align: left;
-}
-
-.schedule-table col.col-day,
-.schedule-table th.col-day,
-.schedule-table td.col-day,
-.schedule-table th:nth-child(2),
-.schedule-table td:nth-child(2) {
-  width: 22%;
-  text-align: left;
-}
-
-.schedule-table col.col-instructor,
-.schedule-table th.col-instructor,
-.schedule-table td.col-instructor,
-.schedule-table th:nth-child(3),
-.schedule-table td:nth-child(3) {
-  width: 24%;
-  text-align: left;
-}
-
-.schedule-table col.col-status,
-.schedule-table th.col-status,
-.schedule-table td.col-status,
-.schedule-table th:nth-child(4),
-.schedule-table td:nth-child(4) {
-  width: 16%;
-  text-align: left;
-  white-space: nowrap;
-}
-
-.schedule-table col.col-action,
-.schedule-table th.col-action,
-.schedule-table td.col-action,
-.schedule-table th:nth-child(5),
-.schedule-table td:nth-child(5) {
-  width: 22%;
-  text-align: left;
-  white-space: nowrap;
-}
-
-@media (max-width: 1024px) {
-  .schedule-table th,
-  .schedule-table td {
-    padding: 16px 14px;
-  }
 }
 
 .schedule-table tr:hover td {
@@ -2187,6 +2130,207 @@ h1, h2, h3, h4, h5, h6 {
 
 .schedule-table tr:last-child td {
   border-bottom: none;
+}
+
+/* --------------------------------------------------------------------------
+   VIEW SCHEDULE CSS GRID TABLE (Single Source of Truth)
+   -------------------------------------------------------------------------- */
+.schedule-grid-container {
+  min-width: 860px;
+  width: 100%;
+}
+
+.schedule-header,
+.schedule-row {
+  display: grid;
+  grid-template-columns: 1.5fr 1.5fr 1.8fr 1fr 1.2fr;
+  align-items: center;
+  padding: 0 32px;
+  column-gap: 16px;
+  box-sizing: border-box;
+}
+
+.schedule-header {
+  background: #141414;
+  height: 56px;
+  min-height: 56px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.schedule-row {
+  min-height: 68px;
+  padding-top: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 15px;
+  color: #E5E5E5;
+  transition: background var(--transition-fast);
+}
+
+/* Column Alignment & Placement */
+.schedule-header .col-class,
+.schedule-row .col-class {
+  text-align: left;
+  justify-self: start;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.schedule-header .col-day,
+.schedule-row .col-day {
+  text-align: left;
+  justify-self: start;
+  color: #E5E5E5;
+}
+
+.schedule-header .col-instructor,
+.schedule-row .col-instructor {
+  text-align: left;
+  justify-self: start;
+  color: #E5E5E5;
+}
+
+.schedule-header .col-status,
+.schedule-row .col-status {
+  text-align: center;
+  justify-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.schedule-header .col-action,
+.schedule-row .col-action {
+  text-align: center;
+  justify-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+/* Accordion Summary Row */
+.schedule-summary-row {
+  cursor: pointer;
+  user-select: none;
+}
+
+.schedule-summary-row:hover {
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.schedule-summary-row:focus-visible {
+  outline: 2px solid #5EBBEA;
+  outline-offset: -2px;
+}
+
+.schedule-group.is-expanded .schedule-summary-row {
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Chevron Icon */
+.schedule-chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  color: #5EBBEA;
+  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
+}
+
+.schedule-group.is-expanded .schedule-chevron {
+  transform: rotate(180deg);
+}
+
+/* Batch Count Badge */
+.batch-count-pill {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--color-muted-text);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  letter-spacing: 0.02em;
+}
+
+/* Sub-Rows (Nesting & Indentation) */
+.schedule-sub-rows {
+  width: 100%;
+}
+
+.schedule-sub-row {
+  background: rgba(255, 255, 255, 0.025);
+  min-height: 60px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.schedule-sub-row:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.schedule-sub-row .col-class.sub-col-class {
+  padding-left: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+}
+
+.sub-branch-icon {
+  color: #5EBBEA;
+  font-size: 14px;
+  line-height: 1;
+  opacity: 0.8;
+}
+
+.sub-level-badge {
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.sub-age-text {
+  font-size: 13px;
+  color: var(--color-muted-text);
+}
+
+.sub-day-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sub-time-text {
+  font-size: 12px;
+  color: #5EBBEA;
+  font-weight: 600;
+}
+
+.schedule-group:last-child .schedule-row:last-child,
+.schedule-group:last-child .schedule-sub-row:last-child {
+  border-bottom: none;
+}
+
+@media (max-width: 1024px) {
+  .schedule-header,
+  .schedule-row {
+    padding: 0 20px;
+    column-gap: 12px;
+  }
 }
 
 .status-badge {
