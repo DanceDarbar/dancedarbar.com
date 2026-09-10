@@ -174,7 +174,8 @@ const DANCE_DATA = {
       onlineNote: '',
       shortDescription: 'Energetic choreography, performance skills, musicality and confidence.',
       fullDescription: 'Experience the joy, drama, and energy of modern Indian cinema dance. Our Bollywood programme blends traditional folk, modern commercial, semi-classical, and hip-hop influences to build coordination, stamina, and vibrant stage presence.',
-      image: 'assets/bollywood-local.png',
+      image: 'assets/bollywood-class.jpg',
+      imagePosition: 'center top',
       ageGroups: ['Children (5–12 yrs)', 'Teenagers (13–17 yrs)', 'Adults (18+ yrs)'],
       levels: ['Beginner', 'Intermediate'],
       curriculum: [
