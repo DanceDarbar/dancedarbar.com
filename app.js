@@ -952,7 +952,7 @@ function renderClaimFreeSeatPage() {
       <div class="section-container">
         <div class="trial-page-layout">
           <div class="trial-visual-side">
-            <img src="assets/trial-form-image.jpg?v=2" alt="Dance Darbar Kala Sansthan Students & Guru" loading="lazy" decoding="async" class="trial-visual-img">
+            <img src="assets/trial-form-image.jpg?v=3" alt="Dance Darbar Kala Sansthan Students & Guru" loading="lazy" decoding="async" class="trial-visual-img">
             <div class="trial-visual-overlay">
               <span class="eyebrow light">Trial Class Admission</span>
               <h2 style="font-size: 32px; color: var(--color-white); margin-top: 4px; margin-bottom: 8px; line-height: 1.2;">Experience Dance Darbar.</h2>
