@@ -516,12 +516,16 @@ function renderHomePage() {
       </div>
     </section>
 
-    <!-- FEATURED EVENT / UPCOMING PERFORMANCE (COMING SOON) -->
+    <!-- FEATURED EVENT / UPCOMING PERFORMANCE -->
     <section class="featured-event-section">
       <div class="section-container">
-        <span class="eyebrow light" style="display: block; margin-bottom: 24px;">Upcoming Performance</span>
-        <div class="coming-soon-card">
-          <h2 class="coming-soon-heading">COMING SOON</h2>
+        <div class="upcoming-performance-header">
+          <span class="pulse-live-dot" aria-hidden="true"></span>
+          <span class="eyebrow light">Upcoming Performance</span>
+        </div>
+        <div class="coming-soon-card theatrical-card">
+          <div class="theatrical-spotlight-sweep" aria-hidden="true"></div>
+          <h2 class="coming-soon-heading theatrical-heading">A NEW STORY TAKES THE STAGE</h2>
         </div>
       </div>
     </section>

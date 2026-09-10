@@ -1382,8 +1382,40 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* --------------------------------------------------------------------------
-   COMING SOON EVENT SECTION & BANNER STYLES
+   COMING SOON EVENT SECTION & THEATRICAL PERFORMANCE STYLES
    -------------------------------------------------------------------------- */
+.upcoming-performance-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.pulse-live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #5EBBEA;
+  display: inline-block;
+  flex-shrink: 0;
+  box-shadow: 0 0 8px rgba(94, 187, 234, 0.6);
+  animation: liveDotPulse 1.5s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes liveDotPulse {
+  0%, 100% {
+    transform: scale(0.9);
+    opacity: 0.55;
+    box-shadow: 0 0 6px rgba(94, 187, 234, 0.4);
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 1;
+    box-shadow: 0 0 14px rgba(94, 187, 234, 0.85);
+  }
+}
+
 .coming-soon-card {
   background: #1A1A1A;
   border-radius: var(--radius-large);
@@ -1400,6 +1432,88 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
 }
 
+.theatrical-card {
+  isolation: isolate;
+}
+
+/* Subtle Animated Gradient Border-Glow */
+.theatrical-card::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(94, 187, 234, 0.35) 35%,
+    rgba(255, 255, 255, 0.08) 65%,
+    rgba(94, 187, 234, 0.28) 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 4;
+  animation: borderGlowShift 8s ease-in-out infinite alternate;
+  will-change: opacity, filter;
+}
+
+@keyframes borderGlowShift {
+  0% {
+    opacity: 0.4;
+    filter: brightness(0.9);
+  }
+  50% {
+    opacity: 0.85;
+    filter: brightness(1.15);
+  }
+  100% {
+    opacity: 0.45;
+    filter: brightness(1);
+  }
+}
+
+/* Diagonal Theatrical Spotlight Sweep */
+.theatrical-spotlight-sweep {
+  position: absolute;
+  top: -60%;
+  left: 0;
+  width: 55%;
+  height: 220%;
+  pointer-events: none;
+  z-index: 2;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    rgba(94, 187, 234, 0.04) 20%,
+    rgba(255, 255, 255, 0.22) 50%,
+    rgba(94, 187, 234, 0.08) 70%,
+    transparent 100%
+  );
+  transform: translateX(-120%) rotate(14deg);
+  animation: spotlightSweep 5s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes spotlightSweep {
+  0% {
+    transform: translateX(-120%) rotate(14deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(260%) rotate(14deg);
+    opacity: 0;
+  }
+}
+
 .coming-soon-heading {
   font-family: 'Satoshi', var(--font-primary), sans-serif;
   font-weight: 900;
@@ -1411,6 +1525,40 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0;
   padding: 0;
   animation: comingSoonEntrance 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Synchronized Glowing Theatrical Heading */
+.theatrical-heading {
+  font-family: 'Satoshi', var(--font-primary), sans-serif;
+  font-weight: 900;
+  font-size: clamp(34px, 5.8vw, 70px);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: #E5E5E5;
+  text-transform: uppercase;
+  text-align: center;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 16px;
+  position: relative;
+  z-index: 3;
+  animation: textLitPulse 5s ease-in-out infinite;
+  will-change: color, text-shadow;
+}
+
+@keyframes textLitPulse {
+  0%, 20% {
+    color: #DADADA;
+    text-shadow: 0 0 0px rgba(255, 255, 255, 0);
+  }
+  50% {
+    color: #FFFFFF;
+    text-shadow: 0 0 24px rgba(255, 255, 255, 0.4), 0 0 50px rgba(94, 187, 234, 0.3);
+  }
+  80%, 100% {
+    color: #DADADA;
+    text-shadow: 0 0 0px rgba(255, 255, 255, 0);
+  }
 }
 
 @keyframes comingSoonEntrance {
@@ -1433,6 +1581,10 @@ h1, h2, h3, h4, h5, h6 {
     font-size: clamp(44px, 10vw, 84px);
     letter-spacing: -0.025em;
   }
+  .theatrical-heading {
+    font-size: clamp(28px, 6vw, 48px);
+    letter-spacing: -0.02em;
+  }
 }
 
 @media (max-width: 767px) {
@@ -1444,6 +1596,32 @@ h1, h2, h3, h4, h5, h6 {
   .coming-soon-heading {
     font-size: clamp(36px, 11vw, 58px);
     letter-spacing: -0.02em;
+  }
+  .theatrical-heading {
+    font-size: clamp(24px, 6.8vw, 36px);
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theatrical-spotlight-sweep {
+    display: none !important;
+    animation: none !important;
+  }
+  .theatrical-heading {
+    animation: none !important;
+    color: #FFFFFF !important;
+    text-shadow: 0 0 16px rgba(255, 255, 255, 0.2) !important;
+  }
+  .pulse-live-dot {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+  .theatrical-card::after {
+    animation: none !important;
+    opacity: 0.6 !important;
   }
 }
 
