@@ -767,14 +767,21 @@ function renderSchedulePage() {
 
         <!-- SCHEDULE DESKTOP TABLE -->
         <div class="schedule-table-wrap schedule-desktop-view">
-          <table class="schedule-table">
+          <table class="schedule-table schedule-view-table">
+            <colgroup>
+              <col class="col-class" style="width: 16%;">
+              <col class="col-day" style="width: 22%;">
+              <col class="col-instructor" style="width: 24%;">
+              <col class="col-status" style="width: 16%;">
+              <col class="col-action" style="width: 22%;">
+            </colgroup>
             <thead>
               <tr>
-                <th>Class</th>
-                <th>Day</th>
-                <th>Instructor</th>
-                <th>Status</th>
-                <th>Action</th>
+                <th class="col-class">Class</th>
+                <th class="col-day">Day</th>
+                <th class="col-instructor">Instructor</th>
+                <th class="col-status">Status</th>
+                <th class="col-action">Action</th>
               </tr>
             </thead>
             <tbody id="schedule-table-body">
@@ -803,11 +810,11 @@ function renderScheduleRows(items) {
 
   const tableHtml = items.map(s => `
     <tr>
-      <td style="font-weight: 700; color: var(--color-navy);">${s.program}</td>
-      <td>${s.day}</td>
-      <td>${s.instructor}</td>
-      <td><span class="status-badge">${s.availability}</span></td>
-      <td>
+      <td class="col-class" style="font-weight: 700; color: #FFFFFF;">${s.program}</td>
+      <td class="col-day">${s.day}</td>
+      <td class="col-instructor">${s.instructor}</td>
+      <td class="col-status"><span class="status-badge">${s.availability}</span></td>
+      <td class="col-action">
         <a href="#/claim-free-seat" class="btn btn-primary claim-seat-btn" style="padding: 8px 16px; font-size: 12px; min-height: 40px; border-radius: 999px;">
           <span>Claim Seat</span>
           <svg class="btn-arrow" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
