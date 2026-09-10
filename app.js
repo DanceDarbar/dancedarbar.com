@@ -392,9 +392,9 @@ function renderApp() {
   } else if (route.startsWith('/events/')) {
     const slug = route.split('/events/')[1];
     appRoot.innerHTML = renderEventDetailPage(slug);
-  } else if (route === '/gallery') {
-    appRoot.innerHTML = renderGalleryPage();
-    initGalleryEvents();
+  } else if (route === '/gallery' || route.startsWith('/gallery')) {
+    window.location.hash = '#/';
+    return;
   } else if (route === '/claim-free-seat') {
     appRoot.innerHTML = renderClaimFreeSeatPage();
     initTrialFormEvents();
@@ -873,76 +873,6 @@ function renderEventDetailPage(slug) {
       </div>
     </div>
   `;
-}
-
-// --- GALLERY PAGE TEMPLATE ---
-function renderGalleryPage() {
-  return `
-    <div style="padding-top: 140px; padding-bottom: 100px;">
-      <div class="section-container">
-        <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 24px; margin-bottom: 36px;">
-          <div>
-            <span class="eyebrow">Instagram Live Feed & Reel Showcase</span>
-            <h1 class="section-heading" style="margin-bottom: 12px;">Moments of Movement and Expression.</h1>
-            <p class="lead-text">Official @dance_darbar Instagram reels, live stage performances, and studio rehearsals.</p>
-          </div>
-          <a href="https://www.instagram.com/dance_darbar?igsh=MWl6bW4za3NreHhrOA==" target="_blank" rel="noopener" class="btn btn-primary" style="gap: 10px;">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-            <span>Follow @dance_darbar</span>
-          </a>
-        </div>
-
-        <!-- CATEGORY FILTERS -->
-        <div class="gallery-filter-bar">
-          <button class="filter-btn active" data-cat="All">All Feed</button>
-          <button class="filter-btn" data-cat="Kathak">Kathak</button>
-          <button class="filter-btn" data-cat="Bollywood">Bollywood</button>
-          <button class="filter-btn" data-cat="Events">Events</button>
-          <button class="filter-btn" data-cat="Fine Arts">Fine Arts</button>
-          <button class="filter-btn" data-cat="Yoga">Yoga</button>
-          <button class="filter-btn" data-cat="Vocals">Vocals</button>
-        </div>
-
-        <!-- CLEAN RESPONSIVE EDITORIAL GRID -->
-        <div class="clean-gallery-grid" id="gallery-grid-wrap">
-          ${renderGalleryItems('All')}
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-function renderGalleryItems(category) {
-  const filtered = category === 'All' 
-    ? DANCE_DATA.galleryItems 
-    : DANCE_DATA.galleryItems.filter(item => item.category === category || (category === 'Vocals' && item.category === 'Vocal Music'));
-
-  return filtered.map((item, idx) => `
-    <a href="${item.instagramUrl || 'https://www.instagram.com/dance_darbar'}" target="_blank" rel="noopener" class="gallery-card motion-graphic-card" style="animation-delay: ${idx * 0.05}s">
-      <div class="gallery-img-container">
-        <img src="${item.image}" alt="${item.title}" loading="lazy" decoding="async" class="gallery-thumb">
-        ${item.type === 'reel' ? `
-          <div class="reel-badge">
-            <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-            <span>REEL</span>
-          </div>
-        ` : `
-          <div class="reel-badge photo-badge">
-            <span>PHOTO</span>
-          </div>
-        `}
-        <div class="gallery-hover-overlay">
-          <span class="view-action-pill">
-            ${item.type === 'reel' ? 'VIEW REEL ↗' : 'VIEW PHOTO ↗'}
-          </span>
-        </div>
-      </div>
-      <div class="gallery-card-content">
-        <span class="gallery-card-tag">${item.category}</span>
-        <h4 class="gallery-card-title">${item.title}</h4>
-      </div>
-    </a>
-  `).join('');
 }
 
 // --- CLAIM FREE SEAT PAGE TEMPLATE ---
@@ -1444,23 +1374,6 @@ function initScheduleFilterEvents() {
 
   if (progFilter) progFilter.addEventListener('change', applyFilters);
   if (dayFilter) dayFilter.addEventListener('change', applyFilters);
-}
-
-// --- Gallery Tab Filters ---
-function initGalleryEvents() {
-  const filterBtns = document.querySelectorAll('.filter-btn');
-  const gridWrap = document.getElementById('gallery-grid-wrap');
-
-  filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      filterBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const cat = btn.getAttribute('data-cat');
-      if (gridWrap) {
-        gridWrap.innerHTML = renderGalleryItems(cat);
-      }
-    });
-  });
 }
 
 function getTrialRegistrations() {
