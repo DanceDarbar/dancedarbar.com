@@ -550,17 +550,17 @@ function renderHomePage() {
     <section class="testimonials-section section-padding">
       <div class="section-container">
         <div style="text-align: center; margin-bottom: 56px;">
-          <span class="eyebrow">Student & Parent Stories</span>
-          <h2 class="section-heading">Voices of Our Community.</h2>
-          <p class="lead-text" style="margin: 0 auto; max-width: 600px;">Hear how Dance Darbar Kala Sansthan shapes confidence, rhythm, and artistic growth.</p>
+          <span class="eyebrow testimonial-reveal-header" style="--reveal-index: 0;">Student & Parent Stories</span>
+          <h2 class="section-heading testimonial-reveal-header" style="--reveal-index: 1;">Voices of Our Community.</h2>
+          <p class="lead-text testimonial-reveal-header" style="margin: 0 auto; max-width: 600px; --reveal-index: 2;">Hear how Dance Darbar Kala Sansthan shapes confidence, rhythm, and artistic growth.</p>
         </div>
 
         <div class="testimonials-grid">
           ${DANCE_DATA.testimonials.map((t, idx) => `
-            <div class="testimonial-card motion-graphic-testimonial cursor-target-view" style="animation-delay: ${idx * 0.15}s">
+            <div class="testimonial-card motion-graphic-testimonial cursor-target-view" style="--card-index: ${idx};">
               <div class="motion-quote-mark">“</div>
               <div class="testimonial-rating">
-                ${'★'.repeat(t.rating)}
+                ${Array.from({ length: t.rating }).map((_, sIdx) => `<span class="star-glyph" style="--star-index: ${sIdx};">★</span>`).join('')}
               </div>
               <p class="testimonial-quote">“${t.quote}”</p>
               <div class="testimonial-author">
@@ -1357,6 +1357,26 @@ function initHomePageEvents() {
       if (!isActive) item.classList.add('active');
     });
   });
+
+  // Voices of Our Community Testimonial Scroll-Triggered Entrance
+  const testimonialSection = document.querySelector('.testimonials-section');
+  if (testimonialSection) {
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      testimonialSection.classList.add('is-visible');
+    } else if ('IntersectionObserver' in window) {
+      const testimonialObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            testimonialSection.classList.add('is-visible');
+            testimonialObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.2 });
+      testimonialObserver.observe(testimonialSection);
+    } else {
+      testimonialSection.classList.add('is-visible');
+    }
+  }
 }
 
 // --- Schedule Filter Engine ---
