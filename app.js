@@ -534,15 +534,15 @@ function renderHomePage() {
     <section class="stats-section">
       <div class="section-container">
         <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr);">
-          <div class="stat-item cursor-target-view">
+          <div class="stat-item">
             <span class="stat-value counter-anim" data-target="5000" data-suffix="+">0+</span>
             <span class="stat-label">Students Trained</span>
           </div>
-          <div class="stat-item cursor-target-view">
+          <div class="stat-item">
             <span class="stat-value counter-anim" data-target="150" data-suffix="+">0+</span>
             <span class="stat-label">Stage Performances</span>
           </div>
-          <div class="stat-item cursor-target-view">
+          <div class="stat-item">
             <span class="stat-value">All Ages</span>
             <span class="stat-label">Learning Community</span>
           </div>
@@ -561,7 +561,7 @@ function renderHomePage() {
 
         <div class="testimonials-grid">
           ${DANCE_DATA.testimonials.map((t, idx) => `
-            <div class="testimonial-card motion-graphic-testimonial cursor-target-view" style="--card-index: ${idx};">
+            <div class="testimonial-card motion-graphic-testimonial" style="--card-index: ${idx};">
               <div class="motion-quote-mark">“</div>
               <div class="testimonial-rating">
                 ${Array.from({ length: t.rating }).map((_, sIdx) => `<span class="star-glyph" style="--star-index: ${sIdx};">★</span>`).join('')}
@@ -585,12 +585,12 @@ function renderHomePage() {
     <!-- DUAL FAQ & CONTACT US SPLIT BANNER -->
     <section class="dual-banner-section">
       <div class="dual-banner-grid">
-        <a href="#/faq" class="dual-banner-item cursor-target-view">
+        <a href="#/faq" class="dual-banner-item">
           <span class="dual-eyebrow">FAQ</span>
           <h2 class="dual-title">FAQ</h2>
         </a>
         <div class="dual-divider"></div>
-        <a href="#/contact" class="dual-banner-item cursor-target-view">
+        <a href="#/contact" class="dual-banner-item">
           <span class="dual-eyebrow">Contact Us</span>
           <h2 class="dual-title">CONTACT US</h2>
         </a>
@@ -2382,7 +2382,7 @@ function initAmrapaliModalEvents() {
 }
 
 // --------------------------------------------------------------------------
-// 5. GLOBAL HEADER & CURSOR CONTROLLER
+// 5. GLOBAL HEADER CONTROLLER
 // --------------------------------------------------------------------------
 // --------------------------------------------------------------------------
 // --- ADMIN DASHBOARD TEMPLATE & LOGIC ---
@@ -2730,27 +2730,6 @@ window.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
-
-  // Custom Cursor
-  const cursor = document.getElementById('custom-cursor');
-  const cursorText = document.getElementById('cursor-text');
-
-  if (cursor && window.innerWidth > 767) {
-    document.addEventListener('mousemove', (e) => {
-      cursor.style.left = `${e.clientX}px`;
-      cursor.style.top = `${e.clientY}px`;
-    });
-
-    document.addEventListener('mouseover', (e) => {
-      const target = e.target.closest('.cursor-target-view');
-      if (target) {
-        cursor.classList.add('active-view');
-        cursorText.textContent = 'View';
-      } else {
-        cursor.classList.remove('active-view');
-      }
-    });
-  }
 
   // Hash Router Listener
   window.addEventListener('hashchange', renderApp);
