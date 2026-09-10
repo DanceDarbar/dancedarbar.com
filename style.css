@@ -2113,6 +2113,33 @@ h1, h2, h3, h4, h5, h6 {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+.schedule-table th:nth-child(1),
+.schedule-table td:nth-child(1) {
+  width: 22%;
+}
+
+.schedule-table th:nth-child(2),
+.schedule-table td:nth-child(2) {
+  width: 26%;
+}
+
+.schedule-table th:nth-child(3),
+.schedule-table td:nth-child(3) {
+  width: 26%;
+}
+
+.schedule-table th:nth-child(4),
+.schedule-table td:nth-child(4) {
+  width: 12%;
+  white-space: nowrap;
+}
+
+.schedule-table th:nth-child(5),
+.schedule-table td:nth-child(5) {
+  width: 14%;
+  white-space: nowrap;
+}
+
 .schedule-table td {
   padding: 20px 24px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);

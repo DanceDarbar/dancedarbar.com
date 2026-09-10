@@ -736,7 +736,7 @@ function renderSchedulePage() {
       <div class="section-container">
         <span class="eyebrow">Class Schedule</span>
         <h1 class="section-heading" style="margin-bottom: 16px;">Find a Batch That Works for You.</h1>
-        <p class="lead-text">Filter available batches by class, age group, and day of week.</p>
+        <p class="lead-text">Filter available batches by class and day of week.</p>
 
         <!-- FILTER CONTROLS -->
         <div class="schedule-filter-bar">
@@ -771,8 +771,6 @@ function renderSchedulePage() {
             <thead>
               <tr>
                 <th>Class</th>
-                <th>Level</th>
-                <th>Age Group</th>
                 <th>Day</th>
                 <th>Instructor</th>
                 <th>Status</th>
@@ -798,7 +796,7 @@ function renderScheduleRows(items) {
   if (items.length === 0) {
     const emptyMsg = `No matching batch currently listed. <a href="#/claim-free-seat" style="color: var(--color-primary-dark); font-weight: 700;">Submit a trial request</a>`;
     return {
-      table: `<tr><td colspan="7" style="text-align: center; padding: 40px; color: var(--color-muted-text);">${emptyMsg}</td></tr>`,
+      table: `<tr><td colspan="5" style="text-align: center; padding: 40px; color: var(--color-muted-text);">${emptyMsg}</td></tr>`,
       cards: `<div style="text-align: center; padding: 32px 16px; color: var(--color-muted-text);">${emptyMsg}</div>`
     };
   }
@@ -806,8 +804,6 @@ function renderScheduleRows(items) {
   const tableHtml = items.map(s => `
     <tr>
       <td style="font-weight: 700; color: var(--color-navy);">${s.program}</td>
-      <td>${s.level}</td>
-      <td>${s.ageGroup}</td>
       <td>${s.day}</td>
       <td>${s.instructor}</td>
       <td><span class="status-badge">${s.availability}</span></td>
@@ -824,7 +820,7 @@ function renderScheduleRows(items) {
     <div class="schedule-mobile-card">
       <div class="schedule-card-top">
         <div>
-          <span class="eyebrow">${s.level} • ${s.ageGroup}</span>
+          <span class="eyebrow">Weekly Batch</span>
           <h3 class="schedule-card-title">${s.program}</h3>
         </div>
         <span class="status-badge">${s.availability}</span>
