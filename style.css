@@ -196,13 +196,13 @@ h1, h2, h3, h4, h5, h6 {
 
 .btn-primary,
 .claim-seat-btn {
-  background-color: #000000;
-  color: #FFFFFF;
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  background-color: #FFFFFF;
+  color: #000000;
+  border: 1px solid #FFFFFF;
   cursor: pointer;
   transform: scale(1);
   transition: all 250ms ease-out;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
 }
 
 .btn-primary:hover,
@@ -228,10 +228,9 @@ h1, h2, h3, h4, h5, h6 {
   display: inline-block;
   vertical-align: middle;
   flex-shrink: 0;
-  color: #FFFFFF;
   stroke: currentColor;
   transform: translateX(0);
-  transition: transform 250ms ease-out;
+  transition: transform 250ms ease-out, stroke 250ms ease-out, color 250ms ease-out;
   will-change: transform;
 }
 
