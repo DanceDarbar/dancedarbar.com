@@ -866,11 +866,11 @@ h1, h2, h3, h4, h5, h6 {
    8. STATISTICS COUNTER SECTION
    -------------------------------------------------------------------------- */
 .stats-section {
-  background-color: #111111;
+  background-color: #000000;
   color: #FFFFFF;
   padding: 48px 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: none;
+  border-bottom: none;
 }
 
 .stats-grid {
@@ -1997,9 +1997,9 @@ h1, h2, h3, h4, h5, h6 {
 
 /* DUAL FAQ & CONTACT US SPLIT BANNER */
 .dual-banner-section {
-  background-color: #111111;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: #000000;
+  border-top: none;
+  border-bottom: none;
   overflow: hidden;
   margin-bottom: 120px;
 }
@@ -2026,7 +2026,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .dual-banner-item:hover {
-  background-color: #1A1A1A;
+  background-color: transparent;
 }
 
 .dual-eyebrow {
@@ -3229,8 +3229,8 @@ h1, h2, h3, h4, h5, h6 {
     justify-content: center !important;
     text-align: center !important;
     padding: 16px 6px !important;
-    background: rgba(255, 255, 255, 0.05) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    background: transparent !important;
+    border: none !important;
     border-radius: 16px !important;
     box-sizing: border-box !important;
   }
