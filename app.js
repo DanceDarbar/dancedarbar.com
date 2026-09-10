@@ -199,7 +199,8 @@ const DANCE_DATA = {
       onlineNote: '',
       shortDescription: 'Voice culture, rhythm, melody, breathing and performance practice.',
       fullDescription: 'Cultivate pitch accuracy, breath control, and classical voice resonance. Learn fundamental Swaras, Ragas, Alankars, and devotional melodies in an encouraging and structured atmosphere.',
-      image: 'assets/music-local.png',
+      image: 'assets/vocals-class.jpg',
+      imagePosition: '42% center',
       ageGroups: ['Children (6–12 yrs)', 'Teenagers (13–17 yrs)', 'Adults & Seniors'],
       levels: ['Beginner', 'Intermediate'],
       curriculum: [
