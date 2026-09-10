@@ -844,6 +844,45 @@ function renderScheduleRows(items) {
   return { table: tableHtml, cards: cardsHtml };
 }
 
+// --- DANCE FOOTSTEP TRAIL GENERATOR ---
+function renderFootstepTrail() {
+  const steps = [
+    { x: '8%',  y: '68%', rot: -10, isRight: false },
+    { x: '17%', y: '56%', rot: -14, isRight: true  },
+    { x: '27%', y: '66%', rot: -8,  isRight: false },
+    { x: '37%', y: '54%', rot: -12, isRight: true  },
+    { x: '46%', y: '64%', rot: -10, isRight: false },
+    { x: '54%', y: '52%', rot: -14, isRight: true  },
+    { x: '63%', y: '62%', rot: -8,  isRight: false },
+    { x: '73%', y: '53%', rot: -12, isRight: true  },
+    { x: '83%', y: '64%', rot: -10, isRight: false },
+    { x: '92%', y: '54%', rot: -14, isRight: true  }
+  ];
+
+  return `
+    <div class="dance-footstep-trail" aria-hidden="true">
+      ${steps.map((s, idx) => `
+        <div class="dance-footstep step-${idx + 1} ${s.isRight ? 'foot-right' : 'foot-left'}"
+             style="--step-x: ${s.x}; --step-y: ${s.y}; --step-rot: ${s.rot}deg;">
+          <div class="footstep-glow"></div>
+          <div class="footstep-inner">
+            <svg class="footstep-icon" viewBox="0 0 24 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 12C16.5 12 19 15.5 18 20.5C17.2 24.5 14.5 25.5 12 25.5C9.5 25.5 6.8 24.5 6 20.5C5 15.5 7.5 12 12 12Z" fill="currentColor"/>
+              <ellipse cx="12" cy="31" rx="4.5" ry="4" fill="currentColor"/>
+              <path d="M7.5 21C8.5 25.5 8.5 28 8 30C10 30.5 14 30.5 16 30C15.5 28 15.5 25.5 16.5 21C15 22 9 22 7.5 21Z" fill="currentColor" opacity="0.6"/>
+              <ellipse cx="16.5" cy="5" rx="2.5" ry="3.2" fill="currentColor"/>
+              <ellipse cx="12" cy="5.2" rx="2.2" ry="2.6" fill="currentColor"/>
+              <ellipse cx="7.8" cy="6.8" rx="1.8" ry="2.2" fill="currentColor"/>
+              <ellipse cx="4.5" cy="9.5" rx="1.5" ry="1.8" fill="currentColor"/>
+              <ellipse cx="2" cy="13" rx="1.2" ry="1.4" fill="currentColor"/>
+            </svg>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
 // --- EVENTS PAGE TEMPLATE ---
 function renderEventsPage() {
   return `
@@ -853,8 +892,9 @@ function renderEventsPage() {
         <h1 class="section-heading" style="margin-bottom: 16px;">Where Practice Meets the Stage.</h1>
         <p class="lead-text" style="margin-bottom: 60px;">Discover upcoming annual productions, stage shows and grand cultural showcases at Dance Darbar Kala Sansthan.</p>
 
-        <div class="coming-soon-card">
-          <h2 class="coming-soon-heading">COMING SOON</h2>
+        <div class="coming-soon-card footstep-card">
+          ${renderFootstepTrail()}
+          <h2 class="coming-soon-heading footstep-heading">A NEW STORY TAKES THE STAGE</h2>
         </div>
       </div>
     </div>
@@ -867,8 +907,9 @@ function renderEventDetailPage(slug) {
     <div style="padding-top: 140px; padding-bottom: 100px;">
       <div class="section-container">
         <a href="#/events" style="font-size: 14px; font-weight: 600; color: var(--color-primary-dark); margin-bottom: 24px; display: inline-block;">&larr; Back to Events</a>
-        <div class="coming-soon-card">
-          <h1 class="coming-soon-heading">COMING SOON</h1>
+        <div class="coming-soon-card footstep-card">
+          ${renderFootstepTrail()}
+          <h1 class="coming-soon-heading footstep-heading">A NEW STORY TAKES THE STAGE</h1>
         </div>
       </div>
     </div>
