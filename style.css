@@ -189,26 +189,70 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: 0.02em;
   cursor: pointer;
   border: 1px solid transparent;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 250ms ease-out;
   white-space: nowrap;
+  box-sizing: border-box;
 }
 
-.btn-primary {
-  background-color: #FFFFFF;
-  color: #000000;
-  border-color: #FFFFFF;
+.btn-primary,
+.claim-seat-btn {
+  background-color: #000000;
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  cursor: pointer;
+  transform: scale(1);
+  transition: all 250ms ease-out;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-.btn-primary:hover {
-  background-color: #E5E5E5;
-  color: #000000;
-  border-color: #E5E5E5;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.08);
+.btn-primary:hover,
+.btn-primary:focus-visible,
+.claim-seat-btn:hover,
+.claim-seat-btn:focus-visible {
+  background-color: #2A2A2A;
+  color: #FFFFFF;
+  border-color: rgba(255, 255, 255, 0.45);
+  transform: scale(1.04);
+  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.15);
+  outline: none;
 }
 
-.btn-primary:hover .btn-arrow {
-  transform: translateX(4px);
+.btn-primary:active,
+.claim-seat-btn:active {
+  transform: scale(0.98);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+}
+
+.btn-arrow,
+.arrow-icon {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+  color: #FFFFFF;
+  stroke: currentColor;
+  transform: translateX(0);
+  transition: transform 250ms ease-out;
+  will-change: transform;
+}
+
+.btn-primary:hover .btn-arrow,
+.btn-primary:hover .arrow-icon,
+.btn-primary:focus-visible .btn-arrow,
+.btn-primary:focus-visible .arrow-icon,
+.claim-seat-btn:hover .btn-arrow,
+.claim-seat-btn:hover .arrow-icon,
+.claim-seat-btn:focus-visible .btn-arrow,
+.claim-seat-btn:focus-visible .arrow-icon {
+  animation: arrowBounce 0.8s ease-in-out infinite;
+}
+
+@keyframes arrowBounce {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(4px);
+  }
 }
 
 .btn-secondary {
@@ -233,10 +277,6 @@ h1, h2, h3, h4, h5, h6 {
   background-color: rgba(255, 255, 255, 0.1);
   color: #FFFFFF;
   border-color: rgba(255, 255, 255, 0.5);
-}
-
-.btn-arrow {
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .full-width {

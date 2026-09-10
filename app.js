@@ -450,7 +450,7 @@ function renderHomePage() {
           <h1 class="display-heading hero-heading">Where Movement<br>Becomes Art.</h1>
           <p class="hero-subheading">Disciplined training in Kathak, Bollywood, Vocal Music, Fine Arts and Yoga for every age and skill level.</p>
           <div class="hero-cta-group">
-            <a href="#/claim-free-seat" class="btn btn-primary">
+            <a href="#/claim-free-seat" class="btn btn-primary claim-seat-btn">
               <span>Claim Free Seat</span>
               <svg class="btn-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
@@ -662,7 +662,10 @@ function renderProgramDetailPage(slug) {
             <p class="mode-subtitle">${prog.modeBadge}</p>
             <p class="lead-text">${prog.onlineNote ? `${prog.onlineNote}` : prog.fullDescription}</p>
             <div class="program-card-actions">
-              <a href="#/claim-free-seat" class="btn btn-primary">Claim Free Trial Seat</a>
+              <a href="#/claim-free-seat" class="btn btn-primary claim-seat-btn">
+                <span>Claim Free Trial Seat</span>
+                <svg class="btn-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
               <a href="#/schedule" class="btn btn-secondary">Check Class Timings</a>
             </div>
           </div>
@@ -709,7 +712,10 @@ function renderProgramDetailPage(slug) {
                 <span class="overview-label">Timings</span>
                 <p class="overview-val timing">${prog.schedulePreview}</p>
               </div>
-              <a href="#/claim-free-seat" class="btn btn-primary full-width" style="margin-top: 8px;">Claim Trial Seat</a>
+              <a href="#/claim-free-seat" class="btn btn-primary full-width claim-seat-btn" style="margin-top: 8px;">
+                <span>Claim Trial Seat</span>
+                <svg class="btn-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
             </div>
           </div>
         </div>
@@ -802,7 +808,10 @@ function renderScheduleRows(items) {
       <td>${s.instructor}</td>
       <td><span class="status-badge">${s.availability}</span></td>
       <td>
-        <a href="#/claim-free-seat" class="btn btn-primary" style="padding: 8px 16px; font-size: 12px; min-height: 40px; border-radius: 999px;">Claim Seat</a>
+        <a href="#/claim-free-seat" class="btn btn-primary claim-seat-btn" style="padding: 8px 16px; font-size: 12px; min-height: 40px; border-radius: 999px;">
+          <span>Claim Seat</span>
+          <svg class="btn-arrow" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
       </td>
     </tr>
   `).join('');
@@ -821,7 +830,10 @@ function renderScheduleRows(items) {
         <p><strong>Days:</strong> ${s.day}</p>
         <p><strong>Timing:</strong> Evening Batch</p>
       </div>
-      <a href="#/claim-free-seat" class="btn btn-primary full-width" style="margin-top: 14px;">Claim Seat</a>
+      <a href="#/claim-free-seat" class="btn btn-primary full-width claim-seat-btn" style="margin-top: 14px;">
+        <span>Claim Seat</span>
+        <svg class="btn-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
     </div>
   `).join('');
 
@@ -996,7 +1008,7 @@ function renderClaimFreeSeatPage() {
                 <span class="error-text" id="err-address">Please enter your address or locality.</span>
               </div>
 
-              <button type="submit" class="btn btn-primary full-width" style="margin-top: 12px;" id="trial-submit-btn">
+              <button type="submit" class="btn btn-primary full-width claim-seat-btn" style="margin-top: 12px;" id="trial-submit-btn">
                 <span>Claim Free Seat</span>
                 <svg class="btn-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
               </button>
@@ -1610,7 +1622,7 @@ function renderAmrapaliCTA(extraClass = '') {
   } else {
     return `
       <div class="amrapali-cta-wrap ${extraClass}">
-        <button type="button" class="btn btn-primary" onclick="window.openAmrapaliModal()">
+        <button type="button" class="btn btn-primary claim-seat-btn" onclick="window.openAmrapaliModal()">
           <span>Reserve Seat</span>
           <svg class="btn-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </button>
