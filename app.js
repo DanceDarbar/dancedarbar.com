@@ -606,7 +606,7 @@ function renderProgramsPage() {
 
         <div style="display: flex; flex-direction: column; gap: 48px;">
           ${DANCE_DATA.programs.map((p, idx) => `
-            <div class="editorial-split" style="background: var(--color-white); border-radius: var(--radius-large); padding: 48px; border: 1px solid var(--color-border); ${idx % 2 === 1 ? 'grid-template-columns: 1fr 1fr;' : ''}">
+            <div class="editorial-split" style="background: var(--color-surface); border-radius: var(--radius-large); padding: 48px; border: 1px solid var(--color-border); box-shadow: 0 10px 30px rgba(0,0,0,0.4); ${idx % 2 === 1 ? 'grid-template-columns: 1fr 1fr;' : ''}">
               <div class="editorial-content">
                 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
                   <span class="eyebrow">${p.number} — Class</span>
@@ -1049,7 +1049,7 @@ function renderContactPage() {
         <p class="lead-text" style="margin-bottom: 44px;">We would love to welcome you to our academy studio in Dwarka, Delhi.</p>
 
         <!-- EMBEDDED GOOGLE MAP CARD -->
-        <div style="background: var(--color-white); padding: 24px; border-radius: var(--radius-large); border: 1px solid var(--color-border); margin-bottom: 40px; box-shadow: 0 10px 30px rgba(8,18,30,0.04);">
+        <div style="background: var(--color-surface); padding: 24px; border-radius: var(--radius-large); border: 1px solid var(--color-border); margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.4);">
           <div style="border-radius: var(--radius-medium); overflow: hidden; height: 360px; margin-bottom: 20px;">
             <iframe src="https://maps.google.com/maps?q=28.5816,77.0674&hl=en&z=15&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
           </div>
@@ -1068,19 +1068,19 @@ function renderContactPage() {
 
         <div class="editorial-split">
           <div>
-            <div style="background: var(--color-white); padding: 36px; border-radius: var(--radius-medium); border: 1px solid var(--color-border); margin-bottom: 32px;">
+            <div style="background: var(--color-surface); padding: 36px; border-radius: var(--radius-medium); border: 1px solid var(--color-border); margin-bottom: 32px; box-shadow: 0 10px 30px rgba(0,0,0,0.4);">
               <h3 style="font-size: 22px; margin-bottom: 20px;">Contact Information</h3>
               <p style="margin-bottom: 16px; font-size: 15px; display: flex; align-items: flex-start; gap: 10px;">
                 <span>📍</span>
-                <span><strong>Address:</strong> <a href="https://maps.app.goo.gl/oC6b7UmrGXwJxt4E6?utm_source=chatgpt.com" target="_blank" rel="noopener" style="color: var(--color-primary-dark); text-decoration: underline; font-weight: 600;">Dance Darbar Kala Sansthan, New Delhi (Open Directions) &rarr;</a></span>
+                <span><strong>Address:</strong> <a href="https://maps.app.goo.gl/oC6b7UmrGXwJxt4E6?utm_source=chatgpt.com" target="_blank" rel="noopener" style="color: #5EBBEA; text-decoration: underline; font-weight: 600;">Dance Darbar Kala Sansthan, New Delhi (Open Directions) &rarr;</a></span>
               </p>
               <p style="margin-bottom: 16px; font-size: 15px; display: flex; align-items: center; gap: 10px;">
                 <span>📞</span>
-                <span><strong>Phone:</strong> <a href="tel:+919958659933" style="color: var(--color-navy); font-weight: 600;">+91 99586 59933</a></span>
+                <span><strong>Phone:</strong> <a href="tel:+919958659933" style="color: #FFFFFF; font-weight: 600;">+91 99586 59933</a></span>
               </p>
               <p style="margin-bottom: 16px; font-size: 15px; display: flex; align-items: center; gap: 10px;">
                 <span>✉️</span>
-                <span><strong>Email:</strong> <a href="mailto:dancedarbar96@gmail.com" style="color: var(--color-primary-dark); text-decoration: underline; font-weight: 600;">dancedarbar96@gmail.com</a></span>
+                <span><strong>Email:</strong> <a href="mailto:dancedarbar96@gmail.com" style="color: #5EBBEA; text-decoration: underline; font-weight: 600;">dancedarbar96@gmail.com</a></span>
               </p>
               <p style="font-size: 15px; display: flex; align-items: center; gap: 10px;">
                 <span>⏰</span>
@@ -1089,7 +1089,7 @@ function renderContactPage() {
             </div>
           </div>
 
-          <div style="background: var(--color-navy); color: var(--color-white); padding: 36px; border-radius: var(--radius-medium);">
+          <div style="background: var(--color-surface-elevated); color: #FFFFFF; padding: 36px; border-radius: var(--radius-medium); border: 1px solid var(--color-border); box-shadow: 0 10px 30px rgba(0,0,0,0.4);">
             <h3 style="font-size: 22px; color: var(--color-white); margin-bottom: 20px;">Send a Direct Message</h3>
             <form id="contact-form">
               <div class="form-group">
@@ -1766,22 +1766,22 @@ function renderAdminLoginPage() {
   return `
     <div style="padding-top: 140px; padding-bottom: 100px; min-height: 80vh; display: flex; align-items: center; justify-content: center;">
       <div style="width: 100%; max-width: 420px; padding: 0 20px;">
-        <div style="background: var(--color-white); border-radius: var(--radius-large); padding: 44px 36px; border: 1px solid var(--color-border); box-shadow: 0 25px 60px rgba(8,18,30,0.12);">
-          <div style="width: 60px; height: 60px; background: var(--color-navy); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+        <div style="background: var(--color-surface); border-radius: var(--radius-large); padding: 44px 36px; border: 1px solid var(--color-border); box-shadow: 0 25px 60px rgba(0,0,0,0.6);">
+          <div style="width: 60px; height: 60px; background: #141414; border: 1px solid var(--color-border); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
             <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#5EBBEA" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           </div>
-          <h2 style="font-size: 24px; color: var(--color-navy); text-align: center; margin-bottom: 6px;">Admin Login</h2>
+          <h2 style="font-size: 24px; color: #FFFFFF; text-align: center; margin-bottom: 6px;">Admin Login</h2>
           <p style="font-size: 13px; color: var(--color-muted-text); text-align: center; margin-bottom: 28px;">This area is restricted to Dance Darbar administrators only.</p>
           <form id="admin-login-form" novalidate>
             <div class="form-group" style="margin-bottom: 16px;">
-              <label class="form-label" for="admin_email" style="font-size: 12px; font-weight: 600; margin-bottom: 4px; display: block;">Email Address</label>
+              <label class="form-label" for="admin_email" style="font-size: 12px; font-weight: 600; margin-bottom: 4px; display: block; color: #FFFFFF;">Email Address</label>
               <input type="email" id="admin_email" class="form-control" placeholder="admin@dancedarbar.com" required autocomplete="email">
             </div>
             <div class="form-group" style="margin-bottom: 20px;">
-              <label class="form-label" for="admin_password" style="font-size: 12px; font-weight: 600; margin-bottom: 4px; display: block;">Password</label>
+              <label class="form-label" for="admin_password" style="font-size: 12px; font-weight: 600; margin-bottom: 4px; display: block; color: #FFFFFF;">Password</label>
               <input type="password" id="admin_password" class="form-control" placeholder="Enter admin password" required autocomplete="current-password">
             </div>
-            <div id="admin-login-error" style="display: none; background: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5; border-radius: var(--radius-small); padding: 10px 14px; font-size: 12.5px; font-weight: 600; margin-bottom: 16px; text-align: center;">
+            <div id="admin-login-error" style="display: none; background: rgba(239, 68, 68, 0.15); color: #F87171; border: 1px solid rgba(239, 68, 68, 0.3); border-radius: var(--radius-small); padding: 10px 14px; font-size: 12.5px; font-weight: 600; margin-bottom: 16px; text-align: center;">
               Invalid email or password. Please try again.
             </div>
             <button type="submit" id="admin-login-btn" class="btn btn-primary" style="width: 100%; padding: 13px;">
@@ -1789,7 +1789,7 @@ function renderAdminLoginPage() {
             </button>
           </form>
           <p style="font-size: 11px; color: var(--color-muted-text); text-align: center; margin-top: 24px; line-height: 1.5;">
-            If you are not an authorized administrator, please <a href="#/" style="color: var(--color-primary-dark); font-weight: 600;">return to the website</a>.
+            If you are not an authorized administrator, please <a href="#/" style="color: #5EBBEA; font-weight: 600;">return to the website</a>.
           </p>
         </div>
       </div>
@@ -1846,17 +1846,17 @@ function renderAdminPage() {
 
         <!-- Admin Overview Cards -->
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 36px;">
-          <div style="background: var(--color-white); padding: 20px; border-radius: var(--radius-medium); border: 1px solid var(--color-border);">
+          <div style="background: var(--color-surface); padding: 20px; border-radius: var(--radius-medium); border: 1px solid var(--color-border); box-shadow: 0 4px 16px rgba(0,0,0,0.4);">
             <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--color-muted-text);">Free Trial Submissions</span>
-            <h3 style="font-size: 26px; color: var(--color-primary-dark); margin-top: 4px;">${trialList.length}</h3>
+            <h3 style="font-size: 26px; color: #5EBBEA; margin-top: 4px;">${trialList.length}</h3>
           </div>
-          <div style="background: var(--color-white); padding: 20px; border-radius: var(--radius-medium); border: 1px solid var(--color-border);">
+          <div style="background: var(--color-surface); padding: 20px; border-radius: var(--radius-medium); border: 1px solid var(--color-border); box-shadow: 0 4px 16px rgba(0,0,0,0.4);">
             <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--color-muted-text);">AMRAPALI Reservations</span>
-            <h3 style="font-size: 26px; color: var(--color-navy); margin-top: 4px;">${bookings.length}</h3>
+            <h3 style="font-size: 26px; color: #FFFFFF; margin-top: 4px;">${bookings.length}</h3>
           </div>
-          <div style="background: var(--color-white); padding: 20px; border-radius: var(--radius-medium); border: 1px solid var(--color-border);">
+          <div style="background: var(--color-surface); padding: 20px; border-radius: var(--radius-medium); border: 1px solid var(--color-border); box-shadow: 0 4px 16px rgba(0,0,0,0.4);">
             <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--color-muted-text);">Confirmed Event Revenue</span>
-            <h3 style="font-size: 26px; color: #166534; margin-top: 4px;">₹${bookings.filter(b => b.status === 'Confirmed').reduce((sum, b) => sum + (b.totalAmount || 500), 0)}</h3>
+            <h3 style="font-size: 26px; color: #4ADE80; margin-top: 4px;">₹${bookings.filter(b => b.status === 'Confirmed').reduce((sum, b) => sum + (b.totalAmount || 500), 0)}</h3>
           </div>
         </div>
 
@@ -2393,13 +2393,13 @@ function renderAdminPage() {
         </div>
 
         <!-- AMRAPALI RESERVATION PORTAL STATUS CONTROL PANEL -->
-        <div style="background: var(--color-white); border-radius: var(--radius-medium); padding: 24px; border: 1px solid var(--color-border); margin-bottom: 32px; box-shadow: 0 4px 16px rgba(8,18,30,0.04); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+        <div style="background: var(--color-surface); border-radius: var(--radius-medium); padding: 24px; border: 1px solid var(--color-border); margin-bottom: 32px; box-shadow: 0 4px 16px rgba(0,0,0,0.4); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
           <div>
             <span style="font-size: 11px; font-weight: 700; color: var(--color-muted-text); text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 4px;">AMRAPALI 2026 Reservation Setting</span>
             <h3 style="font-size: 20px; font-weight: 700; color: var(--color-navy); margin-bottom: 4px; display: flex; align-items: center; gap: 10px;">
               <span>Seat Reservation Portal Status:</span>
               ${currentStatus === 'closed' 
-                ? `<span class="badge" style="background: #FEE2E2; color: #991B1B; font-weight: 700; font-size: 13px;">● Closed (Seats Full)</span>`
+                ? `<span class="badge" style="background: rgba(239, 68, 68, 0.2); color: #F87171; font-weight: 700; font-size: 13px;">● Closed (Seats Full)</span>`
                 : `<span class="badge badge-success" style="font-size: 13px;">● Open (Accepting Reservations)</span>`
               }
             </h3>
@@ -2422,26 +2422,26 @@ function renderAdminPage() {
 
         <!-- STATS OVERVIEW -->
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px;">
-          <div style="background: var(--color-white); border-radius: var(--radius-medium); padding: 20px; border: 1px solid var(--color-border); box-shadow: 0 4px 12px rgba(8,18,30,0.03);">
+          <div style="background: var(--color-surface); border-radius: var(--radius-medium); padding: 20px; border: 1px solid var(--color-border); box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
             <span style="font-size: 11px; font-weight: 700; color: var(--color-muted-text); text-transform: uppercase; letter-spacing: 0.08em;">Trial Registrations</span>
             <h3 style="font-size: 28px; font-weight: 800; color: var(--color-navy); margin-top: 4px;">${trialList.length}</h3>
           </div>
-          <div style="background: var(--color-white); border-radius: var(--radius-medium); padding: 20px; border: 1px solid var(--color-border); box-shadow: 0 4px 12px rgba(8,18,30,0.03);">
+          <div style="background: var(--color-surface); border-radius: var(--radius-medium); padding: 20px; border: 1px solid var(--color-border); box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
             <span style="font-size: 11px; font-weight: 700; color: var(--color-muted-text); text-transform: uppercase; letter-spacing: 0.08em;">AMRAPALI Event Bookings</span>
             <h3 style="font-size: 28px; font-weight: 800; color: var(--color-navy); margin-top: 4px;">${bookingList.length}</h3>
           </div>
-          <div style="background: var(--color-white); border-radius: var(--radius-medium); padding: 20px; border: 1px solid var(--color-border); box-shadow: 0 4px 12px rgba(8,18,30,0.03);">
+          <div style="background: var(--color-surface); border-radius: var(--radius-medium); padding: 20px; border: 1px solid var(--color-border); box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
             <span style="font-size: 11px; font-weight: 700; color: var(--color-muted-text); text-transform: uppercase; letter-spacing: 0.08em;">Total Seats Reserved</span>
-            <h3 style="font-size: 28px; font-weight: 800; color: var(--color-primary-dark); margin-top: 4px;">${totalSeats}</h3>
+            <h3 style="font-size: 28px; font-weight: 800; color: #5EBBEA; margin-top: 4px;">${totalSeats}</h3>
           </div>
-          <div style="background: var(--color-white); border-radius: var(--radius-medium); padding: 20px; border: 1px solid var(--color-border); box-shadow: 0 4px 12px rgba(8,18,30,0.03);">
+          <div style="background: var(--color-surface); border-radius: var(--radius-medium); padding: 20px; border: 1px solid var(--color-border); box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
             <span style="font-size: 11px; font-weight: 700; color: var(--color-muted-text); text-transform: uppercase; letter-spacing: 0.08em;">Total Revenue Collected</span>
-            <h3 style="font-size: 28px; font-weight: 800; color: #10B981; margin-top: 4px;">₹${totalPaid}</h3>
+            <h3 style="font-size: 28px; font-weight: 800; color: #4ADE80; margin-top: 4px;">₹${totalPaid}</h3>
           </div>
         </div>
 
         <!-- FILTERS -->
-        <div style="background: var(--color-white); border-radius: var(--radius-medium); padding: 20px; border: 1px solid var(--color-border); margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: center;">
+        <div style="background: var(--color-surface); border-radius: var(--radius-medium); padding: 20px; border: 1px solid var(--color-border); margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
           <div style="flex: 1; min-width: 260px;">
             <input type="text" id="admin-search-input" class="form-control" placeholder="🔍 Search by Name, Phone, Email, or Booking Ref..." style="padding: 12px 16px; font-size: 14px;">
           </div>
@@ -2452,7 +2452,7 @@ function renderAdminPage() {
         </div>
 
         <!-- TABLE CONTAINER -->
-        <div style="background: var(--color-white); border-radius: var(--radius-medium); border: 1px solid var(--color-border); overflow-x: auto; box-shadow: 0 10px 30px rgba(8,18,30,0.04);">
+        <div style="background: var(--color-surface); border-radius: var(--radius-medium); border: 1px solid var(--color-border); overflow-x: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.4);">
           <div id="admin-table-container">
             ${renderAdminTrialsTable(trialList)}
           </div>
