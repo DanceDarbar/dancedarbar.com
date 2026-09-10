@@ -150,7 +150,8 @@ const DANCE_DATA = {
       onlineNote: 'Learn Kathak from anywhere with our live online classes, or join our offline studio batches for an immersive classroom experience.',
       shortDescription: 'Classical technique, footwork, rhythm, expression and storytelling.',
       fullDescription: 'Kathak is one of the eight major forms of Indian classical dance. Learn Kathak from anywhere with our live online classes, or join our offline studio batches for an immersive classroom experience.',
-      image: 'assets/kathak-local.jpg',
+      image: 'assets/kathak-class.jpg',
+      imagePosition: 'center center',
       ageGroups: ['Children (5–12 yrs)', 'Teenagers (13–17 yrs)', 'Adults (18+ yrs)'],
       levels: ['Beginner', 'Intermediate', 'Advanced'],
       curriculum: [
