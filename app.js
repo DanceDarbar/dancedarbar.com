@@ -447,6 +447,7 @@ function renderHomePage() {
           title="Nritya Mahotsav 2025 Guru Vandana Choreographed By Guru Bhagwan Singh_2160p">
         </iframe>
         <div class="hero-overlay-gradient"></div>
+        <div class="hero-bottom-gradient" aria-hidden="true"></div>
       </div>
       <div class="hero-content">
         <div class="hero-text-box">
