@@ -1200,6 +1200,130 @@ h1, h2, h3, h4, h5, h6 {
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+.explore-classes-section .section-container {
+  position: relative;
+  z-index: 1;
+}
+
+/* Decorative Indian Music Instruments Outline Backdrop */
+.explore-classes-bg-instruments {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.instrument-sketch-icon {
+  position: absolute;
+  stroke: #FFFFFF;
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.3;
+  pointer-events: none;
+  user-select: none;
+  will-change: transform;
+}
+
+/* Subtle Floating Animations */
+@keyframes instrumentFloatA {
+  0% { transform: translateY(0px) rotate(var(--rot, 0deg)); }
+  50% { transform: translateY(-7px) rotate(calc(var(--rot, 0deg) + 1.5deg)); }
+  100% { transform: translateY(3px) rotate(calc(var(--rot, 0deg) - 1deg)); }
+}
+
+@keyframes instrumentFloatB {
+  0% { transform: translateY(0px) rotate(var(--rot, 0deg)); }
+  50% { transform: translateY(6px) rotate(calc(var(--rot, 0deg) - 2deg)); }
+  100% { transform: translateY(-4px) rotate(calc(var(--rot, 0deg) + 1deg)); }
+}
+
+.anim-float-a {
+  animation: instrumentFloatA 8.5s ease-in-out infinite alternate;
+}
+.anim-float-b {
+  animation: instrumentFloatB 10s ease-in-out infinite alternate;
+}
+
+/* Individual Instrument Positions & Sizes */
+.instrument-icon-1 { /* Sitar - Top Left */
+  --rot: 14deg;
+  top: 6%;
+  left: 6%;
+  width: 92px;
+  height: auto;
+  animation-delay: 0s;
+}
+.instrument-icon-2 { /* Tanpura - Top Right */
+  --rot: -12deg;
+  top: 7%;
+  right: 7%;
+  width: 82px;
+  height: auto;
+  animation-delay: -2.8s;
+}
+.instrument-icon-3 { /* Tabla - Mid Left */
+  --rot: -8deg;
+  top: 48%;
+  left: 5%;
+  width: 105px;
+  height: auto;
+  animation-delay: -4.5s;
+}
+.instrument-icon-4 { /* Dholak - Mid Right */
+  --rot: 15deg;
+  top: 50%;
+  right: 6%;
+  width: 100px;
+  height: auto;
+  animation-delay: -1.8s;
+}
+.instrument-icon-5 { /* Harmonium - Bottom Left */
+  --rot: -6deg;
+  bottom: 8%;
+  left: 10%;
+  width: 98px;
+  height: auto;
+  animation-delay: -5.2s;
+}
+.instrument-icon-6 { /* Ghungroo - Bottom Right */
+  --rot: 10deg;
+  bottom: 9%;
+  right: 11%;
+  width: 92px;
+  height: auto;
+  animation-delay: -3.4s;
+}
+.instrument-icon-7 { /* Floating Tanpura accent - Upper center-left */
+  --rot: 22deg;
+  top: 26%;
+  left: 18%;
+  width: 56px;
+  height: auto;
+  opacity: 0.2;
+  animation-delay: -6.5s;
+}
+.instrument-icon-8 { /* Floating Ghungroo accent - Lower center-right */
+  --rot: -16deg;
+  bottom: 16%;
+  right: 22%;
+  width: 60px;
+  height: auto;
+  opacity: 0.2;
+  animation-delay: -4s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .instrument-sketch-icon {
+    animation: none !important;
+    transform: rotate(var(--rot, 0deg)) !important;
+  }
+}
+
 .explore-classes-header {
   text-align: center;
   margin-bottom: 48px;
@@ -3026,6 +3150,39 @@ h1, h2, h3, h4, h5, h6 {
   .magnetic-detail-btn {
     padding: 8px 18px !important;
     font-size: 13px !important;
+  }
+
+  /* Decorative Instrument Backdrop Mobile Refinements */
+  .instrument-desktop-only {
+    display: none !important;
+  }
+
+  .instrument-sketch-icon {
+    opacity: 0.22 !important;
+  }
+
+  .instrument-icon-1 { /* Sitar */
+    top: 3% !important;
+    left: 3% !important;
+    width: 44px !important;
+  }
+
+  .instrument-icon-2 { /* Tanpura */
+    top: 4% !important;
+    right: 3% !important;
+    width: 40px !important;
+  }
+
+  .instrument-icon-3 { /* Tabla */
+    top: 58% !important;
+    left: 2% !important;
+    width: 50px !important;
+  }
+
+  .instrument-icon-4 { /* Dholak */
+    top: 60% !important;
+    right: 2% !important;
+    width: 50px !important;
   }
 
   /* 2. CLASSES CARDS & BUTTON ALIGNMENT */

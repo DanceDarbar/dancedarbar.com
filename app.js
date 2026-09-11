@@ -482,6 +482,159 @@ function renderHomePage() {
 
     <!-- EXPLORE CLASSES SECTION (MAGNETIC CAROUSEL) -->
     <section class="explore-classes-section">
+      <!-- Decorative Indian Musical Instrument Outline Backdrop Layer -->
+      <div class="explore-classes-bg-instruments" aria-hidden="true">
+        <!-- 1. Sitar (Top-Left) -->
+        <svg class="instrument-sketch-icon instrument-icon-1 anim-float-a" viewBox="0 0 90 90">
+          <path d="M16 66 C10 56 13 44 24 39 C28 37 34 39 37 44 C44 47 46 60 40 69 C33 76 22 75 16 66 Z"/>
+          <ellipse cx="28" cy="54" rx="8" ry="11"/>
+          <line x1="24" y1="56" x2="32" y2="52"/>
+          <path d="M35 42 L68 15 L73 19 L39 46 Z"/>
+          <line x1="41" y1="36" x2="45" y2="40"/>
+          <line x1="47" y1="31" x2="51" y2="35"/>
+          <line x1="53" y1="26" x2="57" y2="30"/>
+          <line x1="59" y1="21" x2="63" y2="25"/>
+          <line x1="65" y1="16" x2="69" y2="20"/>
+          <circle cx="68" cy="11" r="2"/>
+          <circle cx="74" cy="14" r="2"/>
+          <circle cx="76" cy="20" r="2"/>
+          <circle cx="58" cy="24" r="4"/>
+          <line x1="28" y1="53" x2="70" y2="15"/>
+        </svg>
+
+        <!-- 2. Tanpura (Top-Right) -->
+        <svg class="instrument-sketch-icon instrument-icon-2 anim-float-b" viewBox="0 0 80 100">
+          <path d="M24 78 C15 65 19 50 30 46 C32 40 36 36 40 36 C44 36 48 40 50 46 C61 50 65 65 56 78 C48 88 32 88 24 78 Z"/>
+          <path d="M28 53 C36 49 44 49 52 53"/>
+          <line x1="33" y1="64" x2="47" y2="64"/>
+          <rect x="38" y="12" width="4" height="26" rx="1"/>
+          <line x1="39" y1="14" x2="38" y2="64"/>
+          <line x1="41" y1="14" x2="42" y2="64"/>
+          <line x1="32" y1="16" x2="38" y2="16"/>
+          <circle cx="30" cy="16" r="2"/>
+          <line x1="42" y1="16" x2="48" y2="16"/>
+          <circle cx="50" cy="16" r="2"/>
+          <line x1="32" y1="22" x2="38" y2="22"/>
+          <circle cx="30" cy="22" r="2"/>
+          <line x1="42" y1="22" x2="48" y2="22"/>
+          <circle cx="50" cy="22" r="2"/>
+          <path d="M38 12 C38 6 42 6 42 12"/>
+        </svg>
+
+        <!-- 3. Tabla (Mid-Left) -->
+        <svg class="instrument-sketch-icon instrument-icon-3 anim-float-a" viewBox="0 0 100 80">
+          <ellipse cx="32" cy="24" rx="20" ry="8"/>
+          <ellipse cx="34" cy="24" rx="9" ry="3.5"/>
+          <path d="M12 25 C10 44 16 62 32 62 C48 62 53 44 51 25"/>
+          <path d="M11 27 C11 29 53 29 53 27"/>
+          <path d="M22 62 C22 66 42 66 42 62"/>
+          <path d="M18 28 L24 62 M45 28 L39 62 M32 29 L32 62"/>
+          <rect x="18" y="40" width="5" height="10" rx="2"/>
+          <ellipse cx="72" cy="26" rx="16" ry="6.5"/>
+          <ellipse cx="72" cy="26" rx="7" ry="2.8"/>
+          <path d="M57 27 L60 60 C60 63 84 63 84 60 L87 27"/>
+          <path d="M56 29 C56 31 88 31 88 29"/>
+          <path d="M63 29 L65 60 M81 29 L79 60 M72 30 L72 60"/>
+          <rect x="61" y="38" width="5" height="10" rx="2"/>
+          <rect x="78" y="41" width="5" height="10" rx="2"/>
+        </svg>
+
+        <!-- 4. Dholak (Mid-Right) -->
+        <svg class="instrument-sketch-icon instrument-icon-4 anim-float-b" viewBox="0 0 100 80">
+          <path d="M16 22 C38 12 62 12 84 22 L84 56 C62 66 38 66 16 56 Z"/>
+          <ellipse cx="16" cy="39" rx="6" ry="17"/>
+          <ellipse cx="18" cy="39" rx="3.5" ry="15"/>
+          <ellipse cx="84" cy="39" rx="6" ry="17"/>
+          <ellipse cx="82" cy="39" rx="3.5" ry="15"/>
+          <path d="M20 25 L38 39 L20 53 L50 39 L20 39"/>
+          <path d="M80 25 L62 39 L80 53 L50 39 L80 39"/>
+          <rect x="36" y="36" width="3" height="6" rx="1"/>
+          <rect x="60" y="36" width="3" height="6" rx="1"/>
+        </svg>
+
+        <!-- 5. Harmonium (Bottom-Left, Desktop only) -->
+        <svg class="instrument-sketch-icon instrument-icon-5 instrument-desktop-only anim-float-a" viewBox="0 0 100 80">
+          <rect x="12" y="24" width="76" height="42" rx="4"/>
+          <path d="M12 32 L88 32"/>
+          <path d="M18 24 L22 17 L78 17 L82 24"/>
+          <path d="M24 17 L28 12 L72 12 L76 17"/>
+          <rect x="18" y="36" width="64" height="15" rx="2"/>
+          <line x1="26" y1="36" x2="26" y2="51"/>
+          <line x1="34" y1="36" x2="34" y2="51"/>
+          <line x1="42" y1="36" x2="42" y2="51"/>
+          <line x1="50" y1="36" x2="50" y2="51"/>
+          <line x1="58" y1="36" x2="58" y2="51"/>
+          <line x1="66" y1="36" x2="66" y2="51"/>
+          <line x1="74" y1="36" x2="74" y2="51"/>
+          <rect x="23" y="36" width="4" height="8" rx="1"/>
+          <rect x="31" y="36" width="4" height="8" rx="1"/>
+          <rect x="47" y="36" width="4" height="8" rx="1"/>
+          <rect x="55" y="36" width="4" height="8" rx="1"/>
+          <rect x="63" y="36" width="4" height="8" rx="1"/>
+          <circle cx="28" cy="57" r="2.5"/>
+          <circle cx="38" cy="57" r="2.5"/>
+          <circle cx="50" cy="57" r="2.5"/>
+          <circle cx="62" cy="57" r="2.5"/>
+          <circle cx="72" cy="57" r="2.5"/>
+          <path d="M8 38 C6 41 6 45 8 48"/>
+          <path d="M92 38 C94 41 94 45 92 48"/>
+        </svg>
+
+        <!-- 6. Ghungroo (Bottom-Right, Desktop only) -->
+        <svg class="instrument-sketch-icon instrument-icon-6 instrument-desktop-only anim-float-b" viewBox="0 0 100 80">
+          <path d="M12 28 C34 18 66 18 88 28 L86 38 C64 28 36 28 14 38 Z"/>
+          <path d="M13 33 C8 44 14 55 10 66"/>
+          <path d="M87 33 C92 44 86 55 90 66"/>
+          <g>
+            <circle cx="24" cy="27" r="4.5"/>
+            <path d="M22 27 L26 27 M24 25 L24 29"/>
+            <circle cx="36" cy="25" r="4.5"/>
+            <path d="M34 25 L38 25 M36 23 L36 27"/>
+            <circle cx="50" cy="24" r="4.5"/>
+            <path d="M48 24 L52 24 M50 22 L50 26"/>
+            <circle cx="64" cy="25" r="4.5"/>
+            <path d="M62 25 L66 25 M64 23 L64 27"/>
+            <circle cx="76" cy="27" r="4.5"/>
+            <path d="M74 27 L78 27 M76 25 L76 29"/>
+          </g>
+          <g>
+            <circle cx="30" cy="38" r="4.5"/>
+            <path d="M28 38 L32 38 M30 36 L30 40"/>
+            <circle cx="43" cy="37" r="4.5"/>
+            <path d="M41 37 L45 37 M43 35 L43 39"/>
+            <circle cx="57" cy="37" r="4.5"/>
+            <path d="M55 37 L59 37 M57 35 L57 39"/>
+            <circle cx="70" cy="38" r="4.5"/>
+            <path d="M68 38 L72 38 M70 36 L70 40"/>
+          </g>
+        </svg>
+
+        <!-- 7. Accent Tanpura (Upper Mid-Left, Desktop only) -->
+        <svg class="instrument-sketch-icon instrument-icon-7 instrument-desktop-only anim-float-b" viewBox="0 0 80 100">
+          <path d="M24 78 C15 65 19 50 30 46 C32 40 36 36 40 36 C44 36 48 40 50 46 C61 50 65 65 56 78 C48 88 32 88 24 78 Z"/>
+          <path d="M28 53 C36 49 44 49 52 53"/>
+          <line x1="33" y1="64" x2="47" y2="64"/>
+          <rect x="38" y="12" width="4" height="26" rx="1"/>
+          <line x1="39" y1="14" x2="38" y2="64"/>
+          <line x1="41" y1="14" x2="42" y2="64"/>
+          <circle cx="30" cy="16" r="2"/>
+          <circle cx="50" cy="16" r="2"/>
+          <circle cx="30" cy="22" r="2"/>
+          <circle cx="50" cy="22" r="2"/>
+        </svg>
+
+        <!-- 8. Accent Ghungroo (Lower Mid-Right, Desktop only) -->
+        <svg class="instrument-sketch-icon instrument-icon-8 instrument-desktop-only anim-float-a" viewBox="0 0 100 80">
+          <path d="M12 28 C34 18 66 18 88 28 L86 38 C64 28 36 28 14 38 Z"/>
+          <circle cx="36" cy="25" r="4"/>
+          <path d="M34 25 L38 25 M36 23 L36 27"/>
+          <circle cx="50" cy="24" r="4"/>
+          <path d="M48 24 L52 24 M50 22 L50 26"/>
+          <circle cx="64" cy="25" r="4"/>
+          <path d="M62 25 L66 25 M64 23 L64 27"/>
+        </svg>
+      </div>
+
       <div class="section-container">
         <div class="explore-classes-header">
           <span class="eyebrow light">EXPLORE CLASSES</span>
