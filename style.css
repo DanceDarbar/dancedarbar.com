@@ -1716,6 +1716,23 @@ h1, h2, h3, h4, h5, h6 {
 /* --------------------------------------------------------------------------
    INTERACTIVE THEATER CURTAIN REVEAL STYLES
    -------------------------------------------------------------------------- */
+.featured-event-section {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  padding-top: 60px;
+  padding-bottom: 20px;
+}
+
+.curtain-stage-full-wrap {
+  width: 100%;
+  max-width: 100%;
+  position: relative;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
 .curtain-stage-card {
   background: #000000;
   border-radius: 0 !important;
@@ -1727,7 +1744,9 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-user-select: none;
   touch-action: pan-y;
   width: 100%;
-  min-height: 480px;
+  max-width: 100%;
+  min-height: clamp(480px, 42vw, 620px);
+  padding: 140px 24px;
   box-sizing: border-box;
 }
 

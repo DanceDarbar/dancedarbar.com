@@ -566,6 +566,8 @@ function renderHomePage() {
         <div class="upcoming-performance-header">
           <h2 class="upcoming-performance-heading">Upcoming Performance</h2>
         </div>
+      </div>
+      <div class="curtain-stage-full-wrap">
         <div class="coming-soon-card curtain-stage-card" id="curtainStageCard" tabindex="0" role="region" aria-label="Upcoming Performance: A NEW STORY TAKES THE STAGE">
           <!-- Centered Content Revealed Behind Curtains -->
           <div class="curtain-content-wrap">
