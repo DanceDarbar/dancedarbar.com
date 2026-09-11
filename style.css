@@ -71,6 +71,21 @@ body {
   background-color: var(--color-off-white);
 }
 
+/* Page Initial Load Entrance Transition */
+.app-root {
+  display: block;
+  width: 100%;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 700ms ease-out, transform 700ms ease-out;
+  will-change: opacity, transform;
+}
+
+.app-root.is-loaded {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 /* Accessibility Focus States for Keyboard Navigation */
 :focus-visible {
   outline: 2px solid var(--color-primary);
@@ -85,6 +100,12 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  .app-root {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
   }
 }
 

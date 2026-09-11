@@ -18,7 +18,30 @@
   <!-- Satoshi Font (Fontshare CDN) -->
   <link href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,600,500,400&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="style.css?v=58">
+  <link rel="stylesheet" href="style.css?v=59">
+  
+  <style>
+    /* Critical entrance style: ensures opacity: 0 on initial paint to avoid FOUC */
+    .app-root {
+      display: block;
+      width: 100%;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 700ms ease-out, transform 700ms ease-out;
+      will-change: opacity, transform;
+    }
+    .app-root.is-loaded {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .app-root {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
 </head>
 <body>
   <!-- Global Header Navigation -->
@@ -406,6 +429,6 @@
     </div>
   </div>
 
-  <script src="app.js?v=58"></script>
+  <script src="app.js?v=59"></script>
 </body>
 </html>

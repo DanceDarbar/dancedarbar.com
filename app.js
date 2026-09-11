@@ -2967,3 +2967,32 @@ window.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('hashchange', renderApp);
   renderApp();
 });
+
+// --- One-Time Initial Full Page Load Fade-in Entrance ---
+let hasTriggeredPageEntrance = false;
+
+function triggerPageEntranceFadeIn() {
+  if (hasTriggeredPageEntrance) return;
+  hasTriggeredPageEntrance = true;
+
+  const appRoot = document.getElementById('app-root');
+  if (appRoot) {
+    appRoot.classList.add('is-loaded');
+    setTimeout(() => {
+      if (appRoot.classList.contains('is-loaded')) {
+        appRoot.style.transform = 'none';
+      }
+    }, 800);
+  }
+}
+
+// Trigger on window.onload once critical assets (fonts, images) have loaded
+if (document.readyState === 'complete') {
+  setTimeout(triggerPageEntranceFadeIn, 60);
+} else {
+  window.addEventListener('load', () => {
+    setTimeout(triggerPageEntranceFadeIn, 60);
+  });
+  // Safety timeout fallback (e.g., slow network or offline)
+  setTimeout(triggerPageEntranceFadeIn, 1500);
+}
