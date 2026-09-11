@@ -1235,7 +1235,7 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 0;
   position: relative;
   overflow: visible;
   width: 100%;
@@ -1254,15 +1254,18 @@ h1, h2, h3, h4, h5, h6 {
 
 .magnetic-thumbnail-card {
   position: relative;
-  width: 200px;
-  height: 150px;
+  width: 90px;
+  height: 90px;
   overflow: hidden;
-  border-radius: 16px;
+  border-radius: 0px;
   cursor: pointer;
   background-color: #161616;
   box-shadow: 0 10px 32px rgba(0, 0, 0, 0.55);
   will-change: width, height, border-radius;
-  transition: border-radius 0.4s cubic-bezier(0.44, 0, 0.56, 1);
+}
+
+.magnetic-thumbnail-card.is-hovered {
+  border-radius: 16px;
 }
 
 .magnetic-thumbnail-card.is-expanded {
@@ -2986,14 +2989,14 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .magnetic-carousel-track {
-    gap: 6px !important;
+    gap: 0 !important;
     padding: 16px 0 !important;
   }
 
   .magnetic-thumbnail-card {
-    width: 60px;
-    height: 45px;
-    border-radius: 12px;
+    width: 64px;
+    height: 64px;
+    border-radius: 0px;
   }
 
   .magnetic-thumbnail-card.is-expanded {
