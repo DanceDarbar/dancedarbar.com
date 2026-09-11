@@ -1650,18 +1650,24 @@ h1, h2, h3, h4, h5, h6 {
    COMING SOON EVENT SECTION & THEATER CURTAIN REVEAL STYLES
    -------------------------------------------------------------------------- */
 .upcoming-performance-header {
-  display: block;
-  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  margin-bottom: 28px;
 }
 
 .upcoming-performance-heading {
   font-family: 'Satoshi', var(--font-primary), sans-serif;
   font-weight: 800;
-  font-size: clamp(28px, 3.6vw, 44px);
+  font-size: clamp(26px, 3.5vw, 42px);
   line-height: 1.15;
-  letter-spacing: -0.025em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: center;
   color: #FFFFFF;
-  margin: 0;
+  margin: 0 auto;
   padding: 0;
 }
 
@@ -1969,6 +1975,10 @@ h1, h2, h3, h4, h5, h6 {
   .coming-soon-heading {
     font-size: clamp(36px, 11vw, 58px);
     letter-spacing: -0.02em;
+  }
+  .upcoming-performance-heading {
+    font-size: clamp(20px, 5.5vw, 28px);
+    letter-spacing: 0.05em;
   }
   .curtain-stage-card {
     border-radius: 0 !important;
