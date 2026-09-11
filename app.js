@@ -483,6 +483,11 @@ function renderHomePage() {
 
     <!-- EXPLORE CLASSES SECTION (MAGNETIC CAROUSEL) -->
     <section class="explore-classes-section">
+      <div class="explore-classes-bg-layer" aria-hidden="true">
+        <img src="assets/stage-spotlight-bg.jpg" alt="" class="explore-classes-bg-img" decoding="async">
+        <div class="explore-classes-fade-top" aria-hidden="true"></div>
+        <div class="explore-classes-fade-bottom" aria-hidden="true"></div>
+      </div>
       <div class="section-container">
         <div class="explore-classes-header">
           <span class="eyebrow light">EXPLORE CLASSES</span>

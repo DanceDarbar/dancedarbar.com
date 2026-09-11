@@ -1237,7 +1237,82 @@ h1, h2, h3, h4, h5, h6 {
   overflow: hidden;
   width: 100%;
   box-sizing: border-box;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: none;
+}
+
+.explore-classes-section .section-container {
+  position: relative;
+  z-index: 2;
+}
+
+.explore-classes-bg-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  user-select: none;
+}
+
+.explore-classes-bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  opacity: 0.5;
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 18%,
+    black 82%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 18%,
+    black 82%,
+    transparent 100%
+  );
+  transition: opacity 0.3s ease;
+}
+
+.explore-classes-fade-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 160px;
+  background: linear-gradient(
+    to bottom,
+    #000000 0%,
+    rgba(0, 0, 0, 0.55) 40%,
+    rgba(0, 0, 0, 0.15) 75%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.explore-classes-fade-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 160px;
+  background: linear-gradient(
+    to top,
+    #000000 0%,
+    rgba(0, 0, 0, 0.55) 40%,
+    rgba(0, 0, 0, 0.15) 75%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 1;
 }
 
 .explore-classes-header {
@@ -3012,6 +3087,15 @@ h1, h2, h3, h4, h5, h6 {
   /* Explore Classes Section & Magnetic Carousel Mobile Refinements */
   .explore-classes-section {
     padding: 50px 0 56px 0 !important;
+  }
+
+  .explore-classes-bg-img {
+    object-position: center top !important;
+  }
+
+  .explore-classes-fade-top,
+  .explore-classes-fade-bottom {
+    height: 100px !important;
   }
 
   .explore-classes-header {
