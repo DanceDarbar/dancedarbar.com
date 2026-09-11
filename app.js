@@ -581,6 +581,10 @@ function renderHomePage() {
           <div class="curtain-panel curtain-panel-left" id="curtainPanelLeft" aria-hidden="true"></div>
           <div class="curtain-panel curtain-panel-right" id="curtainPanelRight" aria-hidden="true"></div>
 
+          <!-- Upper & Bottom Soft Black Blend Gradients -->
+          <div class="curtain-fade-top" aria-hidden="true"></div>
+          <div class="curtain-fade-bottom" aria-hidden="true"></div>
+
           <!-- Interactive Hint -->
           <div class="curtain-hint" id="curtainHint" aria-hidden="true">
             <svg class="curtain-hint-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8l4 4-4 4M6 16l-4-4 4-4M2 12h20"/></svg>
