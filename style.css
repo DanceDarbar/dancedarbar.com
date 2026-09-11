@@ -1256,19 +1256,49 @@ h1, h2, h3, h4, h5, h6 {
   display: block;
 }
 
-.magnetic-thumbnail-label {
-  font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: 13px;
+/* Per-item image cropping to keep subject/person clearly framed */
+.magnetic-item-wrap[data-carousel-index="0"] .magnetic-card-img { object-position: 25% center; }
+.magnetic-item-wrap[data-carousel-index="1"] .magnetic-card-img { object-position: 35% top; }
+.magnetic-item-wrap[data-carousel-index="2"] .magnetic-card-img { object-position: center 30%; }
+.magnetic-item-wrap[data-carousel-index="3"] .magnetic-card-img { object-position: 60% center; }
+.magnetic-item-wrap[data-carousel-index="4"] .magnetic-card-img { object-position: center 40%; }
+
+/* Hover overlay label: hidden by default, fades in on hover/focus */
+.magnetic-hover-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 26px 4px 10px 4px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.88) 0%, rgba(0, 0, 0, 0.45) 60%, rgba(0, 0, 0, 0) 100%);
   color: #FFFFFF;
+  font-family: var(--font-heading), 'Satoshi', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
   text-align: center;
-  margin-top: 12px;
   white-space: nowrap;
-  letter-spacing: 0.02em;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.95);
-  user-select: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.01em;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
+  opacity: 0;
+  transition: opacity 250ms ease;
   pointer-events: none;
-  transition: opacity 0.4s cubic-bezier(0.44, 0, 0.56, 1);
+  user-select: none;
+  z-index: 3;
+}
+
+/* Show label on hover, focus-visible, focus, and is-hovered */
+.magnetic-thumbnail-card:hover .magnetic-hover-label,
+.magnetic-thumbnail-card:focus-visible .magnetic-hover-label,
+.magnetic-thumbnail-card:focus .magnetic-hover-label,
+.magnetic-thumbnail-card.is-hovered .magnetic-hover-label {
+  opacity: 1;
+}
+
+/* Hide hover label when expanded so it doesn't overlap the detail overlay */
+.magnetic-thumbnail-card.is-expanded .magnetic-hover-label {
+  opacity: 0 !important;
 }
 
 .magnetic-detail-overlay {
@@ -2940,9 +2970,9 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: 14px;
   }
 
-  .magnetic-thumbnail-label {
+  .magnetic-hover-label {
     font-size: 11px !important;
-    margin-top: 8px !important;
+    padding: 18px 4px 6px 4px !important;
   }
 
   .magnetic-detail-overlay {

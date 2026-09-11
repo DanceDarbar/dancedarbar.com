@@ -498,6 +498,7 @@ function renderHomePage() {
                 slug: 'bollywood',
                 image: 'assets/bollywood-class.jpg',
                 alt: 'Bollywood',
+                position: '25% center',
                 desc: 'Energetic choreography, performance skills, musicality and confidence.'
               },
               {
@@ -505,6 +506,7 @@ function renderHomePage() {
                 slug: 'vocal-music',
                 image: 'assets/vocals-class.jpg',
                 alt: 'Vocals',
+                position: '35% top',
                 desc: 'Voice culture, rhythm, melody, breathing and performance practice.'
               },
               {
@@ -512,6 +514,7 @@ function renderHomePage() {
                 slug: 'kathak',
                 image: 'assets/kathak-class.jpg',
                 alt: 'Kathak',
+                position: 'center 30%',
                 desc: 'Classical technique, footwork, rhythm, expression and storytelling.'
               },
               {
@@ -519,6 +522,7 @@ function renderHomePage() {
                 slug: 'fine-arts',
                 image: 'assets/fine-arts-local.png',
                 alt: 'Fine Arts',
+                position: '60% center',
                 desc: 'Drawing, composition, color theory and visual creative expression.'
               },
               {
@@ -526,12 +530,14 @@ function renderHomePage() {
                 slug: 'yoga',
                 image: 'assets/yoga-class.jpg',
                 alt: 'Yoga',
+                position: 'center 40%',
                 desc: 'Mindful movement, flexibility, balance, breathing and inner strength.'
               }
             ].map((cls, idx) => `
               <div class="magnetic-item-wrap" data-carousel-index="${idx}">
                 <div class="magnetic-thumbnail-card" role="button" tabindex="0" aria-label="${cls.name} class thumbnail">
-                  <img src="${cls.image}" alt="${cls.alt}" loading="lazy" decoding="async" class="magnetic-card-img">
+                  <img src="${cls.image}" alt="${cls.alt}" loading="lazy" decoding="async" class="magnetic-card-img" style="object-position: ${cls.position};">
+                  <div class="magnetic-hover-label" aria-hidden="true">${cls.name}</div>
                   <div class="magnetic-detail-overlay">
                     <h3 class="magnetic-detail-title">${cls.name}</h3>
                     <p class="magnetic-detail-desc">${cls.desc}</p>
@@ -541,7 +547,6 @@ function renderHomePage() {
                     </a>
                   </div>
                 </div>
-                <span class="magnetic-thumbnail-label">${cls.name}</span>
               </div>
             `).join('')}
           </div>
@@ -1453,7 +1458,7 @@ function initMagneticCarousel() {
 
     items.forEach((item, i) => {
       const card = item.querySelector('.magnetic-thumbnail-card');
-      const label = item.querySelector('.magnetic-thumbnail-label');
+      const hoverLabel = item.querySelector('.magnetic-hover-label');
       const overlay = item.querySelector('.magnetic-detail-overlay');
       if (!card) return;
 
@@ -1477,10 +1482,8 @@ function initMagneticCarousel() {
 
       if (isAnyOpen || isClosing) {
         card.style.transition = `width ${cfg.dur}s ${cfg.ease}, height ${cfg.dur}s ${cfg.ease}, filter ${cfg.dur}s ${cfg.ease}, opacity ${cfg.dur}s ${cfg.ease}`;
-        if (label) label.style.transition = `opacity ${cfg.dur}s ${cfg.ease}`;
       } else {
         card.style.transition = 'none';
-        if (label) label.style.transition = 'none';
       }
 
       if (isAnyOpen && !isOpen && cfg.isMobile) {
@@ -1489,14 +1492,20 @@ function initMagneticCarousel() {
         item.style.display = 'flex';
       }
 
+      card.classList.toggle('is-expanded', isOpen);
+
       card.style.width = `${Math.round(w)}px`;
       card.style.height = `${Math.round(h)}px`;
       card.style.filter = isBlurred ? `blur(${cfg.blur}px)` : 'none';
       card.style.opacity = (isAnyOpen && !isOpen && cfg.isMobile) ? '0' : (isBlurred ? '0.6' : '1');
       card.style.zIndex = isOpen ? '10' : '2';
 
-      if (label) {
-        label.style.opacity = (isAnyOpen && !isOpen && cfg.isMobile) ? '0' : (isBlurred ? '0.6' : '1');
+      if (hoverLabel) {
+        if (isOpen) {
+          hoverLabel.style.opacity = '0';
+        } else {
+          hoverLabel.style.opacity = '';
+        }
       }
 
       if (overlay) {
