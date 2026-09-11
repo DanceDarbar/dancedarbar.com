@@ -480,6 +480,75 @@ function renderHomePage() {
       </div>
     </section>
 
+    <!-- EXPLORE CLASSES SECTION (MAGNETIC CAROUSEL) -->
+    <section class="explore-classes-section">
+      <div class="section-container">
+        <div class="explore-classes-header">
+          <span class="eyebrow light">EXPLORE CLASSES</span>
+          <h2 class="section-heading" style="color: var(--color-white); margin-top: 8px;">Choose the Art That Moves You.</h2>
+          <p class="lead-text light" style="margin: 12px auto 0; max-width: 600px;">Hover or select a class to preview the experience.</p>
+        </div>
+
+        <div class="magnetic-carousel-wrapper" id="magneticCarouselWrapper">
+          <div class="magnetic-backdrop" id="magneticBackdrop" aria-hidden="true"></div>
+          <div class="magnetic-carousel-track" id="magneticCarouselTrack" role="region" aria-label="Explore Classes Carousel">
+            ${[
+              {
+                name: 'Bollywood',
+                slug: 'bollywood',
+                image: 'assets/bollywood-class.jpg',
+                alt: 'Bollywood',
+                desc: 'Energetic choreography, performance skills, musicality and confidence.'
+              },
+              {
+                name: 'Vocals',
+                slug: 'vocal-music',
+                image: 'assets/vocals-class.jpg',
+                alt: 'Vocals',
+                desc: 'Voice culture, rhythm, melody, breathing and performance practice.'
+              },
+              {
+                name: 'Kathak',
+                slug: 'kathak',
+                image: 'assets/kathak-class.jpg',
+                alt: 'Kathak',
+                desc: 'Classical technique, footwork, rhythm, expression and storytelling.'
+              },
+              {
+                name: 'Fine Arts',
+                slug: 'fine-arts',
+                image: 'assets/fine-arts-local.png',
+                alt: 'Fine Arts',
+                desc: 'Drawing, composition, color theory and visual creative expression.'
+              },
+              {
+                name: 'Yoga',
+                slug: 'yoga',
+                image: 'assets/yoga-class.jpg',
+                alt: 'Yoga',
+                desc: 'Mindful movement, flexibility, balance, breathing and inner strength.'
+              }
+            ].map((cls, idx) => `
+              <div class="magnetic-item-wrap" data-carousel-index="${idx}">
+                <div class="magnetic-thumbnail-card" role="button" tabindex="0" aria-label="${cls.name} class thumbnail">
+                  <img src="${cls.image}" alt="${cls.alt}" loading="lazy" decoding="async" class="magnetic-card-img">
+                  <div class="magnetic-detail-overlay">
+                    <h3 class="magnetic-detail-title">${cls.name}</h3>
+                    <p class="magnetic-detail-desc">${cls.desc}</p>
+                    <a href="#/programs/${cls.slug}" class="btn btn-primary magnetic-detail-btn">
+                      <span>View Details</span>
+                      <svg class="btn-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </a>
+                  </div>
+                </div>
+                <span class="magnetic-thumbnail-label">${cls.name}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- FEATURED EVENT / UPCOMING PERFORMANCE -->
     <section class="featured-event-section">
       <div class="section-container">
@@ -1308,6 +1377,267 @@ function initHomePageEvents() {
       testimonialSection.classList.add('is-visible');
     }
   }
+
+  // Initialize Magnetic Carousel for Explore Classes Section
+  initMagneticCarousel();
+}
+
+// --- Magnetic Carousel Engine (Originkit Adapter) ---
+function initMagneticCarousel() {
+  const container = document.getElementById('magneticCarouselTrack');
+  const wrapper = document.getElementById('magneticCarouselWrapper');
+  const backdrop = document.getElementById('magneticBackdrop');
+  if (!container || !wrapper) return;
+
+  const items = Array.from(container.querySelectorAll('.magnetic-item-wrap'));
+  const count = items.length;
+  if (count === 0) return;
+
+  function getConfig() {
+    const isMobile = window.innerWidth < 768;
+    if (isMobile) {
+      const availableW = Math.min(window.innerWidth, 480) - 40;
+      const itemW = Math.max(44, Math.min(52, Math.floor((availableW - 4 * 6) / 5)));
+      const openW = Math.min(window.innerWidth - 40, 340);
+      return {
+        isMobile: true,
+        collapsedWidth: itemW,
+        hoverWidth: itemW, // Disables cursor-based hover expansion on mobile
+        collapsedHeight: 140,
+        hoverHeight: 140,
+        openSize: openW,
+        gap: 6,
+        influence: 600,
+        blur: 16,
+        dur: 0.4,
+        ease: 'cubic-bezier(0.44, 0, 0.56, 1)'
+      };
+    }
+    return {
+      isMobile: false,
+      collapsedWidth: 54,
+      hoverWidth: 200,
+      collapsedHeight: 158,
+      hoverHeight: 600,
+      openSize: 616,
+      gap: 2,
+      influence: 600,
+      blur: 19,
+      dur: 0.4,
+      ease: 'cubic-bezier(0.44, 0, 0.56, 1)'
+    };
+  }
+
+  let cfg = getConfig();
+  let target = new Array(count).fill(0);
+  let cur = new Array(count).fill(0);
+  let openIndex = null;
+  let isClosing = false;
+  let closeTimer = null;
+  let animLoopId = 0;
+
+  function renderSizes() {
+    if (!document.body.contains(container)) {
+      if (animLoopId) cancelAnimationFrame(animLoopId);
+      return;
+    }
+
+    cfg = getConfig();
+    const isAnyOpen = (openIndex !== null);
+    container.style.gap = (isAnyOpen && cfg.isMobile) ? '0px' : `${cfg.gap}px`;
+
+    if (backdrop) {
+      backdrop.style.pointerEvents = isAnyOpen ? 'auto' : 'none';
+      backdrop.style.opacity = isAnyOpen ? '1' : '0';
+    }
+
+    items.forEach((item, i) => {
+      const card = item.querySelector('.magnetic-thumbnail-card');
+      const label = item.querySelector('.magnetic-thumbnail-label');
+      const overlay = item.querySelector('.magnetic-detail-overlay');
+      if (!card) return;
+
+      let w, h;
+      const isOpen = (openIndex === i);
+      const isBlurred = (isAnyOpen && !isOpen);
+
+      if (isAnyOpen) {
+        if (isOpen) {
+          w = cfg.openSize;
+          h = cfg.isMobile ? Math.min(cfg.openSize + 30, 400) : cfg.openSize;
+        } else {
+          w = cfg.isMobile ? 0 : cfg.collapsedWidth;
+          h = cfg.isMobile ? 0 : cfg.collapsedHeight;
+        }
+      } else {
+        const f = cur[i] || 0;
+        w = cfg.collapsedWidth + (cfg.hoverWidth - cfg.collapsedWidth) * f;
+        h = cfg.collapsedHeight + (cfg.hoverHeight - cfg.collapsedHeight) * f;
+      }
+
+      if (isAnyOpen || isClosing) {
+        card.style.transition = `width ${cfg.dur}s ${cfg.ease}, height ${cfg.dur}s ${cfg.ease}, filter ${cfg.dur}s ${cfg.ease}, opacity ${cfg.dur}s ${cfg.ease}`;
+        if (label) label.style.transition = `opacity ${cfg.dur}s ${cfg.ease}`;
+      } else {
+        card.style.transition = 'none';
+        if (label) label.style.transition = 'none';
+      }
+
+      if (isAnyOpen && !isOpen && cfg.isMobile) {
+        item.style.display = 'none';
+      } else {
+        item.style.display = 'flex';
+      }
+
+      card.style.width = `${Math.round(w)}px`;
+      card.style.height = `${Math.round(h)}px`;
+      card.style.filter = isBlurred ? `blur(${cfg.blur}px)` : 'none';
+      card.style.opacity = (isAnyOpen && !isOpen && cfg.isMobile) ? '0' : (isBlurred ? '0.6' : '1');
+      card.style.zIndex = isOpen ? '10' : '2';
+
+      if (label) {
+        label.style.opacity = (isAnyOpen && !isOpen && cfg.isMobile) ? '0' : (isBlurred ? '0.6' : '1');
+      }
+
+      if (overlay) {
+        overlay.style.opacity = isOpen ? '1' : '0';
+        overlay.style.pointerEvents = isOpen ? 'auto' : 'none';
+      }
+    });
+  }
+
+  function startLoop() {
+    if (animLoopId) return;
+    const step = () => {
+      if (!document.body.contains(container)) {
+        animLoopId = 0;
+        return;
+      }
+      let moving = false;
+      for (let i = 0; i < count; i++) {
+        const diff = (target[i] ?? 0) - cur[i];
+        if (Math.abs(diff) > 0.001) {
+          cur[i] += diff * 0.2;
+          moving = true;
+        } else {
+          cur[i] = target[i] ?? 0;
+        }
+      }
+      renderSizes();
+      if (moving) {
+        animLoopId = requestAnimationFrame(step);
+      } else {
+        animLoopId = 0;
+      }
+    };
+    animLoopId = requestAnimationFrame(step);
+  }
+
+  function setTargetFromCursor(clientX) {
+    if (cfg.isMobile || openIndex !== null) return;
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    if (isTouchDevice) return;
+
+    const rect = container.getBoundingClientRect();
+    const cx = clientX - rect.left;
+    const totalBase = count * cfg.collapsedWidth + (count - 1) * cfg.gap;
+    const startX = (rect.width - totalBase) / 2;
+
+    target = items.map((_, i) => {
+      const center = startX + i * (cfg.collapsedWidth + cfg.gap) + cfg.collapsedWidth / 2;
+      const dist = Math.abs(cx - center);
+      const f = Math.max(0, 1 - dist / cfg.influence);
+      return f * f * (3 - 2 * f);
+    });
+    startLoop();
+  }
+
+  function close() {
+    target = new Array(count).fill(0);
+    cur = new Array(count).fill(0);
+    isClosing = true;
+    clearTimeout(closeTimer);
+    closeTimer = setTimeout(() => {
+      isClosing = false;
+    }, cfg.dur * 1000);
+    openIndex = null;
+    renderSizes();
+  }
+
+  // Mouse move on container
+  container.addEventListener('mousemove', (e) => {
+    if (openIndex !== null) return;
+    setTargetFromCursor(e.clientX);
+  });
+
+  // Mouse leave container
+  container.addEventListener('mouseleave', () => {
+    if (openIndex !== null) return;
+    target = new Array(count).fill(0);
+    startLoop();
+  });
+
+  // Backdrop click closes
+  if (backdrop) {
+    backdrop.addEventListener('click', close);
+  }
+
+  // Item click handlers
+  items.forEach((item, i) => {
+    const card = item.querySelector('.magnetic-thumbnail-card');
+    const link = item.querySelector('.magnetic-detail-btn');
+    if (!card) return;
+
+    if (link) {
+      link.addEventListener('click', (e) => {
+        // Prevent click bubbling up so link navigation proceeds smoothly
+        e.stopPropagation();
+      });
+    }
+
+    card.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (openIndex === i) {
+        close();
+      } else {
+        openIndex = i;
+        target = new Array(count).fill(0);
+        cur = new Array(count).fill(0);
+        renderSizes();
+      }
+    });
+
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        if (openIndex === i) {
+          close();
+        } else {
+          openIndex = i;
+          target = new Array(count).fill(0);
+          cur = new Array(count).fill(0);
+          renderSizes();
+        }
+      } else if (e.key === 'Escape' && openIndex !== null) {
+        close();
+      }
+    });
+  });
+
+  // Escape key closes expanded view
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && openIndex !== null) {
+      close();
+    }
+  });
+
+  // Window resize handler
+  window.addEventListener('resize', () => {
+    renderSizes();
+  });
+
+  // Initial render
+  renderSizes();
 }
 
 // --- Schedule Page Accordion Engine ---

@@ -1166,6 +1166,176 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* --------------------------------------------------------------------------
+   9.1 EXPLORE CLASSES SECTION & MAGNETIC CAROUSEL
+   -------------------------------------------------------------------------- */
+.explore-classes-section {
+  position: relative;
+  background-color: #000000;
+  color: #FFFFFF;
+  padding: 80px 0 90px 0;
+  overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.explore-classes-header {
+  text-align: center;
+  margin-bottom: 48px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.explore-classes-header .section-heading {
+  max-width: 100%;
+  word-break: normal;
+}
+
+.magnetic-carousel-wrapper {
+  position: relative;
+  width: 100%;
+  min-height: 680px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+}
+
+.magnetic-backdrop {
+  position: absolute;
+  inset: -100px;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s cubic-bezier(0.44, 0, 0.56, 1);
+}
+
+.magnetic-carousel-track {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  position: relative;
+  overflow: visible;
+  width: 100%;
+  padding: 30px 0;
+  box-sizing: border-box;
+}
+
+.magnetic-item-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex: none;
+}
+
+.magnetic-thumbnail-card {
+  position: relative;
+  width: 54px;
+  height: 158px;
+  overflow: hidden;
+  border-radius: 16px;
+  cursor: pointer;
+  background-color: #161616;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.55);
+  will-change: width, height;
+}
+
+.magnetic-thumbnail-card:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 4px;
+}
+
+.magnetic-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.magnetic-thumbnail-label {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 13px;
+  color: #FFFFFF;
+  text-align: center;
+  margin-top: 12px;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.95);
+  user-select: none;
+  pointer-events: none;
+  transition: opacity 0.4s cubic-bezier(0.44, 0, 0.56, 1);
+}
+
+.magnetic-detail-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 32px 28px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.6) 65%, rgba(0, 0, 0, 0) 100%);
+  opacity: 0;
+  pointer-events: none;
+  box-sizing: border-box;
+}
+
+.magnetic-detail-title {
+  font-family: var(--font-heading);
+  font-size: clamp(22px, 3.2vw, 32px);
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.02em;
+}
+
+.magnetic-detail-desc {
+  font-family: var(--font-heading);
+  font-size: clamp(13px, 1.3vw, 15px);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.88);
+  margin: 0 0 20px 0;
+  max-width: 480px;
+}
+
+.magnetic-detail-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #FFFFFF;
+  color: #000000;
+  padding: 10px 22px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  align-self: flex-start;
+}
+
+.magnetic-detail-btn:hover {
+  background-color: var(--color-primary);
+  color: #FFFFFF;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(94, 187, 234, 0.4);
+}
+
+.magnetic-detail-btn .btn-arrow {
+  transition: transform var(--transition-fast);
+}
+
+.magnetic-detail-btn:hover .btn-arrow {
+  transform: translateX(4px);
+}
+
+/* --------------------------------------------------------------------------
    10. EXPERIENCE & FEATURE PANELS
    -------------------------------------------------------------------------- */
 .experience-section {
@@ -2738,6 +2908,61 @@ h1, h2, h3, h4, h5, h6 {
     line-height: 1.4 !important;
     text-align: right !important;
     word-break: break-word !important;
+  }
+
+  /* Explore Classes Section & Magnetic Carousel Mobile Refinements */
+  .explore-classes-section {
+    padding: 50px 0 56px 0 !important;
+  }
+
+  .explore-classes-header {
+    margin-bottom: 24px !important;
+    padding: 0 12px !important;
+  }
+
+  .explore-classes-header .section-heading {
+    font-size: clamp(22px, 5.8vw, 28px) !important;
+    line-height: 1.2 !important;
+  }
+
+  .magnetic-carousel-wrapper {
+    min-height: 440px !important;
+  }
+
+  .magnetic-carousel-track {
+    gap: 6px !important;
+    padding: 16px 0 !important;
+  }
+
+  .magnetic-thumbnail-card {
+    width: 50px;
+    height: 140px;
+    border-radius: 14px;
+  }
+
+  .magnetic-thumbnail-label {
+    font-size: 11px !important;
+    margin-top: 8px !important;
+  }
+
+  .magnetic-detail-overlay {
+    padding: 20px 18px !important;
+  }
+
+  .magnetic-detail-title {
+    font-size: 20px !important;
+    margin-bottom: 6px !important;
+  }
+
+  .magnetic-detail-desc {
+    font-size: 12.5px !important;
+    line-height: 1.45 !important;
+    margin-bottom: 16px !important;
+  }
+
+  .magnetic-detail-btn {
+    padding: 8px 18px !important;
+    font-size: 13px !important;
   }
 
   /* 2. CLASSES CARDS & BUTTON ALIGNMENT */
