@@ -563,33 +563,26 @@ function renderHomePage() {
     <!-- FEATURED EVENT / UPCOMING PERFORMANCE -->
     <section class="featured-event-section">
       <div class="section-container">
-        <div class="upcoming-performance-header">
-          <span class="pulse-live-dot" aria-hidden="true"></span>
-          <span class="eyebrow light">Upcoming Performance</span>
-        </div>
-        <div class="coming-soon-card curtain-stage-card" id="curtainStageCard" tabindex="0" role="region" aria-label="Upcoming performance announcement: A New Story Takes the Stage">
-          <!-- Horizontal Metallic Curtain Rod -->
+        <div class="coming-soon-card curtain-stage-card" id="curtainStageCard" tabindex="0" role="region" aria-label="Upcoming Performance: A NEW STORY TAKES THE STAGE">
+          <!-- Subtle Top Curtain Track -->
           <div class="curtain-rod" aria-hidden="true"></div>
 
           <!-- Centered Content Revealed Behind Curtains -->
           <div class="curtain-content-wrap">
-            <span class="eyebrow light curtain-eyebrow">UPCOMING PERFORMANCE</span>
-            <h2 class="curtain-headline">A NEW STORY TAKES THE STAGE</h2>
+            <h2 class="curtain-headline">WAIT THEY ARE PREPARING</h2>
           </div>
 
-          <!-- Interactive Curtain Panels -->
-          <div class="curtain-panel curtain-panel-left" id="curtainPanelLeft" aria-hidden="true"></div>
-          <div class="curtain-panel curtain-panel-right" id="curtainPanelRight" aria-hidden="true"></div>
+          <!-- Interactive Realistic Red Velvet Curtain Panels -->
+          <div class="curtain-panel curtain-panel-left" id="curtainPanelLeft" aria-hidden="true">
+            <div class="curtain-image-inner"></div>
+          </div>
+          <div class="curtain-panel curtain-panel-right" id="curtainPanelRight" aria-hidden="true">
+            <div class="curtain-image-inner"></div>
+          </div>
 
-          <!-- Upper & Bottom Soft Black Blend Gradients -->
+          <!-- Soft Edge Vignette Blends -->
           <div class="curtain-fade-top" aria-hidden="true"></div>
           <div class="curtain-fade-bottom" aria-hidden="true"></div>
-
-          <!-- Interactive Hint -->
-          <div class="curtain-hint" id="curtainHint" aria-hidden="true">
-            <svg class="curtain-hint-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8l4 4-4 4M6 16l-4-4 4-4M2 12h20"/></svg>
-            <span>Move your cursor to part the curtains</span>
-          </div>
         </div>
       </div>
     </section>
@@ -1692,91 +1685,123 @@ function initCurtainReveal() {
   const stage = document.getElementById('curtainStageCard');
   const leftPanel = document.getElementById('curtainPanelLeft');
   const rightPanel = document.getElementById('curtainPanelRight');
-  const hint = document.getElementById('curtainHint');
 
   if (!stage || !leftPanel || !rightPanel) return;
 
   const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (prefersReduced) {
-    leftPanel.style.transform = 'translateX(-48%)';
-    rightPanel.style.transform = 'translateX(48%)';
-    if (hint) hint.style.display = 'none';
+    leftPanel.style.transform = 'translateX(-50%)';
+    rightPanel.style.transform = 'translateX(50%)';
     return;
   }
 
-  function updateCurtains(clientX) {
+  let isHolding = false;
+  let currentOpenRatio = 0;
+
+  function setPanelsOffset(ratio, animate = false) {
+    const rect = stage.getBoundingClientRect();
+    const maxOffset = rect.width > 0 ? rect.width * 0.58 : 500;
+    const clampedRatio = Math.min(1, Math.max(0, ratio));
+    currentOpenRatio = clampedRatio;
+    const offsetPx = clampedRatio * maxOffset;
+
+    const transitionStyle = animate ? 'transform 750ms cubic-bezier(0.22, 1, 0.36, 1)' : 'none';
+    leftPanel.style.transition = transitionStyle;
+    rightPanel.style.transition = transitionStyle;
+
+    leftPanel.style.transform = `translateX(${-offsetPx}px)`;
+    rightPanel.style.transform = `translateX(${offsetPx}px)`;
+  }
+
+  function handlePointerMove(clientX, isDrag = false) {
     const rect = stage.getBoundingClientRect();
     if (rect.width <= 0) return;
+
     const x = clientX - rect.left;
     const centerX = rect.width / 2;
-    // Ratio from 0 (at center, closed) to 1 (at either left or right edge, fully open)
-    const ratio = Math.min(1, Math.max(0, Math.abs(x - centerX) / centerX));
-    // Move left curtain left and right curtain right by ratio * ~62% of stage width
-    const offsetPx = ratio * (rect.width * 0.62);
-    leftPanel.style.transform = `translateX(${-offsetPx}px)`;
-    rightPanel.style.transform = `translateX(${offsetPx}px)`;
+    const distFromCenter = Math.abs(x - centerX);
 
-    if (hint) {
-      if (ratio > 0.15) {
-        hint.classList.add('is-hidden');
-      } else {
-        hint.classList.remove('is-hidden');
-      }
+    if (isDrag) {
+      // In active hold & pull mode: the curtain pulls and flies directly with the cursor
+      const dragRatio = Math.min(1, Math.max(0, distFromCenter / (rect.width * 0.42)));
+      setPanelsOffset(dragRatio, false);
+    } else {
+      // Hover influence when moving across the stage
+      const hoverRatio = Math.min(1, Math.max(0, distFromCenter / (rect.width * 0.5)));
+      setPanelsOffset(hoverRatio * 0.75, true);
     }
   }
 
-  function resetCurtains() {
-    leftPanel.style.transform = 'translateX(0)';
-    rightPanel.style.transform = 'translateX(0)';
-    if (hint) {
-      hint.classList.remove('is-hidden');
-    }
+  function startHold(clientX) {
+    isHolding = true;
+    stage.classList.add('is-dragging');
+    handlePointerMove(clientX, true);
   }
 
-  function openKeyboard() {
-    const rect = stage.getBoundingClientRect();
-    const offsetPx = (rect.width > 0 ? rect.width : 900) * 0.62 * 0.70;
-    leftPanel.style.transform = `translateX(${-offsetPx}px)`;
-    rightPanel.style.transform = `translateX(${offsetPx}px)`;
-    if (hint) {
-      hint.classList.add('is-hidden');
-    }
+  function endHold() {
+    if (!isHolding) return;
+    isHolding = false;
+    stage.classList.remove('is-dragging');
+    setPanelsOffset(0, true);
   }
+
+  // Mouse Events
+  stage.addEventListener('mousedown', (e) => {
+    e.preventDefault();
+    startHold(e.clientX);
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (isHolding) {
+      handlePointerMove(e.clientX, true);
+    }
+  });
 
   stage.addEventListener('mousemove', (e) => {
-    updateCurtains(e.clientX);
+    if (!isHolding) {
+      handlePointerMove(e.clientX, false);
+    }
+  });
+
+  window.addEventListener('mouseup', () => {
+    endHold();
   });
 
   stage.addEventListener('mouseleave', () => {
-    resetCurtains();
+    if (!isHolding) {
+      setPanelsOffset(0, true);
+    }
   });
 
+  // Touch Events (mobile hold & drag)
   stage.addEventListener('touchstart', (e) => {
     if (e.touches && e.touches.length > 0) {
-      updateCurtains(e.touches[0].clientX);
+      startHold(e.touches[0].clientX);
     }
   }, { passive: true });
 
   stage.addEventListener('touchmove', (e) => {
-    if (e.touches && e.touches.length > 0) {
-      updateCurtains(e.touches[0].clientX);
+    if (isHolding && e.touches && e.touches.length > 0) {
+      handlePointerMove(e.touches[0].clientX, true);
     }
   }, { passive: true });
 
   stage.addEventListener('touchend', () => {
-    resetCurtains();
+    endHold();
   });
 
   stage.addEventListener('touchcancel', () => {
-    resetCurtains();
+    endHold();
   });
 
+  // Keyboard accessibility
   stage.addEventListener('focus', () => {
-    openKeyboard();
+    setPanelsOffset(0.75, true);
   });
 
   stage.addEventListener('blur', () => {
-    resetCurtains();
+    endHold();
+    setPanelsOffset(0, true);
   });
 }
 
