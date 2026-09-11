@@ -1132,96 +1132,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* --------------------------------------------------------------------------
-   9. INTERACTIVE PROGRAMME INDEX
+/* --------------------------------------------------------------------------
+   9. CLASS STATUS PILL BADGES
    -------------------------------------------------------------------------- */
-.program-index-section {
-  position: relative;
-  background-color: #111111;
-  color: #FFFFFF;
-  padding: 50px 0;
-  overflow: hidden;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.program-bg-preview-wrap {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-}
-
-.program-bg-preview {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0;
-  transition: opacity var(--transition-normal);
-  filter: brightness(0.35);
-}
-
-.program-bg-preview.active {
-  opacity: 1;
-}
-
-.program-index-content {
-  position: relative;
-  z-index: 2;
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 0 40px;
-}
-
-.program-index-header {
-  margin-bottom: 28px;
-}
-
-.program-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.program-item {
-  display: grid;
-  grid-template-columns: 50px 1.4fr 2fr 150px;
-  align-items: center;
-  padding: 16px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.program-item:hover, .program-item.active {
-  border-bottom-color: var(--color-primary);
-  transform: translateX(10px);
-  background-color: rgba(255, 255, 255, 0.02);
-}
-
-.program-number {
-  font-family: var(--font-heading);
-  font-size: 15px;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.35);
-}
-
-.program-item:hover .program-number,
-.program-item.active .program-number {
-  color: var(--color-primary);
-}
-
-.program-title {
-  font-family: var(--font-heading);
-  font-size: clamp(22px, 2.4vw, 34px);
-  font-weight: 600;
-  color: #FFFFFF;
-}
-
 .online-pill-badge {
   display: inline-flex;
   align-items: center;
@@ -1250,17 +1163,6 @@ h1, h2, h3, h4, h5, h6 {
   color: #A0A0A0;
   border: 1px solid rgba(255, 255, 255, 0.15);
   vertical-align: middle;
-}
-
-.program-desc {
-  font-size: 14px;
-  color: #E5E5E5;
-  padding-right: 20px;
-  line-height: 1.5;
-}
-
-.program-action {
-  justify-self: end;
 }
 
 /* --------------------------------------------------------------------------
@@ -2624,7 +2526,7 @@ h1, h2, h3, h4, h5, h6 {
    18. RESPONSIVE BREAKPOINTS
    -------------------------------------------------------------------------- */
 @media (max-width: 1199px) {
-  .header-container, .section-container, .hero-content, .program-index-content, .footer-container {
+  .header-container, .section-container, .hero-content, .footer-container {
     padding-left: 32px;
     padding-right: 32px;
   }
@@ -2637,15 +2539,6 @@ h1, h2, h3, h4, h5, h6 {
   .program-detail-hero {
     grid-template-columns: 1fr 1fr;
     gap: 32px;
-  }
-
-  .program-item {
-    grid-template-columns: 60px 1fr;
-    gap: 16px;
-  }
-
-  .program-desc, .program-action {
-    display: none;
   }
 
   .experience-panels-grid {
@@ -2664,7 +2557,7 @@ h1, h2, h3, h4, h5, h6 {
 
 @media (max-width: 767px) {
   /* Global Container Padding & Box Model Safety */
-  .header-container, .section-container, .hero-content, .program-index-content, .footer-container {
+  .header-container, .section-container, .hero-content, .footer-container {
     padding-left: 20px !important;
     padding-right: 20px !important;
     box-sizing: border-box !important;
@@ -2857,7 +2750,6 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   /* CLASSES SECTION SINGLE CTA - MOBILE CENTER ALIGNED (70-80% WIDTH, 24PX TOP & 16PX BOTTOM MARGIN) */
-  .program-list .program-card-actions,
   .editorial-content .program-card-actions {
     display: flex !important;
     justify-content: center !important;
@@ -2867,7 +2759,6 @@ h1, h2, h3, h4, h5, h6 {
     box-sizing: border-box !important;
   }
 
-  .program-list .program-card-actions .btn,
   .editorial-content .program-card-actions .btn {
     width: 80% !important;
     max-width: 280px !important;
@@ -2906,32 +2797,6 @@ h1, h2, h3, h4, h5, h6 {
     justify-content: center !important;
     white-space: nowrap !important;
     box-sizing: border-box !important;
-  }
-
-  .program-list {
-    gap: 20px !important;
-  }
-
-  .program-item {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    padding: 20px !important;
-    background: rgba(255, 255, 255, 0.06) !important;
-    border: 1px solid rgba(255, 255, 255, 0.14) !important;
-    border-radius: 24px !important;
-    box-shadow: 0 12px 32px rgba(8, 18, 30, 0.18) !important;
-    gap: 12px !important;
-    transform: none !important;
-    box-sizing: border-box !important;
-  }
-
-  .program-desc {
-    display: block !important;
-    font-size: 14px !important;
-    color: rgba(255, 255, 255, 0.85) !important;
-    padding-right: 0 !important;
-    line-height: 1.5 !important;
   }
 
   /* CLASS DETAIL PAGES MOBILE STYLES */
@@ -3380,7 +3245,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Extra Small Screens (320px - 360px) */
 @media (max-width: 360px) {
-  .header-container, .section-container, .hero-content, .program-index-content, .footer-container {
+  .header-container, .section-container, .hero-content, .footer-container {
     padding-left: 14px !important;
     padding-right: 14px !important;
   }

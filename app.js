@@ -480,46 +480,6 @@ function renderHomePage() {
       </div>
     </section>
 
-    <!-- INTERACTIVE PROGRAMME INDEX -->
-    <section class="program-index-section">
-      <div class="program-bg-preview-wrap">
-        ${DANCE_DATA.programs.map((p, idx) => p.video ? `
-          <video src="${p.video}" autoplay loop muted playsinline class="program-bg-preview ${idx === 0 ? 'active' : ''}" data-prog-bg="${p.slug}"></video>
-        ` : `
-          <img src="${p.image}" alt="${p.name}" loading="lazy" decoding="async" class="program-bg-preview ${idx === 0 ? 'active' : ''}" data-prog-bg="${p.slug}">
-        `).join('')}
-      </div>
-      <div class="program-index-content">
-        <div class="program-index-header">
-          <span class="eyebrow light">Explore Classes</span>
-          <h2 class="section-heading" style="color: var(--color-white);">Choose the Art That Moves You.</h2>
-          <p class="lead-text light">Hover or select a class to preview the experience.</p>
-        </div>
-
-        <div class="program-list">
-          ${DANCE_DATA.programs.map((p, idx) => `
-            <div class="program-item ${idx === 0 ? 'active' : ''}" data-prog-target="${p.slug}">
-              <span class="program-number">${p.number}</span>
-              <div>
-                <h3 class="program-title" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                  <span>${p.name}</span>
-                  ${p.onlineAvailable ? `<span class="online-pill-badge">Online Available</span>` : ``}
-                </h3>
-              </div>
-              <div>
-                <p class="program-desc">${p.shortDescription}</p>
-                <span style="font-size: 11px; font-weight: 600; color: ${p.onlineAvailable ? '#5EBBEA' : 'rgba(255,255,255,0.5)'}; margin-top: 4px; display: inline-block;">${p.modeBadge}</span>
-                <p style="font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 4px;">👤 ${p.instructor} • 🎓 ${p.ageGroups[0]}</p>
-              </div>
-              <div class="program-card-actions">
-                <a href="#/programs/${p.slug}" class="btn btn-secondary light">View Details &rarr;</a>
-              </div>
-            </div>
-          `).join('')}
-        </div>
-      </div>
-    </section>
-
     <!-- FEATURED EVENT / UPCOMING PERFORMANCE -->
     <section class="featured-event-section">
       <div class="section-container">
@@ -1318,22 +1278,6 @@ function initHomePageEvents() {
       }
     });
   }
-
-  // Background Video/Image Switcher for Programme Index
-  const items = document.querySelectorAll('.program-item');
-  const previews = document.querySelectorAll('.program-bg-preview');
-
-  items.forEach(item => {
-    item.addEventListener('mouseenter', () => {
-      const slug = item.getAttribute('data-prog-target');
-      items.forEach(i => i.classList.remove('active'));
-      previews.forEach(p => p.classList.remove('active'));
-
-      item.classList.add('active');
-      const targetPreview = document.querySelector(`.program-bg-preview[data-prog-bg="${slug}"]`);
-      if (targetPreview) targetPreview.classList.add('active');
-    });
-  });
 
   // FAQ Accordions
   document.querySelectorAll('.faq-question').forEach(q => {
