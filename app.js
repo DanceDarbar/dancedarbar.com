@@ -1401,31 +1401,37 @@ function initMagneticCarousel() {
   function getConfig() {
     const isMobile = window.innerWidth < 768;
     if (isMobile) {
-      const availableW = Math.min(window.innerWidth, 480) - 40;
-      const itemW = Math.max(44, Math.min(52, Math.floor((availableW - 4 * 6) / 5)));
+      const availableW = Math.min(window.innerWidth, 480) - 36;
+      const gap = 6;
+      const itemW = Math.max(50, Math.min(64, Math.floor((availableW - 4 * gap) / 5)));
+      const itemH = Math.round(itemW * 0.75); // 4:3 aspect ratio on mobile
       const openW = Math.min(window.innerWidth - 40, 340);
       return {
         isMobile: true,
         collapsedWidth: itemW,
         hoverWidth: itemW, // Disables cursor-based hover expansion on mobile
-        collapsedHeight: 140,
-        hoverHeight: 140,
+        collapsedHeight: itemH,
+        hoverHeight: itemH,
         openSize: openW,
-        gap: 6,
+        gap: gap,
         influence: 600,
         blur: 16,
         dur: 0.4,
         ease: 'cubic-bezier(0.44, 0, 0.56, 1)'
       };
     }
+    const availableW = Math.min(window.innerWidth - 80, 1160);
+    const gap = 12;
+    const itemW = Math.min(200, Math.floor((availableW - 4 * gap) / 5));
+    const itemH = Math.round(itemW * 0.75); // 4:3 aspect ratio on desktop (200x150)
     return {
       isMobile: false,
-      collapsedWidth: 54,
+      collapsedWidth: itemW,
       hoverWidth: 200,
-      collapsedHeight: 158,
+      collapsedHeight: itemH,
       hoverHeight: 600,
       openSize: 616,
-      gap: 2,
+      gap: gap,
       influence: 600,
       blur: 19,
       dur: 0.4,
@@ -1481,9 +1487,9 @@ function initMagneticCarousel() {
       }
 
       if (isAnyOpen || isClosing) {
-        card.style.transition = `width ${cfg.dur}s ${cfg.ease}, height ${cfg.dur}s ${cfg.ease}, filter ${cfg.dur}s ${cfg.ease}, opacity ${cfg.dur}s ${cfg.ease}`;
+        card.style.transition = `width ${cfg.dur}s ${cfg.ease}, height ${cfg.dur}s ${cfg.ease}, filter ${cfg.dur}s ${cfg.ease}, opacity ${cfg.dur}s ${cfg.ease}, border-radius ${cfg.dur}s ${cfg.ease}`;
       } else {
-        card.style.transition = 'none';
+        card.style.transition = `border-radius ${cfg.dur}s ${cfg.ease}`;
       }
 
       if (isAnyOpen && !isOpen && cfg.isMobile) {
@@ -1496,6 +1502,7 @@ function initMagneticCarousel() {
 
       card.style.width = `${Math.round(w)}px`;
       card.style.height = `${Math.round(h)}px`;
+      card.style.borderRadius = isOpen ? '24px' : '16px';
       card.style.filter = isBlurred ? `blur(${cfg.blur}px)` : 'none';
       card.style.opacity = (isAnyOpen && !isOpen && cfg.isMobile) ? '0' : (isBlurred ? '0.6' : '1');
       card.style.zIndex = isOpen ? '10' : '2';

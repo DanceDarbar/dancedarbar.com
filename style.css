@@ -1235,7 +1235,7 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 2px;
+  gap: 12px;
   position: relative;
   overflow: visible;
   width: 100%;
@@ -1254,14 +1254,19 @@ h1, h2, h3, h4, h5, h6 {
 
 .magnetic-thumbnail-card {
   position: relative;
-  width: 54px;
-  height: 158px;
+  width: 200px;
+  height: 150px;
   overflow: hidden;
   border-radius: 16px;
   cursor: pointer;
   background-color: #161616;
   box-shadow: 0 10px 32px rgba(0, 0, 0, 0.55);
-  will-change: width, height;
+  will-change: width, height, border-radius;
+  transition: border-radius 0.4s cubic-bezier(0.44, 0, 0.56, 1);
+}
+
+.magnetic-thumbnail-card.is-expanded {
+  border-radius: 24px;
 }
 
 .magnetic-thumbnail-card:focus-visible {
@@ -2986,9 +2991,13 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .magnetic-thumbnail-card {
-    width: 50px;
-    height: 140px;
-    border-radius: 14px;
+    width: 60px;
+    height: 45px;
+    border-radius: 12px;
+  }
+
+  .magnetic-thumbnail-card.is-expanded {
+    border-radius: 20px;
   }
 
   .magnetic-hover-label {
