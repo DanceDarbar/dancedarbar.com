@@ -567,9 +567,25 @@ function renderHomePage() {
           <span class="pulse-live-dot" aria-hidden="true"></span>
           <span class="eyebrow light">Upcoming Performance</span>
         </div>
-        <div class="coming-soon-card theatrical-card">
-          <div class="theatrical-spotlight-sweep" aria-hidden="true"></div>
-          <h2 class="coming-soon-heading theatrical-heading">A NEW STORY TAKES THE STAGE</h2>
+        <div class="coming-soon-card curtain-stage-card" id="curtainStageCard" tabindex="0" role="region" aria-label="Upcoming performance announcement: A New Story Takes the Stage">
+          <!-- Horizontal Metallic Curtain Rod -->
+          <div class="curtain-rod" aria-hidden="true"></div>
+
+          <!-- Centered Content Revealed Behind Curtains -->
+          <div class="curtain-content-wrap">
+            <span class="eyebrow light curtain-eyebrow">UPCOMING PERFORMANCE</span>
+            <h2 class="curtain-headline">A NEW STORY TAKES THE STAGE</h2>
+          </div>
+
+          <!-- Interactive Curtain Panels -->
+          <div class="curtain-panel curtain-panel-left" id="curtainPanelLeft" aria-hidden="true"></div>
+          <div class="curtain-panel curtain-panel-right" id="curtainPanelRight" aria-hidden="true"></div>
+
+          <!-- Interactive Hint -->
+          <div class="curtain-hint" id="curtainHint" aria-hidden="true">
+            <svg class="curtain-hint-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8l4 4-4 4M6 16l-4-4 4-4M2 12h20"/></svg>
+            <span>Move your cursor to part the curtains</span>
+          </div>
         </div>
       </div>
     </section>
@@ -1391,6 +1407,9 @@ function initHomePageEvents() {
 
   // Initialize Magnetic Carousel for Explore Classes Section
   initMagneticCarousel();
+
+  // Initialize Interactive Curtain Reveal for Upcoming Performance Card
+  initCurtainReveal();
 }
 
 // --- Magnetic Carousel Engine (Originkit Adapter) ---
@@ -1662,6 +1681,99 @@ function initMagneticCarousel() {
 
   // Initial render
   renderSizes();
+}
+
+// --- Interactive Theater Curtain Reveal Engine ---
+function initCurtainReveal() {
+  const stage = document.getElementById('curtainStageCard');
+  const leftPanel = document.getElementById('curtainPanelLeft');
+  const rightPanel = document.getElementById('curtainPanelRight');
+  const hint = document.getElementById('curtainHint');
+
+  if (!stage || !leftPanel || !rightPanel) return;
+
+  const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReduced) {
+    leftPanel.style.transform = 'translateX(-48%)';
+    rightPanel.style.transform = 'translateX(48%)';
+    if (hint) hint.style.display = 'none';
+    return;
+  }
+
+  function updateCurtains(clientX) {
+    const rect = stage.getBoundingClientRect();
+    if (rect.width <= 0) return;
+    const x = clientX - rect.left;
+    const centerX = rect.width / 2;
+    // Ratio from 0 (at center, closed) to 1 (at either left or right edge, fully open)
+    const ratio = Math.min(1, Math.max(0, Math.abs(x - centerX) / centerX));
+    // Move left curtain left and right curtain right by ratio * ~62% of stage width
+    const offsetPx = ratio * (rect.width * 0.62);
+    leftPanel.style.transform = `translateX(${-offsetPx}px)`;
+    rightPanel.style.transform = `translateX(${offsetPx}px)`;
+
+    if (hint) {
+      if (ratio > 0.15) {
+        hint.classList.add('is-hidden');
+      } else {
+        hint.classList.remove('is-hidden');
+      }
+    }
+  }
+
+  function resetCurtains() {
+    leftPanel.style.transform = 'translateX(0)';
+    rightPanel.style.transform = 'translateX(0)';
+    if (hint) {
+      hint.classList.remove('is-hidden');
+    }
+  }
+
+  function openKeyboard() {
+    const rect = stage.getBoundingClientRect();
+    const offsetPx = (rect.width > 0 ? rect.width : 900) * 0.62 * 0.70;
+    leftPanel.style.transform = `translateX(${-offsetPx}px)`;
+    rightPanel.style.transform = `translateX(${offsetPx}px)`;
+    if (hint) {
+      hint.classList.add('is-hidden');
+    }
+  }
+
+  stage.addEventListener('mousemove', (e) => {
+    updateCurtains(e.clientX);
+  });
+
+  stage.addEventListener('mouseleave', () => {
+    resetCurtains();
+  });
+
+  stage.addEventListener('touchstart', (e) => {
+    if (e.touches && e.touches.length > 0) {
+      updateCurtains(e.touches[0].clientX);
+    }
+  }, { passive: true });
+
+  stage.addEventListener('touchmove', (e) => {
+    if (e.touches && e.touches.length > 0) {
+      updateCurtains(e.touches[0].clientX);
+    }
+  }, { passive: true });
+
+  stage.addEventListener('touchend', () => {
+    resetCurtains();
+  });
+
+  stage.addEventListener('touchcancel', () => {
+    resetCurtains();
+  });
+
+  stage.addEventListener('focus', () => {
+    openKeyboard();
+  });
+
+  stage.addEventListener('blur', () => {
+    resetCurtains();
+  });
 }
 
 // --- Schedule Page Accordion Engine ---
