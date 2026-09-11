@@ -563,10 +563,10 @@ function renderHomePage() {
     <!-- FEATURED EVENT / UPCOMING PERFORMANCE -->
     <section class="featured-event-section">
       <div class="section-container">
+        <div class="upcoming-performance-header">
+          <h2 class="upcoming-performance-heading">Upcoming Performance</h2>
+        </div>
         <div class="coming-soon-card curtain-stage-card" id="curtainStageCard" tabindex="0" role="region" aria-label="Upcoming Performance: A NEW STORY TAKES THE STAGE">
-          <!-- Subtle Top Curtain Track -->
-          <div class="curtain-rod" aria-hidden="true"></div>
-
           <!-- Centered Content Revealed Behind Curtains -->
           <div class="curtain-content-wrap">
             <h2 class="curtain-headline">WAIT THEY ARE PREPARING</h2>

@@ -1650,10 +1650,19 @@ h1, h2, h3, h4, h5, h6 {
    COMING SOON EVENT SECTION & THEATER CURTAIN REVEAL STYLES
    -------------------------------------------------------------------------- */
 .upcoming-performance-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  display: block;
   margin-bottom: 24px;
+}
+
+.upcoming-performance-heading {
+  font-family: 'Satoshi', var(--font-primary), sans-serif;
+  font-weight: 800;
+  font-size: clamp(28px, 3.6vw, 44px);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: #FFFFFF;
+  margin: 0;
+  padding: 0;
 }
 
 .pulse-live-dot {
@@ -1702,8 +1711,9 @@ h1, h2, h3, h4, h5, h6 {
    -------------------------------------------------------------------------- */
 .curtain-stage-card {
   background: #000000;
-  border: none;
-  box-shadow: none;
+  border-radius: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
   isolation: isolate;
   cursor: grab;
   user-select: none;
@@ -1723,24 +1733,9 @@ h1, h2, h3, h4, h5, h6 {
   outline-offset: 3px;
 }
 
-/* Subtle Stage Rigging Curtain Track */
+/* Hidden rod to ensure zero hard seam at top */
 .curtain-rod {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 6px;
-  background: linear-gradient(
-    180deg,
-    #141414 0%,
-    #2c2c2c 35%,
-    #1a1a1a 70%,
-    #080808 100%
-  );
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.9);
-  z-index: 7;
-  pointer-events: none;
-  opacity: 0.65;
+  display: none !important;
 }
 
 /* Centered Announcement Content Revealed Behind Curtains */
@@ -1783,7 +1778,7 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-/* Realistic Red Velvet Curtain Panels */
+/* Realistic Red Velvet Curtain Panels with Soft Alpha Feathering */
 .curtain-panel {
   position: absolute;
   top: 0;
@@ -1791,7 +1786,34 @@ h1, h2, h3, h4, h5, h6 {
   z-index: 4;
   overflow: hidden;
   pointer-events: none;
+  background-color: #000000;
   will-change: transform;
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.08) 4%,
+    rgba(0, 0, 0, 0.4) 10%,
+    rgba(0, 0, 0, 0.85) 18%,
+    #000000 24%,
+    #000000 76%,
+    rgba(0, 0, 0, 0.85) 82%,
+    rgba(0, 0, 0, 0.4) 90%,
+    rgba(0, 0, 0, 0.08) 96%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.08) 4%,
+    rgba(0, 0, 0, 0.4) 10%,
+    rgba(0, 0, 0, 0.85) 18%,
+    #000000 24%,
+    #000000 76%,
+    rgba(0, 0, 0, 0.85) 82%,
+    rgba(0, 0, 0, 0.4) 90%,
+    rgba(0, 0, 0, 0.08) 96%,
+    transparent 100%
+  );
 }
 
 .curtain-panel-left {
@@ -1807,7 +1829,7 @@ h1, h2, h3, h4, h5, h6 {
   z-index: 4;
 }
 
-/* Inner Image Layer for Wind Breeze Animation */
+/* Inner Image Layer with -20% Saturation and Wind Breeze Animation */
 .curtain-image-inner {
   position: absolute;
   top: 0;
@@ -1816,6 +1838,8 @@ h1, h2, h3, h4, h5, h6 {
   background-image: url('assets/red-curtain-stage.jpg');
   background-size: cover;
   background-repeat: no-repeat;
+  -webkit-filter: saturate(0.8);
+  filter: saturate(0.8);
   will-change: transform;
 }
 
@@ -1859,36 +1883,38 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-/* Upper Soft Black Blend Gradient */
+/* Upper Multi-Stop Gradient Blend (Seamless Black Feather) */
 .curtain-fade-top {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: 48px;
+  height: 120px;
   background: linear-gradient(
     to bottom,
     #000000 0%,
-    rgba(0, 0, 0, 0.6) 30%,
-    rgba(0, 0, 0, 0.15) 70%,
+    rgba(0, 0, 0, 0.95) 25%,
+    rgba(0, 0, 0, 0.7) 50%,
+    rgba(0, 0, 0, 0.25) 80%,
     transparent 100%
   );
   pointer-events: none;
   z-index: 6;
 }
 
-/* Bottom Soft Black Blend Gradient */
+/* Bottom Multi-Stop Gradient Blend (Seamless Black Feather) */
 .curtain-fade-bottom {
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 54px;
+  height: 120px;
   background: linear-gradient(
     to top,
     #000000 0%,
-    rgba(0, 0, 0, 0.65) 30%,
-    rgba(0, 0, 0, 0.15) 70%,
+    rgba(0, 0, 0, 0.95) 25%,
+    rgba(0, 0, 0, 0.7) 50%,
+    rgba(0, 0, 0, 0.25) 80%,
     transparent 100%
   );
   pointer-events: none;
@@ -1945,6 +1971,7 @@ h1, h2, h3, h4, h5, h6 {
     letter-spacing: -0.02em;
   }
   .curtain-stage-card {
+    border-radius: 0 !important;
     padding: 48px 12px;
     min-height: 280px;
     width: 100%;
@@ -1952,10 +1979,10 @@ h1, h2, h3, h4, h5, h6 {
     box-sizing: border-box;
   }
   .curtain-fade-top {
-    height: 36px;
+    height: 90px;
   }
   .curtain-fade-bottom {
-    height: 40px;
+    height: 90px;
   }
   .curtain-content-wrap {
     padding: 20px 8px;
