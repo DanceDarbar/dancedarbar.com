@@ -1835,19 +1835,6 @@ h1, h2, h3, h4, h5, h6 {
   touch-action: none;
 }
 
-/* Decorative Top Curtain Rod */
-.curtain-rod {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(to bottom, #4a4a4a 0%, #1a1a1a 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-  z-index: 6;
-  pointer-events: none;
-}
-
 /* Lightweight Mobile Fallback Curtain Panels */
 .curtain-panels-mobile {
   display: none;

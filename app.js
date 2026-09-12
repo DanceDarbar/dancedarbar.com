@@ -604,9 +604,6 @@ function renderHomePage() {
             <!-- Canvas for Desktop Verlet Mass-Spring Cloth Simulation -->
             <canvas id="curtainCanvas" class="curtain-canvas"></canvas>
 
-            <!-- Decorative Top Curtain Rod -->
-            <div class="curtain-rod" aria-hidden="true"></div>
-
             <!-- Soft Edge Vignette Blends into Black -->
             <div class="curtain-fade-top" aria-hidden="true"></div>
             <div class="curtain-fade-bottom" aria-hidden="true"></div>
