@@ -603,7 +603,7 @@ function renderHomePage() {
           </div>
 
           <!-- Desktop texture (compressed) and a smaller mobile-only copy -->
-          <img id="curtainImg" src="assets/curtain-texture.jpg" style="display:none" crossorigin="anonymous" alt="">
+          <img id="curtainImg" src="assets/curtain-texture.jpg" style="display:none" alt="">
         </div>
       </div>
     </section>
@@ -1599,51 +1599,112 @@ function initClothCurtainSimulation() {
       return;
     }
 
-    const MAX_OPEN_RATIO = 0.62;
+    const MAX_OPEN_RATIO = 0.52;
+    let currentOpenness = 0;
 
     function setOpenness(px) {
-      if (left) left.style.transform = `translateX(${-px}px)`;
-      if (right) right.style.transform = `translateX(${px}px) scaleX(-1)`;
+      const rect = stage.getBoundingClientRect();
+      const maxPx = rect.width * 0.5 * MAX_OPEN_RATIO;
+      currentOpenness = Math.max(0, Math.min(px, maxPx));
+      if (left) left.style.transform = `translateX(${-currentOpenness}px)`;
+      if (right) right.style.transform = `translateX(${currentOpenness}px) scaleX(-1)`;
+      if (hint) hint.style.opacity = currentOpenness > 15 ? '0' : '1';
     }
 
-    function openFromClientX(clientX) {
-      const rect = stage.getBoundingClientRect();
-      const x = clientX - rect.left;
-      const center = rect.width / 2;
-      const factor = Math.min(1, Math.abs(x - center) / center);
-      setOpenness(factor * rect.width * MAX_OPEN_RATIO);
-      if (hint) hint.style.opacity = factor > 0.15 ? '0' : '1';
-    }
+    let touchStartX = 0;
+    let touchStartOpen = 0;
+    let isTouchDragging = false;
+
+    const onTouchStart = (e) => {
+      const t = e.touches && e.touches[0];
+      if (!t) return;
+      touchStartX = t.clientX;
+      touchStartOpen = currentOpenness;
+      isTouchDragging = false;
+    };
 
     const onTouchMove = (e) => {
       const t = e.touches && e.touches[0];
-      if (t) openFromClientX(t.clientX);
+      if (!t) return;
+      const deltaX = t.clientX - touchStartX;
+      if (Math.abs(deltaX) > 6) isTouchDragging = true;
+
+      const rect = stage.getBoundingClientRect();
+      const isLeft = touchStartX < (rect.left + rect.width / 2);
+      const openDelta = isLeft ? -deltaX : deltaX;
+      setOpenness(touchStartOpen + openDelta);
     };
 
     const onTouchEnd = () => {
-      setOpenness(0);
-      if (hint) hint.style.opacity = '1';
+      if (!isTouchDragging) {
+        // Quick tap without drag toggles open / closed
+        const rect = stage.getBoundingClientRect();
+        const maxPx = rect.width * 0.5 * MAX_OPEN_RATIO;
+        if (currentOpenness < maxPx * 0.3) {
+          setOpenness(maxPx * 0.85);
+        } else {
+          setOpenness(0);
+        }
+      }
+      // Curtains stay where moved — do not snap back
     };
 
-    const onMouseMove = (e) => openFromClientX(e.clientX);
-    const onMouseLeave = () => {
-      setOpenness(0);
-      if (hint) hint.style.opacity = '1';
+    let mouseStartX = 0;
+    let mouseStartOpen = 0;
+    let isMouseDown = false;
+    let isMouseDragging = false;
+
+    const onMouseDown = (e) => {
+      isMouseDown = true;
+      isMouseDragging = false;
+      mouseStartX = e.clientX;
+      mouseStartOpen = currentOpenness;
+    };
+
+    const onMouseMove = (e) => {
+      if (!isMouseDown) return;
+      const deltaX = e.clientX - mouseStartX;
+      if (Math.abs(deltaX) > 6) isMouseDragging = true;
+      const rect = stage.getBoundingClientRect();
+      const isLeft = mouseStartX < (rect.left + rect.width / 2);
+      const openDelta = isLeft ? -deltaX : deltaX;
+      setOpenness(mouseStartOpen + openDelta);
+    };
+
+    const onMouseUp = () => {
+      if (!isMouseDown) return;
+      if (!isMouseDragging) {
+        const rect = stage.getBoundingClientRect();
+        const maxPx = rect.width * 0.5 * MAX_OPEN_RATIO;
+        if (currentOpenness < maxPx * 0.3) {
+          setOpenness(maxPx * 0.85);
+        } else {
+          setOpenness(0);
+        }
+      }
+      isMouseDown = false;
+      // Curtains stay where moved
     };
 
     const onKeyDown = (e) => {
       if (e.key === ' ' || e.key === 'Enter') {
         e.preventDefault();
         const rect = stage.getBoundingClientRect();
-        setOpenness(rect.width * MAX_OPEN_RATIO * 0.7);
-        setTimeout(() => setOpenness(0), 1600);
+        const maxPx = rect.width * 0.5 * MAX_OPEN_RATIO;
+        if (currentOpenness < maxPx * 0.3) {
+          setOpenness(maxPx * 0.85);
+        } else {
+          setOpenness(0);
+        }
       }
     };
 
+    stage.addEventListener('touchstart', onTouchStart, { passive: true });
     stage.addEventListener('touchmove', onTouchMove, { passive: true });
     stage.addEventListener('touchend', onTouchEnd);
+    stage.addEventListener('mousedown', onMouseDown);
     stage.addEventListener('mousemove', onMouseMove);
-    stage.addEventListener('mouseleave', onMouseLeave);
+    stage.addEventListener('mouseup', onMouseUp);
     stage.addEventListener('keydown', onKeyDown);
 
     let resizeTimer;
@@ -1658,11 +1719,23 @@ function initClothCurtainSimulation() {
     };
     window.addEventListener('resize', onResize);
 
+    window.setCurtainOpenRatio = (ratio) => {
+      const rect = stage.getBoundingClientRect();
+      const maxPx = rect.width * 0.5 * MAX_OPEN_RATIO;
+      setOpenness(maxPx * ratio);
+    };
+    window.getCurtainState = () => ({
+      mode: 'lightweight',
+      openness: currentOpenness
+    });
+
     window.cleanupCurtainSimulation = () => {
+      stage.removeEventListener('touchstart', onTouchStart);
       stage.removeEventListener('touchmove', onTouchMove);
       stage.removeEventListener('touchend', onTouchEnd);
+      stage.removeEventListener('mousedown', onMouseDown);
       stage.removeEventListener('mousemove', onMouseMove);
-      stage.removeEventListener('mouseleave', onMouseLeave);
+      stage.removeEventListener('mouseup', onMouseUp);
       stage.removeEventListener('keydown', onKeyDown);
       window.removeEventListener('resize', onResize);
     };
@@ -1695,15 +1768,15 @@ function initClothCurtainSimulation() {
     canvas.style.display = 'block';
 
     const CFG = {
-      cols: 8, rows: 6, panelWidthRatio: 0.56,
-      damping: 0.985, restoreStrength: 0.012, gravity: 0.06,
-      windSpeed: 0.55, windAmp: 10, constraintIterations: 4, stiffness: 0.5,
+      cols: 8, rows: 6, panelWidthRatio: 0.505,
+      damping: 0.985, restoreStrength: 0.05, gravity: 0.06,
+      windSpeed: 0.55, windAmp: 8, constraintIterations: 4, stiffness: 0.5,
       bendStiffness: 0.15,     // gentler skip-one constraint — smooths creases into curves
       grabRadius: 130,         // px: how much fabric moves as a "handful" around the grab point
       grabCatchup: 0.35,       // 0-1: how quickly the grabbed point eases toward the cursor
-      maxOpenRatio: 0.95,      // how far a panel can slide open, as a fraction of its own width
+      maxOpenRatio: 0.62,      // how far a panel can slide open — leaves ~38% draped at sides
       localGrabRange: 70,      // px: max local wrinkle offset, independent of the panel's slide
-      closeSpeed: 0.035,       // how fast an un-grabbed panel eases back toward closed
+      closeSpeed: 0.035,       // kept for reference
       openTrackSpeed: 0.14,    // how fast the panel's actual position catches up to the raw drag target
     };
 
@@ -1727,7 +1800,7 @@ function initClothCurtainSimulation() {
         }
       }
       return {
-        cols, rows, points, prev, rest, pinned, u, v,
+        cols, rows, points, prev, rest, pinned, u, v, mirrored,
         restDX: w / cols, restDY: h / rows,
         openAmount: 0,                 // raw target, 0 = closed, up to maxOpen = fully slid away
         openAmountSmoothed: 0,         // what actually drives every row's position — eases toward openAmount
@@ -1753,8 +1826,6 @@ function initClothCurtainSimulation() {
       left = makeMesh(0, topOffset, panelW, panelH, false);
       right = makeMesh(stageW - panelW, topOffset, panelW, panelH, true);
     }
-
-    let grab = null, pointerActive = false;
 
     function nearestPoint(x, y) {
       let best = null, bestDist = Infinity;
@@ -1801,9 +1872,14 @@ function initClothCurtainSimulation() {
     }
     function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
 
+    let grab = null, pointerActive = false;
+    let pointerStartX = 0, pointerStartY = 0, isDraggingPointer = false;
+
     const onPointerDown = (e) => {
       pointerActive = true;
+      isDraggingPointer = false;
       const p = stagePos(e.clientX, e.clientY);
+      pointerStartX = p.x; pointerStartY = p.y;
       grab = nearestPoint(p.x, p.y);
       if (grab) {
         grab.x = grab.mesh.points[grab.index].x;
@@ -1819,27 +1895,42 @@ function initClothCurtainSimulation() {
     const onPointerMove = (e) => {
       if (!pointerActive || !grab) return;
       const p = stagePos(e.clientX, e.clientY);
+      if (Math.hypot(p.x - pointerStartX, p.y - pointerStartY) > 5) {
+        isDraggingPointer = true;
+      }
       grab.x = p.x; grab.y = p.y;
 
       // Net horizontal drag from where the grab started decides how far the
       // WHOLE panel has slid open — bounded, so it can only travel as far as
-      // its own width allows, never an unbounded rubber-band stretch.
+      // its own width allows, leaving drapery on the side.
       const deltaX = p.x - grab.initialCursorX;
       const openDelta = (grab.mesh === left) ? -deltaX : deltaX;
       grab.mesh.openAmount = clamp(grab.initialOpen + openDelta, 0, grab.mesh.maxOpen);
     };
 
     function releasePointer() {
+      if (pointerActive && !isDraggingPointer && grab) {
+        // Quick click/tap on a panel without dragging: toggle that panel open/closed
+        const m = grab.mesh;
+        if (m.openAmount < m.maxOpen * 0.3) {
+          m.openAmount = m.maxOpen * 0.85;
+        } else {
+          m.openAmount = 0;
+        }
+      }
       pointerActive = false; grab = null;
       canvas.classList.remove('grabbing');
+      // Curtains stay where the user moved them — no return to closed on release
     }
 
     const onKeyDown = (e) => {
       if (e.key === ' ' || e.key === 'Enter') {
         e.preventDefault();
         if (left && right) {
-          left.openAmount = clamp(left.openAmount + left.maxOpen * 0.45, 0, left.maxOpen);
-          right.openAmount = clamp(right.openAmount + right.maxOpen * 0.45, 0, right.maxOpen);
+          const isAlreadyOpen = (left.openAmount > left.maxOpen * 0.3) || (right.openAmount > right.maxOpen * 0.3);
+          const target = isAlreadyOpen ? 0 : left.maxOpen * 0.85;
+          left.openAmount = target;
+          right.openAmount = target;
           ensureRunning();
         }
       }
@@ -1856,24 +1947,28 @@ function initClothCurtainSimulation() {
       const rows = mesh.rows, cols = mesh.cols;
       let grabDeltaX = 0, grabDeltaY = 0;
 
-      // If this panel isn't the one currently being dragged, let it ease
-      // back toward fully closed — this is what makes release feel like a
-      // real curtain settling shut instead of staying wherever it was left.
-      if (!isGrabbedMesh) {
-        mesh.openAmount += (0 - mesh.openAmount) * CFG.closeSpeed;
-      }
+      // Curtains stay where the user moved them — no automatic close-back
+      const prevSmoothed = mesh.openAmountSmoothed;
       mesh.openAmountSmoothed += (mesh.openAmount - mesh.openAmountSmoothed) * CFG.openTrackSpeed;
+      const shiftDelta = (mesh.openAmountSmoothed - prevSmoothed) * mesh.openDir;
       const shiftX = mesh.openDir * mesh.openAmountSmoothed;
 
       for (let i = 0; i < mesh.points.length; i++) {
+        const row = Math.floor(i / (cols + 1)), col = i % (cols + 1);
+        const colFactor = mesh.mirrored ? (cols - col) / cols : col / cols;
+
         if (mesh.pinned[i]) {
-          const tx = mesh.rest[i].x + shiftX;
+          const tx = mesh.rest[i].x + colFactor * shiftX;
           mesh.points[i].x = tx; mesh.points[i].y = mesh.rest[i].y;
           mesh.prev[i].x = tx;   mesh.prev[i].y = mesh.rest[i].y;
           continue;
         }
 
-        const targetX = mesh.rest[i].x + shiftX;
+        // Propagate panel shift synchronously to all rows so the whole panel glides as one sheet
+        mesh.points[i].x += shiftDelta * colFactor;
+        mesh.prev[i].x   += shiftDelta * colFactor;
+
+        const targetX = mesh.rest[i].x + colFactor * shiftX;
 
         if (isGrabbedMesh && grab && grab.index === i) {
           const p = mesh.points[i];
@@ -1892,7 +1987,6 @@ function initClothCurtainSimulation() {
 
         const p = mesh.points[i], pp = mesh.prev[i], rest = mesh.rest[i];
         const vx = (p.x - pp.x) * CFG.damping, vy = (p.y - pp.y) * CFG.damping;
-        const row = Math.floor(i / (cols + 1)), col = i % (cols + 1);
         const depth = row / rows;
         const windPhase = time * CFG.windSpeed + col * 0.6 + row * 0.2;
         const windX = Math.sin(windPhase) * CFG.windAmp * depth * 0.05;
@@ -1913,11 +2007,14 @@ function initClothCurtainSimulation() {
       }
     }
 
-    function constrainPair(mesh, i1, i2, restDist, stiffnessOverride) {
+    function constrainPair(mesh, i1, i2, restDist, stiffnessOverride, isHorizontal) {
       const p1 = mesh.points[i1], p2 = mesh.points[i2];
       const dx = p2.x - p1.x, dy = p2.y - p1.y;
       const dist = Math.sqrt(dx * dx + dy * dy) || 0.0001;
-      const stiff = stiffnessOverride !== undefined ? stiffnessOverride : CFG.stiffness;
+      let stiff = stiffnessOverride !== undefined ? stiffnessOverride : CFG.stiffness;
+      if (dist < restDist && isHorizontal) {
+        stiff *= 0.1; // Reduced compression resistance allows realistic fabric gathering into vertical folds
+      }
       const diff = ((dist - restDist) / dist) * stiff * 0.5;
       const offX = dx * diff, offY = dy * diff;
       const g1 = grab && grab.mesh === mesh && grab.index === i1;
@@ -1933,14 +2030,14 @@ function initClothCurtainSimulation() {
         for (let r = 0; r <= mesh.rows; r++) {
           for (let c = 0; c <= mesh.cols; c++) {
             const i = idx(mesh, r, c);
-            if (c < mesh.cols) constrainPair(mesh, i, idx(mesh, r, c + 1), mesh.restDX);
-            if (r < mesh.rows) constrainPair(mesh, i, idx(mesh, r + 1, c), mesh.restDY);
+            if (c < mesh.cols) constrainPair(mesh, i, idx(mesh, r, c + 1), mesh.restDX, undefined, true);
+            if (r < mesh.rows) constrainPair(mesh, i, idx(mesh, r + 1, c), mesh.restDY, undefined, false);
             if (r < mesh.rows && c < mesh.cols) {
-              constrainPair(mesh, idx(mesh, r, c), idx(mesh, r + 1, c + 1), diag);
-              constrainPair(mesh, idx(mesh, r, c + 1), idx(mesh, r + 1, c), diag);
+              constrainPair(mesh, idx(mesh, r, c), idx(mesh, r + 1, c + 1), diag, 0.25, false);
+              constrainPair(mesh, idx(mesh, r, c + 1), idx(mesh, r + 1, c), diag, 0.25, false);
             }
-            if (c < mesh.cols - 1) constrainPair(mesh, i, idx(mesh, r, c + 2), mesh.restDX * 2, CFG.bendStiffness);
-            if (r < mesh.rows - 1) constrainPair(mesh, i, idx(mesh, r + 2, c), mesh.restDY * 2, CFG.bendStiffness);
+            if (c < mesh.cols - 1) constrainPair(mesh, i, idx(mesh, r, c + 2), mesh.restDX * 2, CFG.bendStiffness, true);
+            if (r < mesh.rows - 1) constrainPair(mesh, i, idx(mesh, r + 2, c), mesh.restDY * 2, CFG.bendStiffness, false);
           }
         }
       }
@@ -1956,8 +2053,18 @@ function initClothCurtainSimulation() {
       const d = (d0.y * (s2.x - s1.x) + d1.y * (s0.x - s2.x) + d2.y * (s1.x - s0.x)) / denom;
       const e = (d0.x * (s1.x * s2.y - s2.x * s1.y) + d1.x * (s2.x * s0.y - s0.x * s2.y) + d2.x * (s0.x * s1.y - s1.x * s0.y)) / denom;
       const f = (d0.y * (s1.x * s2.y - s2.x * s1.y) + d1.y * (s2.x * s0.y - s0.x * s2.y) + d2.y * (s0.x * s1.y - s1.x * s0.y)) / denom;
+
+      // Expand clipping triangle slightly from centroid (0.75px) to eliminate antialiasing hairline cracks between adjacent mesh quads
+      const cx = (d0.x + d1.x + d2.x) / 3, cy = (d0.y + d1.y + d2.y) / 3;
+      const ex = (p) => {
+        const vx = p.x - cx, vy = p.y - cy;
+        const len = Math.hypot(vx, vy) || 1;
+        return { x: p.x + (vx / len) * 0.75, y: p.y + (vy / len) * 0.75 };
+      };
+      const p0 = ex(d0), p1 = ex(d1), p2 = ex(d2);
+
       ctx.save();
-      ctx.beginPath(); ctx.moveTo(d0.x, d0.y); ctx.lineTo(d1.x, d1.y); ctx.lineTo(d2.x, d2.y); ctx.closePath(); ctx.clip();
+      ctx.beginPath(); ctx.moveTo(p0.x, p0.y); ctx.lineTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y); ctx.closePath(); ctx.clip();
       ctx.setTransform(dpr * a, dpr * b, dpr * c, dpr * d, dpr * e, dpr * f);
       ctx.drawImage(curtainImage, 0, 0);
       ctx.restore();
@@ -1988,7 +2095,10 @@ function initClothCurtainSimulation() {
       ctx.clearRect(0, 0, stageW, stageH);
       renderMesh(left);
       renderMesh(right);
-      if (hint) hint.style.opacity = pointerActive ? '0' : '1';
+      if (hint) {
+        const isOpen = (left && left.openAmount > 20) || (right && right.openAmount > 20);
+        hint.style.opacity = (pointerActive || isOpen) ? '0' : '1';
+      }
       animId = requestAnimationFrame(frame);
     }
 
@@ -2038,6 +2148,35 @@ function initClothCurtainSimulation() {
     window.addEventListener('resize', onResize);
 
     if (curtainImage.complete && curtainImage.naturalWidth > 0) start(); else curtainImage.addEventListener('load', start);
+
+    window.setCurtainOpenRatio = (ratio) => {
+      if (left && right) {
+        const target = left.maxOpen * ratio;
+        left.openAmount = target;
+        right.openAmount = target;
+        ensureRunning();
+      }
+    };
+    window.getCurtainState = () => ({
+      mode: 'cloth',
+      running,
+      leftOpen: left ? left.openAmount : 0,
+      leftSmoothed: left ? left.openAmountSmoothed : 0,
+      maxOpen: left ? left.maxOpen : 0
+    });
+    window.stepCurtainFrames = (count = 1) => {
+      for (let f = 0; f < count; f++) {
+        time += 0.016;
+        stepMesh(left, grab && grab.mesh === left);
+        stepMesh(right, grab && grab.mesh === right);
+        satisfyConstraints(left);
+        satisfyConstraints(right);
+      }
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, stageW, stageH);
+      renderMesh(left);
+      renderMesh(right);
+    };
 
     window.cleanupCurtainSimulation = () => {
       running = false;
@@ -2426,154 +2565,6 @@ function initAdminLoginEvents() {
       }
     }, 400);
   });
-}
-
-// --- Admin Dashboard Page Template ---
-function renderAdminPage() {
-  const bookings = getAmrapaliBookings();
-  const trialList = getTrialRegistrations();
-
-  return `
-    <div style="padding-top: 140px; padding-bottom: 100px;">
-      <div class="section-container">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px;">
-          <div>
-            <span class="eyebrow">Dance Darbar Admin Portal</span>
-            <h1 class="section-heading">Master Control Dashboard</h1>
-          </div>
-          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-            <button class="btn btn-secondary" onclick="location.reload()">Refresh</button>
-            <button class="btn btn-secondary" style="border-color: #991B1B; color: #991B1B;" onclick="window.clearAllReservations()">Clear Reservations</button>
-            <button class="btn btn-secondary" style="border-color: #991B1B; color: #991B1B;" onclick="window.clearAllTrialRegistrations()">Clear Trials</button>
-            <button class="btn btn-secondary" onclick="window.adminLogout()" style="gap: 6px;">
-              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
-              Logout
-            </button>
-          </div>
-        </div>
-
-        <!-- Admin Overview Cards -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 36px;">
-          <div style="background: var(--color-surface); padding: 20px; border-radius: var(--radius-medium); border: 1px solid var(--color-border); box-shadow: 0 4px 16px rgba(0,0,0,0.4);">
-            <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--color-muted-text);">Free Trial Submissions</span>
-            <h3 style="font-size: 26px; color: #5EBBEA; margin-top: 4px;">${trialList.length}</h3>
-          </div>
-          <div style="background: var(--color-surface); padding: 20px; border-radius: var(--radius-medium); border: 1px solid var(--color-border); box-shadow: 0 4px 16px rgba(0,0,0,0.4);">
-            <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--color-muted-text);">AMRAPALI Reservations</span>
-            <h3 style="font-size: 26px; color: #FFFFFF; margin-top: 4px;">${bookings.length}</h3>
-          </div>
-          <div style="background: var(--color-surface); padding: 20px; border-radius: var(--radius-medium); border: 1px solid var(--color-border); box-shadow: 0 4px 16px rgba(0,0,0,0.4);">
-            <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--color-muted-text);">Confirmed Event Revenue</span>
-            <h3 style="font-size: 26px; color: #4ADE80; margin-top: 4px;">₹${bookings.filter(b => b.status === 'Confirmed').reduce((sum, b) => sum + (b.totalAmount || 500), 0)}</h3>
-          </div>
-        </div>
-
-        <!-- SECTION 1: FREE TRIAL CLASS REGISTRATIONS (CLAIM FREE SEAT) -->
-        <div style="margin-bottom: 48px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-            <h2 style="font-size: 22px; color: var(--color-navy);">1. Free Trial Class Registrations ("Claim Free Seat")</h2>
-            <span class="badge badge-info">${trialList.length} Total Submissions</span>
-          </div>
-
-          <div class="admin-table-wrap">
-            <table class="admin-table">
-              <thead>
-                <tr>
-                  <th>Reg ID</th>
-                  <th>Student Name</th>
-                  <th>Age Group</th>
-                  <th>Interested Class</th>
-                  <th>Phone Number</th>
-                  <th>Address / City</th>
-                  <th>Submitted At</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${trialList.length === 0 ? `
-                  <tr>
-                    <td colspan="8" style="text-align: center; padding: 36px; color: var(--color-muted-text);">
-                      No Free Trial registrations submitted yet. Click <a href="#/claim-free-seat" style="color: var(--color-primary-dark); font-weight: 700;">Claim Free Seat</a> on the website to test form submission.
-                    </td>
-                  </tr>
-                ` : trialList.map(t => `
-                  <tr>
-                    <td style="font-family: monospace; font-weight: 700; color: var(--color-primary-dark);">${t.id}</td>
-                    <td><strong>${t.studentName}</strong></td>
-                    <td>${t.ageGroup}</td>
-                    <td><span style="font-weight: 600; color: var(--color-navy);">${t.interestedClass}</span></td>
-                    <td><a href="tel:${t.phone}" style="color: var(--color-primary-dark); font-weight: 600;">${t.phone}</a></td>
-                    <td>${t.address}</td>
-                    <td style="font-size: 11.5px; color: var(--color-muted-text);">${t.submittedAt}</td>
-                    <td><span class="badge badge-success">New Lead</span></td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- SECTION 2: AMRAPALI 2026 EVENT SEAT RESERVATIONS -->
-        <div>
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-            <h2 style="font-size: 22px; color: var(--color-navy);">2. AMRAPALI 2026 Event Seat Reservations</h2>
-            <span class="badge badge-warning">${bookings.length} Event Bookings</span>
-          </div>
-
-          <div class="admin-table-wrap">
-            <table class="admin-table">
-              <thead>
-                <tr>
-                  <th>Booking Ref</th>
-                  <th>Guest Name</th>
-                  <th>Phone & Email</th>
-                  <th>Seats</th>
-                  <th>Amount</th>
-                  <th>Txn ID / Proof</th>
-                  <th>Date</th>
-                  <th>Status</th>
-                  <th>Admin Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${bookings.length === 0 ? `
-                  <tr>
-                    <td colspan="9" style="text-align: center; padding: 36px; color: var(--color-muted-text);">
-                      No seat reservations recorded yet. Click "Reserve Seat" on the AMRAPALI 2026 event section to test.
-                    </td>
-                  </tr>
-                ` : bookings.map(b => `
-                  <tr>
-                    <td style="font-family: monospace; font-weight: 700; color: var(--color-primary-dark);">${b.bookingRef}</td>
-                    <td><strong>${b.fullName}</strong><br><span style="font-size: 11px; color: var(--color-muted-text);">${b.attendeeType || 'Guest'}</span></td>
-                    <td><a href="tel:${b.phone}" style="color: var(--color-navy); font-weight: 600;">${b.phone}</a><br><span style="font-size: 11.5px; color: var(--color-muted-text);">${b.email}</span></td>
-                    <td>${b.seatCount}</td>
-                    <td style="font-weight: 700; color: #166534;">₹${b.totalAmount}</td>
-                    <td>${b.txnId || 'N/A'}${b.screenshotName ? `<br><span style="font-size: 11px; color: var(--color-primary-dark);">📎 ${b.screenshotName}</span>` : ''}</td>
-                    <td style="font-size: 11.5px;">${b.createdAt || 'Just now'}</td>
-                    <td>
-                      ${b.status === 'Confirmed' ? `<span class="badge badge-success">Confirmed</span>` :
-                        b.status === 'Verification Pending' ? `<span class="badge badge-info">Verification Pending</span>` :
-                        b.status === 'Rejected' ? `<span class="badge badge-danger">Rejected</span>` :
-                        `<span class="badge badge-warning">Payment Pending</span>`}
-                    </td>
-                    <td>
-                      ${b.status !== 'Confirmed' ? `
-                        <button class="admin-action-btn admin-btn-approve" onclick="window.adminApproveBooking('${b.bookingRef}')">✓ Verify & Confirm</button>
-                        <button class="admin-action-btn admin-btn-reject" onclick="window.adminRejectBooking('${b.bookingRef}')">✕ Reject</button>
-                      ` : `
-                        <button class="admin-action-btn admin-btn-resend" onclick="window.adminResendNotifications('${b.bookingRef}')">📩 Resend Pass</button>
-                      `}
-                    </td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
 }
 
 // Global Admin Action Handlers & Payment Verification Processors
