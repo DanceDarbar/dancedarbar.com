@@ -2777,7 +2777,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .footer-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr;
+  grid-template-columns: 2fr 1fr 1fr 1.8fr;
   gap: 48px;
   margin-bottom: 80px;
 }
@@ -2836,16 +2836,37 @@ h1, h2, h3, h4, h5, h6 {
 .footer-links a {
   color: #A0A0A0;
   font-size: 14px;
+  transition: color var(--transition-fast);
 }
 
 .footer-links a:hover {
   color: var(--color-primary);
 }
 
+.footer-contact-block {
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
 .contact-info-item {
   color: #E5E5E5;
   font-size: 14px;
   margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.contact-info-item:last-child {
+  margin-bottom: 0;
+}
+
+.contact-info-item a {
+  color: inherit;
+  transition: color var(--transition-fast);
+}
+
+.contact-info-item a:hover {
+  color: var(--color-primary);
 }
 
 .footer-bottom {
@@ -3811,7 +3832,7 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .footer-accordion.active .footer-accordion-content {
-    max-height: 320px !important;
+    max-height: 520px !important;
     padding: 0 0 16px !important;
   }
 
