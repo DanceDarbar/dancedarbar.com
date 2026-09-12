@@ -584,36 +584,26 @@ function renderHomePage() {
           <h2 class="upcoming-performance-heading">Upcoming Performance</h2>
         </div>
         <div class="curtain-stage-wrap">
-          <div class="curtain-stage" id="curtainStage" tabindex="0" role="region" aria-label="Interactive announcement reveal: Upcoming performance: A NEW STORY TAKES THE STAGE">
-            <!-- Centered Content Revealed Behind Curtains -->
-            <div class="curtain-content-wrap">
-              <span class="curtain-eyebrow">UPCOMING PERFORMANCE</span>
-              <h2 class="curtain-headline">WAIT THEY ARE PREPARING</h2>
+          <div class="curtain-stage" id="stage" tabindex="0" role="region" aria-label="Interactive announcement reveal: Upcoming performance: A NEW STORY TAKES THE STAGE">
+            <div class="stage-content">
+              <p class="stage-eyebrow">Upcoming Performance</p>
+              <h2 class="stage-heading">Wait, They Are Preparing</h2>
             </div>
 
-            <!-- Lightweight Fallback Panels for Mobile & Touch Devices -->
-            <div class="curtain-panels-mobile" id="curtainPanelsMobile" aria-hidden="true">
-              <div class="curtain-panel curtain-panel-left" id="curtainPanelLeft">
-                <div class="curtain-image-inner"></div>
-              </div>
-              <div class="curtain-panel curtain-panel-right" id="curtainPanelRight">
-                <div class="curtain-image-inner"></div>
-              </div>
+            <canvas id="curtainCanvas"></canvas>
+
+            <div class="mobile-curtain" id="mobileCurtain">
+              <div class="m-panel m-left" id="mLeft"></div>
+              <div class="m-panel m-right" id="mRight"></div>
             </div>
 
-            <!-- Canvas for Desktop Verlet Mass-Spring Cloth Simulation -->
-            <canvas id="curtainCanvas" class="curtain-canvas"></canvas>
-
-            <!-- Soft Edge Vignette Blends into Black -->
-            <div class="curtain-fade-top" aria-hidden="true"></div>
-            <div class="curtain-fade-bottom" aria-hidden="true"></div>
-
-            <!-- Interaction Hint -->
-            <div class="curtain-hint" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8l4 4-4 4M6 16l-4-4 4-4M2 12h20"/></svg>
-              <span>Drag or pull curtains to reveal</span>
-            </div>
+            <div class="edge-fade edge-fade-top"></div>
+            <div class="edge-fade edge-fade-bottom"></div>
+            <p class="curtain-hint" id="hint">Move your cursor to part the curtains</p>
           </div>
+
+          <!-- Desktop texture (compressed) and a smaller mobile-only copy -->
+          <img id="curtainImg" src="assets/curtain-texture.jpg" style="display:none" crossorigin="anonymous" alt="">
         </div>
       </div>
     </section>
@@ -1567,119 +1557,96 @@ function initClothCurtainSimulation() {
     window.cleanupCurtainSimulation();
   }
 
-  const stage = document.getElementById('curtainStage');
+  const stage = document.getElementById('stage') || document.getElementById('curtainStage');
+  const hint = document.getElementById('hint');
   const canvas = document.getElementById('curtainCanvas');
-  const mobilePanels = document.getElementById('curtainPanelsMobile');
-  const leftPanel = document.getElementById('curtainPanelLeft');
-  const rightPanel = document.getElementById('curtainPanelRight');
+  const img = document.getElementById('curtainImg');
 
   if (!stage) return;
 
-  // 2. Exact device-detection branch as requested:
+  const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Coarse pointer (touch) OR a narrow viewport = use the lightweight version.
+  // Full cloth physics is reserved for devices that can actually run it smoothly.
   const isLightweight = window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 900;
 
   if (isLightweight) {
-    // ------------------------------------------------------------------------
-    // LIGHTWEIGHT MOBILE / TOUCH FALLBACK
-    // ------------------------------------------------------------------------
+    initLightweightCurtain();
+  } else {
+    initClothPhysics();
+  }
+
+  // =========================================================================
+  // LIGHTWEIGHT MODE — mobile / touch: two flat panels, transform only,
+  // no per-frame simulation, no canvas. Cheapest possible version of the
+  // same idea: drag toward an edge to pull that side's curtain open.
+  // =========================================================================
+  function initLightweightCurtain() {
     if (canvas) canvas.style.display = 'none';
-    if (mobilePanels) mobilePanels.style.display = 'block';
+    const wrap = document.getElementById('mobileCurtain') || document.getElementById('curtainPanelsMobile');
+    const left = document.getElementById('mLeft') || document.getElementById('curtainPanelLeft');
+    const right = document.getElementById('mRight') || document.getElementById('curtainPanelRight');
+    if (wrap) wrap.style.display = 'block';
+    if (left) left.style.backgroundImage = "url('assets/curtain-texture-mobile.jpg')";
+    if (right) right.style.backgroundImage = "url('assets/curtain-texture-mobile.jpg')";
+    if (hint) hint.textContent = 'Swipe to part the curtains';
 
-    if (!leftPanel || !rightPanel) return;
-
-    const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReduced) {
-      leftPanel.style.transform = 'translate3d(-50%, 0, 0)';
-      rightPanel.style.transform = 'translate3d(50%, 0, 0)';
+      if (left) left.style.transform = 'translateX(-40%)';
+      if (right) right.style.transform = 'translateX(40%) scaleX(-1)';
+      if (hint) hint.style.display = 'none';
       window.cleanupCurtainSimulation = () => {};
       return;
     }
 
-    const MAX_OPEN_RATIO = 0.58;
-    let isHolding = false;
+    const MAX_OPEN_RATIO = 0.62;
 
-    function setPanelsOffset(ratio, animate = false) {
-      const rect = stage.getBoundingClientRect();
-      const maxOffset = (rect.width > 0 ? rect.width : 360) * MAX_OPEN_RATIO;
-      const clampedRatio = Math.min(1, Math.max(0, ratio));
-      const offsetPx = clampedRatio * maxOffset;
-
-      const transition = animate ? 'transform 450ms cubic-bezier(0.22, 1, 0.36, 1)' : 'none';
-      leftPanel.style.transition = transition;
-      rightPanel.style.transition = transition;
-      leftPanel.style.transform = `translate3d(${-offsetPx}px, 0, 0)`;
-      rightPanel.style.transform = `translate3d(${offsetPx}px, 0, 0)`;
+    function setOpenness(px) {
+      if (left) left.style.transform = `translateX(${-px}px)`;
+      if (right) right.style.transform = `translateX(${px}px) scaleX(-1)`;
     }
 
-    function handlePointerMove(clientX) {
+    function openFromClientX(clientX) {
       const rect = stage.getBoundingClientRect();
-      if (rect.width <= 0) return;
       const x = clientX - rect.left;
-      const centerX = rect.width / 2;
-      const distFromCenter = Math.abs(x - centerX);
-      const ratio = Math.min(1, Math.max(0, distFromCenter / (rect.width * 0.42)));
-      setPanelsOffset(ratio, false);
+      const center = rect.width / 2;
+      const factor = Math.min(1, Math.abs(x - center) / center);
+      setOpenness(factor * rect.width * MAX_OPEN_RATIO);
+      if (hint) hint.style.opacity = factor > 0.15 ? '0' : '1';
     }
-
-    function startHold(clientX) {
-      isHolding = true;
-      stage.classList.add('is-grabbing');
-      handlePointerMove(clientX);
-    }
-
-    function endHold() {
-      if (!isHolding) return;
-      isHolding = false;
-      stage.classList.remove('is-grabbing');
-      setPanelsOffset(0, true);
-    }
-
-    const onTouchStart = (e) => {
-      if (e.touches && e.touches.length > 0) {
-        startHold(e.touches[0].clientX);
-      }
-    };
 
     const onTouchMove = (e) => {
-      if (isHolding && e.touches && e.touches.length > 0) {
-        handlePointerMove(e.touches[0].clientX);
-      }
+      const t = e.touches && e.touches[0];
+      if (t) openFromClientX(t.clientX);
     };
 
-    const onTouchEnd = () => endHold();
-    const onTouchCancel = () => endHold();
-
-    const onMouseDown = (e) => {
-      startHold(e.clientX);
+    const onTouchEnd = () => {
+      setOpenness(0);
+      if (hint) hint.style.opacity = '1';
     };
 
-    const onMouseMove = (e) => {
-      if (isHolding) {
-        handlePointerMove(e.clientX);
-      }
+    const onMouseMove = (e) => openFromClientX(e.clientX);
+    const onMouseLeave = () => {
+      setOpenness(0);
+      if (hint) hint.style.opacity = '1';
     };
-
-    const onMouseUp = () => endHold();
-
-    stage.addEventListener('touchstart', onTouchStart, { passive: true });
-    window.addEventListener('touchmove', onTouchMove, { passive: true });
-    window.addEventListener('touchend', onTouchEnd);
-    window.addEventListener('touchcancel', onTouchCancel);
-
-    stage.addEventListener('mousedown', onMouseDown);
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseup', onMouseUp);
 
     const onKeyDown = (e) => {
       if (e.key === ' ' || e.key === 'Enter') {
         e.preventDefault();
-        setPanelsOffset(0.75, true);
-        setTimeout(() => setPanelsOffset(0, true), 1600);
+        const rect = stage.getBoundingClientRect();
+        setOpenness(rect.width * MAX_OPEN_RATIO * 0.7);
+        setTimeout(() => setOpenness(0), 1600);
       }
     };
+
+    stage.addEventListener('touchmove', onTouchMove, { passive: true });
+    stage.addEventListener('touchend', onTouchEnd);
+    stage.addEventListener('mousemove', onMouseMove);
+    stage.addEventListener('mouseleave', onMouseLeave);
     stage.addEventListener('keydown', onKeyDown);
 
-    let resizeTimer = null;
+    let resizeTimer;
     const onResize = () => {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
@@ -1692,605 +1659,399 @@ function initClothCurtainSimulation() {
     window.addEventListener('resize', onResize);
 
     window.cleanupCurtainSimulation = () => {
-      stage.removeEventListener('touchstart', onTouchStart);
-      window.removeEventListener('touchmove', onTouchMove);
-      window.removeEventListener('touchend', onTouchEnd);
-      window.removeEventListener('touchcancel', onTouchCancel);
-      stage.removeEventListener('mousedown', onMouseDown);
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseup', onMouseUp);
+      stage.removeEventListener('touchmove', onTouchMove);
+      stage.removeEventListener('touchend', onTouchEnd);
+      stage.removeEventListener('mousemove', onMouseMove);
+      stage.removeEventListener('mouseleave', onMouseLeave);
       stage.removeEventListener('keydown', onKeyDown);
       window.removeEventListener('resize', onResize);
     };
-
-    return;
   }
 
-  // --------------------------------------------------------------------------
-  // DESKTOP CANVAS VERLET CLOTH PHYSICS ENGINE
-  // --------------------------------------------------------------------------
-  if (mobilePanels) mobilePanels.style.display = 'none';
-  if (canvas) canvas.style.display = 'block';
-  if (!canvas) return;
-
-  const ctx = canvas.getContext('2d');
-  const CFG = {
-    cols: 8,
-    rows: 6,
-    iterations: 4,
-    constraintIterations: 4,
-    damping: 0.94,
-    gravity: 0.10,
-    stiffness: 0.90,
-    shearStiffness: 0.65,
-    bendStiffness: 0.15,
-    restoreStrength: 0.012,
-    ambientWind: 0.45,
-    grabRadius: 130,
-    grabCatchup: 0.35,
-    localGrabRange: 80,
-    openTrackSpeed: 0.14,
-    imageSrc: 'assets/curtain-texture.jpg'
-  };
-
-  let width = 0;
-  let height = 0;
-  let dpr = 1;
-  let animationFrameId = null;
-  let isVisible = false;
-  let intersectionObserver = null;
-
-  let imgLoaded = false;
-  const curtainImg = new Image();
-  if (window.location.protocol !== 'file:') {
-    curtainImg.crossOrigin = 'anonymous';
-  }
-  curtainImg.onload = () => {
-    imgLoaded = true;
-    if (isVisible && !animationFrameId) {
-      animationFrameId = requestAnimationFrame(loop);
+  // =========================================================================
+  // FULL MODE — desktop: real cloth simulation (verlet + constraints),
+  // rendered by warping the curtain photo onto a deforming mesh.
+  // Same engine as before, with three performance changes:
+  //   1. Uses the compressed JPEG texture instead of the original PNG
+  //   2. Caps devicePixelRatio at 2 (unbounded DPR was the biggest single cost)
+  //   3. Pauses the animation loop entirely when the section scrolls off-screen
+  // =========================================================================
+  function initClothPhysics() {
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let curtainImage = img;
+    if (!curtainImage) {
+      curtainImage = new Image();
+      curtainImage.src = 'assets/curtain-texture.jpg';
     }
-  };
-  curtainImg.src = CFG.imageSrc;
-  if (curtainImg.complete && curtainImg.naturalWidth > 0) {
-    imgLoaded = true;
-  }
-
-  class Particle {
-    constructor(x, y, u, v, pinned = false, fixedY = false, row = 0, col = 0) {
-      this.x = x;
-      this.y = y;
-      this.ox = x;
-      this.oy = y;
-      this.restX = x;
-      this.restY = y;
-      this.u = u;
-      this.v = v;
-      this.pinned = pinned;
-      this.fixedY = fixedY;
-      this.row = row;
-      this.col = col;
-    }
-  }
-
-  class Constraint {
-    constructor(p1, p2, stiffness = 0.9) {
-      this.p1 = p1;
-      this.p2 = p2;
-      this.stiffness = stiffness;
-      this.restDistance = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+    if (window.location.protocol !== 'file:') {
+      curtainImage.crossOrigin = 'anonymous';
+    } else {
+      curtainImage.removeAttribute('crossorigin');
     }
 
-    resolve(anchor = null) {
-      const dx = this.p2.x - this.p1.x;
-      const dy = this.p2.y - this.p1.y;
-      const dist = Math.hypot(dx, dy);
-      if (dist === 0) return;
-      const diff = (dist - this.restDistance) / dist;
+    const wrap = document.getElementById('mobileCurtain') || document.getElementById('curtainPanelsMobile');
+    if (wrap) wrap.style.display = 'none';
+    canvas.style.display = 'block';
 
-      const p1CanMove = !this.p1.pinned && this.p1 !== anchor;
-      const p2CanMove = !this.p2.pinned && this.p2 !== anchor;
+    const CFG = {
+      cols: 8, rows: 6, panelWidthRatio: 0.56,
+      damping: 0.985, restoreStrength: 0.012, gravity: 0.06,
+      windSpeed: 0.55, windAmp: 10, constraintIterations: 4, stiffness: 0.5,
+      bendStiffness: 0.15,     // gentler skip-one constraint — smooths creases into curves
+      grabRadius: 130,         // px: how much fabric moves as a "handful" around the grab point
+      grabCatchup: 0.35,       // 0-1: how quickly the grabbed point eases toward the cursor
+      maxOpenRatio: 0.95,      // how far a panel can slide open, as a fraction of its own width
+      localGrabRange: 70,      // px: max local wrinkle offset, independent of the panel's slide
+      closeSpeed: 0.035,       // how fast an un-grabbed panel eases back toward closed
+      openTrackSpeed: 0.14,    // how fast the panel's actual position catches up to the raw drag target
+    };
 
-      if (!p1CanMove && !p2CanMove) return;
+    let dpr = Math.min(2, Math.max(1, window.devicePixelRatio || 1)); // capped
+    let stageW = 0, stageH = 0, time = 0, left, right;
+    let running = false;
+    let animId = null;
 
-      const weight1 = p1CanMove ? (p2CanMove ? 0.5 : 1.0) : 0;
-      const weight2 = p2CanMove ? (p1CanMove ? 0.5 : 1.0) : 0;
-
-      const factor = this.stiffness;
-      const offsetX = dx * diff * factor;
-      const offsetY = dy * diff * factor;
-
-      if (p1CanMove) {
-        this.p1.x += offsetX * weight1;
-        if (!this.p1.fixedY) this.p1.y += offsetY * weight1;
-      }
-      if (p2CanMove) {
-        this.p2.x -= offsetX * weight2;
-        if (!this.p2.fixedY) this.p2.y -= offsetY * weight2;
-      }
-    }
-  }
-
-  class CurtainPanel {
-    constructor(isLeft) {
-      this.isLeft = isLeft;
-      this.openDir = isLeft ? -1 : 1;
-      this.openAmount = 0;
-      this.openAmountSmoothed = 0;
-      this.panelWidth = 0;
-      this.maxOpen = 0;
-      this.dragStartPos = { x: 0, y: 0 };
-      this.initialOpen = 0;
-      this.particles = [];
-      this.constraints = [];
-      this.bendConstraints = [];
-    }
-
-    build(stageWidth, stageHeight) {
-      this.particles = [];
-      this.constraints = [];
-      this.bendConstraints = [];
-
-      const cols = CFG.cols;
-      const rows = CFG.rows;
-      const overlap = stageWidth * 0.05;
-      const startX = this.isLeft ? 0 : stageWidth * 0.5 - overlap;
-      const endX = this.isLeft ? stageWidth * 0.5 + overlap : stageWidth;
-      this.panelWidth = endX - startX;
-      this.maxOpen = this.panelWidth * 0.72;
-
-      for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
-          const x = startX + (c / (cols - 1)) * this.panelWidth;
-          const y = (r / (rows - 1)) * stageHeight;
-
-          const u = this.isLeft
-            ? (c / (cols - 1)) * 0.53
-            : 0.47 + (c / (cols - 1)) * 0.53;
-          const v = r / (rows - 1);
-
-          const isOuterTop = (r === 0) && (this.isLeft ? c === 0 : c === cols - 1);
-          const isTopRow = (r === 0);
-
-          this.particles.push(new Particle(x, y, u, v, isOuterTop, isTopRow, r, c));
+    function makeMesh(x0, y0, w, h, mirrored) {
+      const cols = CFG.cols, rows = CFG.rows;
+      const points = [], prev = [], rest = [], pinned = [], u = [], v = [];
+      for (let r = 0; r <= rows; r++) {
+        for (let c = 0; c <= cols; c++) {
+          const px = x0 + (c / cols) * w, py = y0 + (r / rows) * h;
+          points.push({ x: px, y: py });
+          prev.push({ x: px, y: py });
+          rest.push({ x: px, y: py });
+          pinned.push(r === 0);
+          u.push(mirrored ? 1 - c / cols : c / cols);
+          v.push(r / rows);
         }
       }
+      return {
+        cols, rows, points, prev, rest, pinned, u, v,
+        restDX: w / cols, restDY: h / rows,
+        openAmount: 0,                 // raw target, 0 = closed, up to maxOpen = fully slid away
+        openAmountSmoothed: 0,         // what actually drives every row's position — eases toward openAmount
+        openDir: mirrored ? 1 : -1,    // which way this panel travels as it opens
+        maxOpen: w * CFG.maxOpenRatio,
+      };
+    }
 
-      // Structural & Shear Constraints
-      for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
-          const idx = r * cols + c;
+    function idx(mesh, r, c) { return r * (mesh.cols + 1) + c; }
 
-          if (c < cols - 1) {
-            this.constraints.push(new Constraint(this.particles[idx], this.particles[idx + 1], CFG.stiffness));
-          }
-          if (r < rows - 1) {
-            this.constraints.push(new Constraint(this.particles[idx], this.particles[idx + cols], CFG.stiffness));
-          }
-          if (c < cols - 1 && r < rows - 1) {
-            this.constraints.push(new Constraint(this.particles[idx], this.particles[idx + cols + 1], CFG.shearStiffness));
-            this.constraints.push(new Constraint(this.particles[idx + 1], this.particles[idx + cols], CFG.shearStiffness));
-          }
+    function buildStage() {
+      const rect = stage.getBoundingClientRect();
+      stageW = rect.width; stageH = rect.height;
+      if (stageW === 0 || stageH === 0) return;
+      dpr = Math.min(2, Math.max(1, window.devicePixelRatio || 1));
+      canvas.width = Math.round(stageW * dpr);
+      canvas.height = Math.round(stageH * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      const topOffset = 0;
+      const panelH = stageH - topOffset;
+      const panelW = stageW * CFG.panelWidthRatio;
+      left = makeMesh(0, topOffset, panelW, panelH, false);
+      right = makeMesh(stageW - panelW, topOffset, panelW, panelH, true);
+    }
+
+    let grab = null, pointerActive = false;
+
+    function nearestPoint(x, y) {
+      let best = null, bestDist = Infinity;
+      [left, right].forEach((mesh) => {
+        if (!mesh) return;
+        for (let i = 0; i < mesh.points.length; i++) {
+          if (mesh.pinned[i]) continue;
+          const p = mesh.points[i];
+          const d = (p.x - x) ** 2 + (p.y - y) ** 2;
+          if (d < bestDist) { bestDist = d; best = { mesh, index: i }; }
+        }
+      });
+      return best;
+    }
+
+    function stagePos(clientX, clientY) {
+      const rect = stage.getBoundingClientRect();
+      return { x: clientX - rect.left, y: clientY - rect.top };
+    }
+
+    // Points near the grabbed one move with it too, weighted by distance —
+    // this is what makes it feel like gripping a handful of fabric instead
+    // of pinching a single thread.
+    function computeInfluence(mesh, centerIndex) {
+      const center = mesh.points[centerIndex];
+      const influence = [];
+      for (let i = 0; i < mesh.points.length; i++) {
+        if (i === centerIndex || mesh.pinned[i]) continue;
+        const p = mesh.points[i];
+        const dist = Math.hypot(p.x - center.x, p.y - center.y);
+        if (dist >= CFG.grabRadius) continue;
+        let w = 1 - dist / CFG.grabRadius;
+        w = w * w * (3 - 2 * w); // smoothstep falloff
+        influence.push({ index: i, weight: w });
+      }
+      return influence;
+    }
+
+    function clampLen(dx, dy, maxLen) {
+      const len = Math.hypot(dx, dy);
+      if (len <= maxLen || len === 0) return { dx, dy };
+      const s = maxLen / len;
+      return { dx: dx * s, dy: dy * s };
+    }
+    function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+    const onPointerDown = (e) => {
+      pointerActive = true;
+      const p = stagePos(e.clientX, e.clientY);
+      grab = nearestPoint(p.x, p.y);
+      if (grab) {
+        grab.x = grab.mesh.points[grab.index].x;
+        grab.y = grab.mesh.points[grab.index].y;
+        grab.influence = computeInfluence(grab.mesh, grab.index);
+        grab.initialCursorX = p.x;
+        grab.initialOpen = grab.mesh.openAmount;
+      }
+      canvas.classList.add('grabbing');
+      ensureRunning();
+    };
+
+    const onPointerMove = (e) => {
+      if (!pointerActive || !grab) return;
+      const p = stagePos(e.clientX, e.clientY);
+      grab.x = p.x; grab.y = p.y;
+
+      // Net horizontal drag from where the grab started decides how far the
+      // WHOLE panel has slid open — bounded, so it can only travel as far as
+      // its own width allows, never an unbounded rubber-band stretch.
+      const deltaX = p.x - grab.initialCursorX;
+      const openDelta = (grab.mesh === left) ? -deltaX : deltaX;
+      grab.mesh.openAmount = clamp(grab.initialOpen + openDelta, 0, grab.mesh.maxOpen);
+    };
+
+    function releasePointer() {
+      pointerActive = false; grab = null;
+      canvas.classList.remove('grabbing');
+    }
+
+    const onKeyDown = (e) => {
+      if (e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        if (left && right) {
+          left.openAmount = clamp(left.openAmount + left.maxOpen * 0.45, 0, left.maxOpen);
+          right.openAmount = clamp(right.openAmount + right.maxOpen * 0.45, 0, right.maxOpen);
+          ensureRunning();
         }
       }
+    };
 
-      // Bending Constraints (Pass 2: skip-one in horizontal & vertical directions)
-      for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
-          const idx = r * cols + c;
+    canvas.addEventListener('pointerdown', onPointerDown);
+    window.addEventListener('pointermove', onPointerMove);
+    window.addEventListener('pointerup', releasePointer);
+    window.addEventListener('pointercancel', releasePointer);
+    stage.addEventListener('keydown', onKeyDown);
 
-          if (c < cols - 2) {
-            this.bendConstraints.push(new Constraint(this.particles[idx], this.particles[idx + 2], CFG.bendStiffness));
-          }
-          if (r < rows - 2) {
-            this.bendConstraints.push(new Constraint(this.particles[idx], this.particles[idx + 2 * cols], CFG.bendStiffness));
+    function stepMesh(mesh, isGrabbedMesh) {
+      if (!mesh) return;
+      const rows = mesh.rows, cols = mesh.cols;
+      let grabDeltaX = 0, grabDeltaY = 0;
+
+      // If this panel isn't the one currently being dragged, let it ease
+      // back toward fully closed — this is what makes release feel like a
+      // real curtain settling shut instead of staying wherever it was left.
+      if (!isGrabbedMesh) {
+        mesh.openAmount += (0 - mesh.openAmount) * CFG.closeSpeed;
+      }
+      mesh.openAmountSmoothed += (mesh.openAmount - mesh.openAmountSmoothed) * CFG.openTrackSpeed;
+      const shiftX = mesh.openDir * mesh.openAmountSmoothed;
+
+      for (let i = 0; i < mesh.points.length; i++) {
+        if (mesh.pinned[i]) {
+          const tx = mesh.rest[i].x + shiftX;
+          mesh.points[i].x = tx; mesh.points[i].y = mesh.rest[i].y;
+          mesh.prev[i].x = tx;   mesh.prev[i].y = mesh.rest[i].y;
+          continue;
+        }
+
+        const targetX = mesh.rest[i].x + shiftX;
+
+        if (isGrabbedMesh && grab && grab.index === i) {
+          const p = mesh.points[i];
+          const oldX = p.x, oldY = p.y;
+          const clamped = clampLen(grab.x - targetX, grab.y - mesh.rest[i].y, CFG.localGrabRange);
+          const desiredX = targetX + clamped.dx;
+          const desiredY = mesh.rest[i].y + clamped.dy;
+          const newX = oldX + (desiredX - oldX) * CFG.grabCatchup;
+          const newY = oldY + (desiredY - oldY) * CFG.grabCatchup;
+          mesh.prev[i].x = oldX; mesh.prev[i].y = oldY;
+          p.x = newX; p.y = newY;
+          grabDeltaX = newX - oldX;
+          grabDeltaY = newY - oldY;
+          continue;
+        }
+
+        const p = mesh.points[i], pp = mesh.prev[i], rest = mesh.rest[i];
+        const vx = (p.x - pp.x) * CFG.damping, vy = (p.y - pp.y) * CFG.damping;
+        const row = Math.floor(i / (cols + 1)), col = i % (cols + 1);
+        const depth = row / rows;
+        const windPhase = time * CFG.windSpeed + col * 0.6 + row * 0.2;
+        const windX = Math.sin(windPhase) * CFG.windAmp * depth * 0.05;
+        const windY = Math.sin(windPhase * 0.6 + 1.3) * CFG.windAmp * depth * 0.02;
+        const nx = p.x + vx + windX + (targetX - p.x) * CFG.restoreStrength;
+        const ny = p.y + vy + windY + (rest.y - p.y) * CFG.restoreStrength + CFG.gravity * depth * 0.4;
+        mesh.prev[i].x = p.x; mesh.prev[i].y = p.y;
+        mesh.points[i].x = nx; mesh.points[i].y = ny;
+      }
+
+      if (isGrabbedMesh && grab && grab.influence && (grabDeltaX || grabDeltaY)) {
+        for (const { index, weight } of grab.influence) {
+          if (mesh.pinned[index]) continue;
+          const p = mesh.points[index], pv = mesh.prev[index];
+          p.x += grabDeltaX * weight;  p.y += grabDeltaY * weight;
+          pv.x += grabDeltaX * weight; pv.y += grabDeltaY * weight;
+        }
+      }
+    }
+
+    function constrainPair(mesh, i1, i2, restDist, stiffnessOverride) {
+      const p1 = mesh.points[i1], p2 = mesh.points[i2];
+      const dx = p2.x - p1.x, dy = p2.y - p1.y;
+      const dist = Math.sqrt(dx * dx + dy * dy) || 0.0001;
+      const stiff = stiffnessOverride !== undefined ? stiffnessOverride : CFG.stiffness;
+      const diff = ((dist - restDist) / dist) * stiff * 0.5;
+      const offX = dx * diff, offY = dy * diff;
+      const g1 = grab && grab.mesh === mesh && grab.index === i1;
+      const g2 = grab && grab.mesh === mesh && grab.index === i2;
+      if (!mesh.pinned[i1] && !g1) { p1.x += offX; p1.y += offY; }
+      if (!mesh.pinned[i2] && !g2) { p2.x -= offX; p2.y -= offY; }
+    }
+
+    function satisfyConstraints(mesh) {
+      if (!mesh) return;
+      const diag = Math.sqrt(mesh.restDX ** 2 + mesh.restDY ** 2);
+      for (let it = 0; it < CFG.constraintIterations; it++) {
+        for (let r = 0; r <= mesh.rows; r++) {
+          for (let c = 0; c <= mesh.cols; c++) {
+            const i = idx(mesh, r, c);
+            if (c < mesh.cols) constrainPair(mesh, i, idx(mesh, r, c + 1), mesh.restDX);
+            if (r < mesh.rows) constrainPair(mesh, i, idx(mesh, r + 1, c), mesh.restDY);
+            if (r < mesh.rows && c < mesh.cols) {
+              constrainPair(mesh, idx(mesh, r, c), idx(mesh, r + 1, c + 1), diag);
+              constrainPair(mesh, idx(mesh, r, c + 1), idx(mesh, r + 1, c), diag);
+            }
+            if (c < mesh.cols - 1) constrainPair(mesh, i, idx(mesh, r, c + 2), mesh.restDX * 2, CFG.bendStiffness);
+            if (r < mesh.rows - 1) constrainPair(mesh, i, idx(mesh, r + 2, c), mesh.restDY * 2, CFG.bendStiffness);
           }
         }
       }
     }
 
-    stepMesh(time, cursor, isDragging, activeGrabbedPoint) {
-      this.openAmountSmoothed += (this.openAmount - this.openAmountSmoothed) * CFG.openTrackSpeed;
-      const shiftX = this.openDir * this.openAmountSmoothed;
+    function drawTriangle(srcPts, dstPts) {
+      const [s0, s1, s2] = srcPts, [d0, d1, d2] = dstPts;
+      const denom = s0.x * (s1.y - s2.y) + s1.x * (s2.y - s0.y) + s2.x * (s0.y - s1.y);
+      if (Math.abs(denom) < 1e-6) return;
+      const a = (d0.x * (s1.y - s2.y) + d1.x * (s2.y - s0.y) + d2.x * (s0.y - s1.y)) / denom;
+      const b = (d0.y * (s1.y - s2.y) + d1.y * (s2.y - s0.y) + d2.y * (s0.y - s1.y)) / denom;
+      const c = (d0.x * (s2.x - s1.x) + d1.x * (s0.x - s2.x) + d2.x * (s1.x - s0.x)) / denom;
+      const d = (d0.y * (s2.x - s1.x) + d1.y * (s0.x - s2.x) + d2.y * (s1.x - s0.x)) / denom;
+      const e = (d0.x * (s1.x * s2.y - s2.x * s1.y) + d1.x * (s2.x * s0.y - s0.x * s2.y) + d2.x * (s0.x * s1.y - s1.x * s0.y)) / denom;
+      const f = (d0.y * (s1.x * s2.y - s2.x * s1.y) + d1.y * (s2.x * s0.y - s0.x * s2.y) + d2.y * (s0.x * s1.y - s1.x * s0.y)) / denom;
+      ctx.save();
+      ctx.beginPath(); ctx.moveTo(d0.x, d0.y); ctx.lineTo(d1.x, d1.y); ctx.lineTo(d2.x, d2.y); ctx.closePath(); ctx.clip();
+      ctx.setTransform(dpr * a, dpr * b, dpr * c, dpr * d, dpr * e, dpr * f);
+      ctx.drawImage(curtainImage, 0, 0);
+      ctx.restore();
+    }
 
-      const damping = CFG.damping;
-      const gravity = CFG.gravity;
-      const windAmp = CFG.ambientWind;
-      const restoreStr = CFG.restoreStrength;
-      const cols = CFG.cols;
+    function renderMesh(mesh) {
+      if (!mesh || !curtainImage.naturalWidth) return;
+      const iw = curtainImage.naturalWidth, ih = curtainImage.naturalHeight;
+      for (let r = 0; r < mesh.rows; r++) {
+        for (let c = 0; c < mesh.cols; c++) {
+          const i00 = idx(mesh, r, c), i10 = idx(mesh, r, c + 1), i01 = idx(mesh, r + 1, c), i11 = idx(mesh, r + 1, c + 1);
+          const src = (i) => ({ x: mesh.u[i] * iw, y: mesh.v[i] * ih });
+          const dst = (i) => mesh.points[i];
+          drawTriangle([src(i00), src(i10), src(i01)], [dst(i00), dst(i10), dst(i01)]);
+          drawTriangle([src(i10), src(i11), src(i01)], [dst(i10), dst(i11), dst(i01)]);
+        }
+      }
+    }
 
-      for (const p of this.particles) {
-        if (p.pinned) continue;
-        if (isDragging && p === activeGrabbedPoint) continue;
+    function frame() {
+      if (!running) return;
+      time += 0.016;
+      stepMesh(left, grab && grab.mesh === left);
+      stepMesh(right, grab && grab.mesh === right);
+      satisfyConstraints(left);
+      satisfyConstraints(right);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, stageW, stageH);
+      renderMesh(left);
+      renderMesh(right);
+      if (hint) hint.style.opacity = pointerActive ? '0' : '1';
+      animId = requestAnimationFrame(frame);
+    }
 
-        const colFactor = this.isLeft
-          ? (p.col / (cols - 1))
-          : ((cols - 1 - p.col) / (cols - 1));
-        const targetBaseX = p.restX + colFactor * shiftX;
+    function ensureRunning() {
+      if (!running) { running = true; animId = requestAnimationFrame(frame); }
+    }
 
-        const vx = (p.x - p.ox) * damping;
-        const vy = (p.y - p.oy) * damping;
-        p.ox = p.x;
-        p.oy = p.y;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) ensureRunning();
+        else {
+          running = false;
+          if (animId) cancelAnimationFrame(animId);
+          animId = null;
+        }
+      });
+    }, { threshold: 0.05 });
 
-        const breeze = Math.sin(time * 0.0018 + p.y * 0.008 + (this.isLeft ? 0 : 2.5)) * windAmp;
-        const breezeY = Math.cos(time * 0.0014 + p.x * 0.006) * (windAmp * 0.15);
+    function start() {
+      buildStage();
+      if (prefersReduced) {
+        if (left) left.points.forEach((p) => { p.x -= 40; });
+        if (right) right.points.forEach((p) => { p.x += 40; });
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, stageW, stageH);
+        renderMesh(left); renderMesh(right);
+        if (hint) hint.style.display = 'none';
+        canvas.style.cursor = 'default';
+        return;
+      }
+      observer.observe(stage);
+      ensureRunning();
+    }
 
-        if (p.fixedY) {
-          p.y = 0;
-          p.x = targetBaseX;
+    let resizeTimer;
+    const onResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        const nowLightweight = window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 900;
+        if (nowLightweight) {
+          initClothCurtainSimulation();
         } else {
-          p.x += vx + breeze + (targetBaseX - p.x) * restoreStr;
-          p.y += vy + gravity + breezeY + (p.restY - p.y) * restoreStr;
+          buildStage();
         }
+      }, 150);
+    };
+    window.addEventListener('resize', onResize);
 
-        if (cursor.active && !isDragging) {
-          const dx = p.x - cursor.x;
-          const dy = p.y - cursor.y;
-          const dist = Math.hypot(dx, dy);
-          const influenceRadius = width * 0.20;
-          if (dist < influenceRadius) {
-            const pushStrength = (1 - dist / influenceRadius) * 2.0;
-            const dir = this.isLeft ? -1 : 1;
-            p.x += dir * pushStrength;
-          }
-        }
-      }
+    if (curtainImage.complete && curtainImage.naturalWidth > 0) start(); else curtainImage.addEventListener('load', start);
 
-      const iters = CFG.constraintIterations || CFG.iterations || 4;
-      for (let iter = 0; iter < iters; iter++) {
-        for (const c of this.constraints) {
-          c.resolve(activeGrabbedPoint);
-        }
-        for (const bc of this.bendConstraints) {
-          bc.resolve(activeGrabbedPoint);
-        }
-      }
-    }
-
-    update(time, cursor, isDragging, activeGrabbedPoint) {
-      this.stepMesh(time, cursor, isDragging, activeGrabbedPoint);
-    }
-
-    render(ctx, img) {
-      const cols = CFG.cols;
-      const rows = CFG.rows;
-      const imgW = img.width;
-      const imgH = img.height;
-
-      for (let r = 0; r < rows - 1; r++) {
-        for (let c = 0; c < cols - 1; c++) {
-          const p00 = this.particles[r * cols + c];
-          const p10 = this.particles[r * cols + c + 1];
-          const p01 = this.particles[(r + 1) * cols + c];
-          const p11 = this.particles[(r + 1) * cols + c + 1];
-
-          drawAffineTriangle(
-            ctx, img,
-            p00.x, p00.y, p10.x, p10.y, p01.x, p01.y,
-            p00.u * imgW, p00.v * imgH,
-            p10.u * imgW, p10.v * imgH,
-            p01.u * imgW, p01.v * imgH
-          );
-
-          drawAffineTriangle(
-            ctx, img,
-            p10.x, p10.y, p11.x, p11.y, p01.x, p01.y,
-            p10.u * imgW, p10.v * imgH,
-            p11.u * imgW, p11.v * imgH,
-            p01.u * imgW, p01.v * imgH
-          );
-        }
-      }
-    }
-  }
-
-  function drawAffineTriangle(ctx, img, x0, y0, x1, y1, x2, y2, u0, v0, u1, v1, u2, v2) {
-    const delta = u0 * (v1 - v2) + u1 * (v2 - v0) + u2 * (v0 - v1);
-    if (Math.abs(delta) < 0.001) return;
-
-    const a = (x0 * (v1 - v2) + x1 * (v2 - v0) + x2 * (v0 - v1)) / delta;
-    const c = (x0 * (u2 - u1) + x1 * (u0 - u2) + x2 * (u1 - u0)) / delta;
-    const e = (x0 * (u1 * v2 - u2 * v1) + x1 * (u2 * v0 - u0 * v2) + x2 * (u0 * v1 - u1 * v0)) / delta;
-
-    const b = (y0 * (v1 - v2) + y1 * (v2 - v0) + y2 * (v0 - v1)) / delta;
-    const d = (y0 * (u2 - u1) + y1 * (u0 - u2) + y2 * (u1 - u0)) / delta;
-    const f = (y0 * (u1 * v2 - u2 * v1) + y1 * (u2 * v0 - u0 * v2) + y2 * (u0 * v1 - u1 * v0)) / delta;
-
-    const cx = (x0 + x1 + x2) / 3;
-    const cy = (y0 + y1 + y2) / 3;
-    const expand = 1.4;
-
-    const d0 = Math.hypot(x0 - cx, y0 - cy) || 1;
-    const ex0 = x0 + ((x0 - cx) / d0) * expand;
-    const ey0 = y0 + ((y0 - cy) / d0) * expand;
-
-    const d1 = Math.hypot(x1 - cx, y1 - cy) || 1;
-    const ex1 = x1 + ((x1 - cx) / d1) * expand;
-    const ey1 = y1 + ((y1 - cy) / d1) * expand;
-
-    const d2 = Math.hypot(x2 - cx, y2 - cy) || 1;
-    const ex2 = x2 + ((x2 - cx) / d2) * expand;
-    const ey2 = y2 + ((y2 - cy) / d2) * expand;
-
-    ctx.save();
-    ctx.beginPath();
-    ctx.moveTo(ex0, ey0);
-    ctx.lineTo(ex1, ey1);
-    ctx.lineTo(ex2, ey2);
-    ctx.closePath();
-    ctx.clip();
-
-    ctx.transform(a, b, c, d, e, f);
-    ctx.drawImage(img, 0, 0);
-    ctx.restore();
-  }
-
-  const leftClothPanel = new CurtainPanel(true);
-  const rightClothPanel = new CurtainPanel(false);
-
-  const cursor = { x: 0, y: 0, active: false };
-  let isDragging = false;
-  let grabbedPoint = null;
-  let activePanel = null;
-  let influenceList = [];
-
-  function computeInfluence(centerPoint, particles = null) {
-    const pool = particles || (leftClothPanel.particles.includes(centerPoint) ? leftClothPanel.particles : rightClothPanel.particles);
-    const radius = CFG.grabRadius;
-    const list = [];
-    for (const p of pool) {
-      if (p === centerPoint || p.pinned) continue;
-      const d = Math.hypot(p.x - centerPoint.x, p.y - centerPoint.y);
-      if (d < radius) {
-        // Distance-weighted falloff for fistful of fabric
-        const weight = Math.pow(1 - d / radius, 1.4);
-        list.push({ particle: p, weight });
-      }
-    }
-    return list;
-  }
-
-  function resize() {
-    const rect = stage.getBoundingClientRect();
-    if (rect.width === 0 || rect.height === 0) return;
-    width = rect.width;
-    height = rect.height;
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
-
-    canvas.width = width * dpr;
-    canvas.height = height * dpr;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-    leftClothPanel.build(width, height);
-    rightClothPanel.build(width, height);
-
-    const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReduced) {
-      for (const p of leftClothPanel.particles) {
-        p.x = (p.x / (width * 0.55)) * (width * 0.18);
-      }
-      for (const p of rightClothPanel.particles) {
-        p.x = width - ((width - p.x) / (width * 0.55)) * (width * 0.18);
-      }
-      if (imgLoaded) {
-        ctx.clearRect(0, 0, width, height);
-        ctx.filter = 'saturate(80%)';
-        leftClothPanel.render(ctx, curtainImg);
-        rightClothPanel.render(ctx, curtainImg);
-        ctx.filter = 'none';
-      }
-    }
-  }
-
-  function getPointerPos(e) {
-    const rect = canvas.getBoundingClientRect();
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    return {
-      x: clientX - rect.left,
-      y: clientY - rect.top
+    window.cleanupCurtainSimulation = () => {
+      running = false;
+      if (animId) cancelAnimationFrame(animId);
+      animId = null;
+      observer.disconnect();
+      canvas.removeEventListener('pointerdown', onPointerDown);
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', releasePointer);
+      window.removeEventListener('pointercancel', releasePointer);
+      stage.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener('resize', onResize);
     };
   }
-
-  function startDrag(e) {
-    const pos = getPointerPos(e);
-    cursor.x = pos.x;
-    cursor.y = pos.y;
-    cursor.active = true;
-    isDragging = true;
-    stage.classList.add('is-grabbing');
-
-    const allParticles = [...leftClothPanel.particles, ...rightClothPanel.particles];
-    let closest = null;
-    let closestDist = Infinity;
-
-    for (const p of allParticles) {
-      if (p.pinned) continue;
-      const d = Math.hypot(p.x - pos.x, p.y - pos.y);
-      if (d < closestDist) {
-        closestDist = d;
-        closest = p;
-      }
-    }
-
-    if (closest) {
-      grabbedPoint = closest;
-      activePanel = leftClothPanel.particles.includes(closest)
-        ? leftClothPanel
-        : rightClothPanel;
-
-      activePanel.dragStartPos = { x: pos.x, y: pos.y };
-      activePanel.initialOpen = activePanel.openAmount;
-
-      const panelParticles = activePanel.particles;
-      influenceList = computeInfluence(closest, panelParticles);
-    }
-  }
-
-  function moveDrag(e) {
-    const pos = getPointerPos(e);
-    cursor.x = pos.x;
-    cursor.y = pos.y;
-    cursor.active = true;
-
-    if (isDragging && activePanel) {
-      const deltaX = pos.x - activePanel.dragStartPos.x;
-      const pullDist = activePanel.isLeft ? -deltaX : deltaX;
-      activePanel.openAmount = Math.max(0, Math.min(activePanel.maxOpen, activePanel.initialOpen + pullDist));
-    }
-  }
-
-  function endDrag() {
-    isDragging = false;
-    grabbedPoint = null;
-    activePanel = null;
-    influenceList = [];
-    stage.classList.remove('is-grabbing');
-  }
-
-  const onMouseLeave = () => {
-    if (!isDragging) cursor.active = false;
-  };
-
-  const onKeyDown = (e) => {
-    if (e.key === ' ' || e.key === 'Enter') {
-      e.preventDefault();
-      leftClothPanel.openAmount = Math.min(leftClothPanel.maxOpen, leftClothPanel.openAmount + 60);
-      rightClothPanel.openAmount = Math.min(rightClothPanel.maxOpen, rightClothPanel.openAmount + 60);
-    }
-  };
-
-  canvas.addEventListener('mousedown', startDrag);
-  window.addEventListener('mousemove', moveDrag);
-  window.addEventListener('mouseup', endDrag);
-  canvas.addEventListener('mouseleave', onMouseLeave);
-  stage.addEventListener('keydown', onKeyDown);
-
-  // 3. Keep the IntersectionObserver pause logic on the desktop path:
-  intersectionObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        isVisible = true;
-        if (!animationFrameId && imgLoaded) {
-          animationFrameId = requestAnimationFrame(loop);
-        }
-      } else {
-        isVisible = false;
-        if (animationFrameId) {
-          cancelAnimationFrame(animationFrameId);
-          animationFrameId = null;
-        }
-      }
-    });
-  }, { threshold: 0.05 });
-
-  intersectionObserver.observe(stage);
-
-  // Animation Loop
-  function loop(time) {
-    if (!isVisible) {
-      animationFrameId = null;
-      return;
-    }
-
-    const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReduced) return;
-
-    animationFrameId = requestAnimationFrame(loop);
-
-    // Soft handful grab & catch-up lag update
-    if (isDragging && grabbedPoint && activePanel) {
-      const prevX = grabbedPoint.x;
-      const prevY = grabbedPoint.y;
-
-      let targetX = cursor.x;
-      let targetY = cursor.y;
-
-      // Clamped local wrinkle (localGrabRange: 80)
-      const colFactor = activePanel.isLeft
-        ? (grabbedPoint.col / (CFG.cols - 1))
-        : ((CFG.cols - 1 - grabbedPoint.col) / (CFG.cols - 1));
-      const anchorX = grabbedPoint.restX + colFactor * (activePanel.openDir * activePanel.openAmountSmoothed);
-      const anchorY = grabbedPoint.restY;
-
-      const offX = targetX - anchorX;
-      const offY = targetY - anchorY;
-      const offDist = Math.hypot(offX, offY);
-      if (offDist > CFG.localGrabRange) {
-        targetX = anchorX + (offX / offDist) * CFG.localGrabRange;
-        targetY = anchorY + (offY / offDist) * CFG.localGrabRange;
-      }
-
-      // 2. Catch-up lag instead of instant cursor-snap (grabCatchup: 0.35)
-      grabbedPoint.x += (targetX - grabbedPoint.x) * CFG.grabCatchup;
-      if (!grabbedPoint.fixedY) {
-        grabbedPoint.y += (targetY - grabbedPoint.y) * CFG.grabCatchup;
-      }
-
-      grabbedPoint.ox = prevX;
-      grabbedPoint.oy = prevY;
-
-      const moveX = grabbedPoint.x - prevX;
-      const moveY = grabbedPoint.y - prevY;
-
-      // 1. Propagate movement share to handful influence list
-      for (const item of influenceList) {
-        item.particle.x += moveX * item.weight;
-        if (!item.particle.fixedY) {
-          item.particle.y += moveY * item.weight;
-        }
-      }
-    }
-
-    ctx.clearRect(0, 0, width, height);
-
-    leftClothPanel.update(time, cursor, isDragging, grabbedPoint);
-    rightClothPanel.update(time, cursor, isDragging, grabbedPoint);
-
-    if (imgLoaded) {
-      ctx.filter = 'saturate(80%)';
-      leftClothPanel.render(ctx, curtainImg);
-      rightClothPanel.render(ctx, curtainImg);
-      ctx.filter = 'none';
-    }
-  }
-
-  resize();
-
-  let resizeTimer = null;
-  const onWindowResize = () => {
-    resize();
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => {
-      const nowLightweight = window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 900;
-      if (nowLightweight) {
-        initClothCurtainSimulation();
-      }
-    }, 150);
-  };
-  window.addEventListener('resize', onWindowResize);
-
-  window.cleanupCurtainSimulation = () => {
-    if (intersectionObserver) {
-      intersectionObserver.disconnect();
-      intersectionObserver = null;
-    }
-    if (animationFrameId) {
-      cancelAnimationFrame(animationFrameId);
-      animationFrameId = null;
-    }
-    window.removeEventListener('resize', onWindowResize);
-    window.removeEventListener('mousemove', moveDrag);
-    window.removeEventListener('mouseup', endDrag);
-    if (canvas) {
-      canvas.removeEventListener('mousedown', startDrag);
-      canvas.removeEventListener('mouseleave', onMouseLeave);
-    }
-    if (stage) {
-      stage.removeEventListener('keydown', onKeyDown);
-    }
-  };
 }
 
 
