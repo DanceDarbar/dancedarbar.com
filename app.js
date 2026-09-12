@@ -1728,6 +1728,8 @@ function initClothCurtainSimulation() {
     ambientWind: 0.45,
     grabRadius: 130,
     grabCatchup: 0.35,
+    localGrabRange: 80,
+    openTrackSpeed: 0.14,
     imageSrc: 'assets/curtain-texture.jpg'
   };
 
@@ -1738,19 +1740,24 @@ function initClothCurtainSimulation() {
   let isVisible = false;
   let intersectionObserver = null;
 
-  const curtainImg = new Image();
-  curtainImg.crossOrigin = 'anonymous';
-  curtainImg.src = CFG.imageSrc;
   let imgLoaded = false;
+  const curtainImg = new Image();
+  if (window.location.protocol !== 'file:') {
+    curtainImg.crossOrigin = 'anonymous';
+  }
   curtainImg.onload = () => {
     imgLoaded = true;
     if (isVisible && !animationFrameId) {
       animationFrameId = requestAnimationFrame(loop);
     }
   };
+  curtainImg.src = CFG.imageSrc;
+  if (curtainImg.complete && curtainImg.naturalWidth > 0) {
+    imgLoaded = true;
+  }
 
   class Particle {
-    constructor(x, y, u, v, pinned = false, fixedY = false) {
+    constructor(x, y, u, v, pinned = false, fixedY = false, row = 0, col = 0) {
       this.x = x;
       this.y = y;
       this.ox = x;
@@ -1761,6 +1768,8 @@ function initClothCurtainSimulation() {
       this.v = v;
       this.pinned = pinned;
       this.fixedY = fixedY;
+      this.row = row;
+      this.col = col;
     }
   }
 
@@ -1805,6 +1814,13 @@ function initClothCurtainSimulation() {
   class CurtainPanel {
     constructor(isLeft) {
       this.isLeft = isLeft;
+      this.openDir = isLeft ? -1 : 1;
+      this.openAmount = 0;
+      this.openAmountSmoothed = 0;
+      this.panelWidth = 0;
+      this.maxOpen = 0;
+      this.dragStartPos = { x: 0, y: 0 };
+      this.initialOpen = 0;
       this.particles = [];
       this.constraints = [];
       this.bendConstraints = [];
@@ -1820,11 +1836,12 @@ function initClothCurtainSimulation() {
       const overlap = stageWidth * 0.05;
       const startX = this.isLeft ? 0 : stageWidth * 0.5 - overlap;
       const endX = this.isLeft ? stageWidth * 0.5 + overlap : stageWidth;
-      const panelWidth = endX - startX;
+      this.panelWidth = endX - startX;
+      this.maxOpen = this.panelWidth * 0.72;
 
       for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
-          const x = startX + (c / (cols - 1)) * panelWidth;
+          const x = startX + (c / (cols - 1)) * this.panelWidth;
           const y = (r / (rows - 1)) * stageHeight;
 
           const u = this.isLeft
@@ -1835,7 +1852,7 @@ function initClothCurtainSimulation() {
           const isOuterTop = (r === 0) && (this.isLeft ? c === 0 : c === cols - 1);
           const isTopRow = (r === 0);
 
-          this.particles.push(new Particle(x, y, u, v, isOuterTop, isTopRow));
+          this.particles.push(new Particle(x, y, u, v, isOuterTop, isTopRow, r, c));
         }
       }
 
@@ -1872,15 +1889,24 @@ function initClothCurtainSimulation() {
       }
     }
 
-    update(time, cursor, isDragging, activeGrabbedPoint) {
+    stepMesh(time, cursor, isDragging, activeGrabbedPoint) {
+      this.openAmountSmoothed += (this.openAmount - this.openAmountSmoothed) * CFG.openTrackSpeed;
+      const shiftX = this.openDir * this.openAmountSmoothed;
+
       const damping = CFG.damping;
       const gravity = CFG.gravity;
       const windAmp = CFG.ambientWind;
       const restoreStr = CFG.restoreStrength;
+      const cols = CFG.cols;
 
       for (const p of this.particles) {
         if (p.pinned) continue;
         if (isDragging && p === activeGrabbedPoint) continue;
+
+        const colFactor = this.isLeft
+          ? (p.col / (cols - 1))
+          : ((cols - 1 - p.col) / (cols - 1));
+        const targetBaseX = p.restX + colFactor * shiftX;
 
         const vx = (p.x - p.ox) * damping;
         const vy = (p.y - p.oy) * damping;
@@ -1890,12 +1916,12 @@ function initClothCurtainSimulation() {
         const breeze = Math.sin(time * 0.0018 + p.y * 0.008 + (this.isLeft ? 0 : 2.5)) * windAmp;
         const breezeY = Math.cos(time * 0.0014 + p.x * 0.006) * (windAmp * 0.15);
 
-        p.x += vx + breeze + (p.restX - p.x) * restoreStr;
-        if (!p.fixedY) {
-          p.y += vy + gravity + breezeY + (p.restY - p.y) * restoreStr;
-        } else {
+        if (p.fixedY) {
           p.y = 0;
-          p.x += (p.restX - p.x) * 0.06;
+          p.x = targetBaseX;
+        } else {
+          p.x += vx + breeze + (targetBaseX - p.x) * restoreStr;
+          p.y += vy + gravity + breezeY + (p.restY - p.y) * restoreStr;
         }
 
         if (cursor.active && !isDragging) {
@@ -1920,6 +1946,10 @@ function initClothCurtainSimulation() {
           bc.resolve(activeGrabbedPoint);
         }
       }
+    }
+
+    update(time, cursor, isDragging, activeGrabbedPoint) {
+      this.stepMesh(time, cursor, isDragging, activeGrabbedPoint);
     }
 
     render(ctx, img) {
@@ -2002,6 +2032,7 @@ function initClothCurtainSimulation() {
   const cursor = { x: 0, y: 0, active: false };
   let isDragging = false;
   let grabbedPoint = null;
+  let activePanel = null;
   let influenceList = [];
 
   function computeInfluence(centerPoint, particles = null) {
@@ -2085,9 +2116,14 @@ function initClothCurtainSimulation() {
 
     if (closest) {
       grabbedPoint = closest;
-      const panelParticles = leftClothPanel.particles.includes(closest)
-        ? leftClothPanel.particles
-        : rightClothPanel.particles;
+      activePanel = leftClothPanel.particles.includes(closest)
+        ? leftClothPanel
+        : rightClothPanel;
+
+      activePanel.dragStartPos = { x: pos.x, y: pos.y };
+      activePanel.initialOpen = activePanel.openAmount;
+
+      const panelParticles = activePanel.particles;
       influenceList = computeInfluence(closest, panelParticles);
     }
   }
@@ -2097,11 +2133,18 @@ function initClothCurtainSimulation() {
     cursor.x = pos.x;
     cursor.y = pos.y;
     cursor.active = true;
+
+    if (isDragging && activePanel) {
+      const deltaX = pos.x - activePanel.dragStartPos.x;
+      const pullDist = activePanel.isLeft ? -deltaX : deltaX;
+      activePanel.openAmount = Math.max(0, Math.min(activePanel.maxOpen, activePanel.initialOpen + pullDist));
+    }
   }
 
   function endDrag() {
     isDragging = false;
     grabbedPoint = null;
+    activePanel = null;
     influenceList = [];
     stage.classList.remove('is-grabbing');
   }
@@ -2113,12 +2156,8 @@ function initClothCurtainSimulation() {
   const onKeyDown = (e) => {
     if (e.key === ' ' || e.key === 'Enter') {
       e.preventDefault();
-      for (const p of leftClothPanel.particles) {
-        if (!p.pinned) p.x -= 40;
-      }
-      for (const p of rightClothPanel.particles) {
-        if (!p.pinned) p.x += 40;
-      }
+      leftClothPanel.openAmount = Math.min(leftClothPanel.maxOpen, leftClothPanel.openAmount + 60);
+      rightClothPanel.openAmount = Math.min(rightClothPanel.maxOpen, rightClothPanel.openAmount + 60);
     }
   };
 
@@ -2161,14 +2200,32 @@ function initClothCurtainSimulation() {
     animationFrameId = requestAnimationFrame(loop);
 
     // Soft handful grab & catch-up lag update
-    if (isDragging && grabbedPoint) {
+    if (isDragging && grabbedPoint && activePanel) {
       const prevX = grabbedPoint.x;
       const prevY = grabbedPoint.y;
 
+      let targetX = cursor.x;
+      let targetY = cursor.y;
+
+      // Clamped local wrinkle (localGrabRange: 80)
+      const colFactor = activePanel.isLeft
+        ? (grabbedPoint.col / (CFG.cols - 1))
+        : ((CFG.cols - 1 - grabbedPoint.col) / (CFG.cols - 1));
+      const anchorX = grabbedPoint.restX + colFactor * (activePanel.openDir * activePanel.openAmountSmoothed);
+      const anchorY = grabbedPoint.restY;
+
+      const offX = targetX - anchorX;
+      const offY = targetY - anchorY;
+      const offDist = Math.hypot(offX, offY);
+      if (offDist > CFG.localGrabRange) {
+        targetX = anchorX + (offX / offDist) * CFG.localGrabRange;
+        targetY = anchorY + (offY / offDist) * CFG.localGrabRange;
+      }
+
       // 2. Catch-up lag instead of instant cursor-snap (grabCatchup: 0.35)
-      grabbedPoint.x += (cursor.x - grabbedPoint.x) * CFG.grabCatchup;
+      grabbedPoint.x += (targetX - grabbedPoint.x) * CFG.grabCatchup;
       if (!grabbedPoint.fixedY) {
-        grabbedPoint.y += (cursor.y - grabbedPoint.y) * CFG.grabCatchup;
+        grabbedPoint.y += (targetY - grabbedPoint.y) * CFG.grabCatchup;
       }
 
       grabbedPoint.ox = prevX;
