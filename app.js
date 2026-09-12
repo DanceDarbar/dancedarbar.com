@@ -360,6 +360,9 @@ const DANCE_DATA = {
 // 2. ROUTER & PAGE RENDERERS
 // --------------------------------------------------------------------------
 function renderApp() {
+  if (window.cleanupCurtainSimulation) {
+    window.cleanupCurtainSimulation();
+  }
   const appRoot = document.getElementById('app-root');
   const header = document.getElementById('site-header');
   const hash = window.location.hash || '#/';
@@ -580,25 +583,27 @@ function renderHomePage() {
         <div class="upcoming-performance-header">
           <h2 class="upcoming-performance-heading">Upcoming Performance</h2>
         </div>
-      </div>
-      <div class="curtain-stage-full-wrap">
-        <div class="coming-soon-card curtain-stage-card" id="curtainStageCard" tabindex="0" role="region" aria-label="Upcoming Performance: A NEW STORY TAKES THE STAGE">
-          <!-- Centered Content Revealed Behind Curtains -->
-          <div class="curtain-content-wrap">
-            <h2 class="curtain-headline">WAIT THEY ARE PREPARING</h2>
-          </div>
+        <div class="curtain-stage-wrap">
+          <div class="curtain-stage" id="curtainStage" tabindex="0" role="region" aria-label="Interactive announcement reveal: Upcoming performance: A NEW STORY TAKES THE STAGE">
+            <!-- Centered Content Revealed Behind Curtains -->
+            <div class="curtain-content-wrap">
+              <span class="curtain-eyebrow">UPCOMING PERFORMANCE</span>
+              <h2 class="curtain-headline">WAIT THEY ARE PREPARING</h2>
+            </div>
 
-          <!-- Interactive Realistic Red Velvet Curtain Panels -->
-          <div class="curtain-panel curtain-panel-left" id="curtainPanelLeft" aria-hidden="true">
-            <div class="curtain-image-inner"></div>
-          </div>
-          <div class="curtain-panel curtain-panel-right" id="curtainPanelRight" aria-hidden="true">
-            <div class="curtain-image-inner"></div>
-          </div>
+            <!-- Canvas for Verlet Mass-Spring Cloth Physics Simulation -->
+            <canvas id="curtainCanvas" class="curtain-canvas"></canvas>
 
-          <!-- Soft Edge Vignette Blends -->
-          <div class="curtain-fade-top" aria-hidden="true"></div>
-          <div class="curtain-fade-bottom" aria-hidden="true"></div>
+            <!-- Soft Edge Vignette Blends into Black -->
+            <div class="curtain-fade-top" aria-hidden="true"></div>
+            <div class="curtain-fade-bottom" aria-hidden="true"></div>
+
+            <!-- Interaction Hint -->
+            <div class="curtain-hint" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8l4 4-4 4M6 16l-4-4 4-4M2 12h20"/></svg>
+              <span>Drag or pull curtains to reveal</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -1358,8 +1363,8 @@ function initHomePageEvents() {
   // Initialize Magnetic Carousel for Explore Classes Section
   initMagneticCarousel();
 
-  // Initialize Interactive Curtain Reveal for Upcoming Performance Card
-  initCurtainReveal();
+  // Initialize Interactive Cloth Curtain Simulation for Upcoming Performance Card
+  initClothCurtainSimulation();
 }
 
 // --- Magnetic Carousel Engine (Originkit Adapter) ---
@@ -1633,129 +1638,481 @@ function initMagneticCarousel() {
   renderSizes();
 }
 
-// --- Interactive Theater Curtain Reveal Engine ---
-function initCurtainReveal() {
-  const stage = document.getElementById('curtainStageCard');
-  const leftPanel = document.getElementById('curtainPanelLeft');
-  const rightPanel = document.getElementById('curtainPanelRight');
-
-  if (!stage || !leftPanel || !rightPanel) return;
-
-  const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (prefersReduced) {
-    leftPanel.style.transform = 'translateX(-50%)';
-    rightPanel.style.transform = 'translateX(50%)';
-    return;
+// --- Interactive Verlet Cloth Physics Curtain Engine ---
+function initClothCurtainSimulation() {
+  // Always clean up any existing simulation instance first
+  if (window.cleanupCurtainSimulation) {
+    window.cleanupCurtainSimulation();
   }
 
-  let isHolding = false;
-  let currentOpenRatio = 0;
+  const stage = document.getElementById('curtainStage');
+  const canvas = document.getElementById('curtainCanvas');
+  if (!stage || !canvas) return;
 
-  function setPanelsOffset(ratio, animate = false) {
+  const ctx = canvas.getContext('2d');
+  const CFG = {
+    cols: 8,
+    rows: 6,
+    iterations: 4,
+    damping: 0.94,
+    gravity: 0.10,
+    stiffness: 0.90,
+    shearStiffness: 0.65,
+    ambientWind: 0.45,
+    grabRadius: 90,
+    imageSrc: 'assets/curtain-texture.png'
+  };
+
+  let width = 0;
+  let height = 0;
+  let dpr = 1;
+  let animationFrameId = null;
+
+  const curtainImg = new Image();
+  curtainImg.crossOrigin = 'anonymous';
+  curtainImg.src = CFG.imageSrc;
+  let imgLoaded = false;
+  curtainImg.onload = () => {
+    imgLoaded = true;
+    if (!animationFrameId) {
+      animationFrameId = requestAnimationFrame(loop);
+    }
+  };
+
+  class Particle {
+    constructor(x, y, u, v, pinned = false, fixedY = false) {
+      this.x = x;
+      this.y = y;
+      this.ox = x;
+      this.oy = y;
+      this.restX = x;
+      this.restY = y;
+      this.u = u;
+      this.v = v;
+      this.pinned = pinned;
+      this.fixedY = fixedY;
+    }
+  }
+
+  class Constraint {
+    constructor(p1, p2, stiffness = 0.9) {
+      this.p1 = p1;
+      this.p2 = p2;
+      this.stiffness = stiffness;
+      this.restDistance = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+    }
+
+    resolve() {
+      const dx = this.p2.x - this.p1.x;
+      const dy = this.p2.y - this.p1.y;
+      const dist = Math.hypot(dx, dy);
+      if (dist === 0) return;
+      const diff = (dist - this.restDistance) / dist;
+      const factor = 0.5 * this.stiffness;
+      const offsetX = dx * diff * factor;
+      const offsetY = dy * diff * factor;
+
+      if (!this.p1.pinned) {
+        this.p1.x += offsetX;
+        if (!this.p1.fixedY) this.p1.y += offsetY;
+      }
+      if (!this.p2.pinned) {
+        this.p2.x -= offsetX;
+        if (!this.p2.fixedY) this.p2.y -= offsetY;
+      }
+    }
+  }
+
+  class CurtainPanel {
+    constructor(isLeft) {
+      this.isLeft = isLeft;
+      this.particles = [];
+      this.constraints = [];
+    }
+
+    build(stageWidth, stageHeight) {
+      this.particles = [];
+      this.constraints = [];
+
+      const cols = CFG.cols;
+      const rows = CFG.rows;
+      // Slight 5% center overlap for realistic theater drapery seam
+      const overlap = stageWidth * 0.05;
+      const startX = this.isLeft ? 0 : stageWidth * 0.5 - overlap;
+      const endX = this.isLeft ? stageWidth * 0.5 + overlap : stageWidth;
+      const panelWidth = endX - startX;
+
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const x = startX + (c / (cols - 1)) * panelWidth;
+          const y = (r / (rows - 1)) * stageHeight;
+
+          // UV coordinates mapping across the curtain texture
+          const u = this.isLeft
+            ? (c / (cols - 1)) * 0.53
+            : 0.47 + (c / (cols - 1)) * 0.53;
+          const v = r / (rows - 1);
+
+          // Outer top corner is pinned in space; top rod particles slide horizontally
+          const isOuterTop = (r === 0) && (this.isLeft ? c === 0 : c === cols - 1);
+          const isTopRow = (r === 0);
+
+          this.particles.push(new Particle(x, y, u, v, isOuterTop, isTopRow));
+        }
+      }
+
+      // Structural Constraints
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const idx = r * cols + c;
+
+          // Horizontal spring
+          if (c < cols - 1) {
+            this.constraints.push(new Constraint(this.particles[idx], this.particles[idx + 1], CFG.stiffness));
+          }
+
+          // Vertical spring
+          if (r < rows - 1) {
+            this.constraints.push(new Constraint(this.particles[idx], this.particles[idx + cols], CFG.stiffness));
+          }
+
+          // Shear diagonal springs
+          if (c < cols - 1 && r < rows - 1) {
+            this.constraints.push(new Constraint(this.particles[idx], this.particles[idx + cols + 1], CFG.shearStiffness));
+            this.constraints.push(new Constraint(this.particles[idx + 1], this.particles[idx + cols], CFG.shearStiffness));
+          }
+        }
+      }
+    }
+
+    update(time, cursor, isDragging) {
+      const damping = CFG.damping;
+      const gravity = CFG.gravity;
+      const windAmp = CFG.ambientWind;
+
+      for (const p of this.particles) {
+        if (p.pinned) continue;
+
+        const vx = (p.x - p.ox) * damping;
+        const vy = (p.y - p.oy) * damping;
+        p.ox = p.x;
+        p.oy = p.y;
+
+        // Ambient gentle wind breeze varying across space & time
+        const breeze = Math.sin(time * 0.0018 + p.y * 0.008 + (this.isLeft ? 0 : 2.5)) * windAmp;
+        const breezeY = Math.cos(time * 0.0014 + p.x * 0.006) * (windAmp * 0.15);
+
+        p.x += vx + breeze;
+        if (!p.fixedY) {
+          p.y += vy + gravity + breezeY;
+        } else {
+          p.y = 0;
+          // Soft horizontal spring for top rings returning towards rest position
+          p.x += (p.restX - p.x) * 0.06;
+        }
+
+        // Center hover breeze push: gently parts curtains as cursor approaches center
+        if (cursor.active && !isDragging) {
+          const dx = p.x - cursor.x;
+          const dy = p.y - cursor.y;
+          const dist = Math.hypot(dx, dy);
+          const influenceRadius = width * 0.20;
+          if (dist < influenceRadius) {
+            const pushStrength = (1 - dist / influenceRadius) * 2.0;
+            const dir = this.isLeft ? -1 : 1;
+            p.x += dir * pushStrength;
+          }
+        }
+      }
+
+      // Relax constraints
+      for (let iter = 0; iter < CFG.iterations; iter++) {
+        for (const c of this.constraints) {
+          c.resolve();
+        }
+      }
+    }
+
+    render(ctx, img) {
+      const cols = CFG.cols;
+      const rows = CFG.rows;
+      const imgW = img.width;
+      const imgH = img.height;
+
+      for (let r = 0; r < rows - 1; r++) {
+        for (let c = 0; c < cols - 1; c++) {
+          const p00 = this.particles[r * cols + c];
+          const p10 = this.particles[r * cols + c + 1];
+          const p01 = this.particles[(r + 1) * cols + c];
+          const p11 = this.particles[(r + 1) * cols + c + 1];
+
+          // Triangle 1: p00, p10, p01
+          drawAffineTriangle(
+            ctx, img,
+            p00.x, p00.y, p10.x, p10.y, p01.x, p01.y,
+            p00.u * imgW, p00.v * imgH,
+            p10.u * imgW, p10.v * imgH,
+            p01.u * imgW, p01.v * imgH
+          );
+
+          // Triangle 2: p10, p11, p01
+          drawAffineTriangle(
+            ctx, img,
+            p10.x, p10.y, p11.x, p11.y, p01.x, p01.y,
+            p10.u * imgW, p10.v * imgH,
+            p11.u * imgW, p11.v * imgH,
+            p01.u * imgW, p01.v * imgH
+          );
+        }
+      }
+    }
+  }
+
+  function drawAffineTriangle(ctx, img, x0, y0, x1, y1, x2, y2, u0, v0, u1, v1, u2, v2) {
+    const delta = u0 * (v1 - v2) + u1 * (v2 - v0) + u2 * (v0 - v1);
+    if (Math.abs(delta) < 0.001) return;
+
+    const a = (x0 * (v1 - v2) + x1 * (v2 - v0) + x2 * (v0 - v1)) / delta;
+    const c = (x0 * (u2 - u1) + x1 * (u0 - u2) + x2 * (u1 - u0)) / delta;
+    const e = (x0 * (u1 * v2 - u2 * v1) + x1 * (u2 * v0 - u0 * v2) + x2 * (u0 * v1 - u1 * v0)) / delta;
+
+    const b = (y0 * (v1 - v2) + y1 * (v2 - v0) + y2 * (v0 - v1)) / delta;
+    const d = (y0 * (u2 - u1) + y1 * (u0 - u2) + y2 * (u1 - u0)) / delta;
+    const f = (y0 * (u1 * v2 - u2 * v1) + y1 * (u2 * v0 - u0 * v2) + y2 * (u0 * v1 - u1 * v0)) / delta;
+
+    // Centroid dilation to eliminate sub-pixel antialiasing seams
+    const cx = (x0 + x1 + x2) / 3;
+    const cy = (y0 + y1 + y2) / 3;
+    const expand = 1.4;
+
+    const d0 = Math.hypot(x0 - cx, y0 - cy) || 1;
+    const ex0 = x0 + ((x0 - cx) / d0) * expand;
+    const ey0 = y0 + ((y0 - cy) / d0) * expand;
+
+    const d1 = Math.hypot(x1 - cx, y1 - cy) || 1;
+    const ex1 = x1 + ((x1 - cx) / d1) * expand;
+    const ey1 = y1 + ((y1 - cy) / d1) * expand;
+
+    const d2 = Math.hypot(x2 - cx, y2 - cy) || 1;
+    const ex2 = x2 + ((x2 - cx) / d2) * expand;
+    const ey2 = y2 + ((y2 - cy) / d2) * expand;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(ex0, ey0);
+    ctx.lineTo(ex1, ey1);
+    ctx.lineTo(ex2, ey2);
+    ctx.closePath();
+    ctx.clip();
+
+    ctx.transform(a, b, c, d, e, f);
+    ctx.drawImage(img, 0, 0);
+    ctx.restore();
+  }
+
+  const leftPanel = new CurtainPanel(true);
+  const rightPanel = new CurtainPanel(false);
+
+  const cursor = { x: 0, y: 0, active: false };
+  let isDragging = false;
+  let grabbedParticles = [];
+
+  function resize() {
     const rect = stage.getBoundingClientRect();
-    const maxOffset = rect.width > 0 ? rect.width * 0.58 : 500;
-    const clampedRatio = Math.min(1, Math.max(0, ratio));
-    currentOpenRatio = clampedRatio;
-    const offsetPx = clampedRatio * maxOffset;
+    if (rect.width === 0 || rect.height === 0) return;
+    width = rect.width;
+    height = rect.height;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-    const transitionStyle = animate ? 'transform 750ms cubic-bezier(0.22, 1, 0.36, 1)' : 'none';
-    leftPanel.style.transition = transitionStyle;
-    rightPanel.style.transition = transitionStyle;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    leftPanel.style.transform = `translateX(${-offsetPx}px)`;
-    rightPanel.style.transform = `translateX(${offsetPx}px)`;
-  }
+    leftPanel.build(width, height);
+    rightPanel.build(width, height);
 
-  function handlePointerMove(clientX, isDrag = false) {
-    const rect = stage.getBoundingClientRect();
-    if (rect.width <= 0) return;
-
-    const x = clientX - rect.left;
-    const centerX = rect.width / 2;
-    const distFromCenter = Math.abs(x - centerX);
-
-    if (isDrag) {
-      // In active hold & pull mode: the curtain pulls and flies directly with the cursor
-      const dragRatio = Math.min(1, Math.max(0, distFromCenter / (rect.width * 0.42)));
-      setPanelsOffset(dragRatio, false);
-    } else {
-      // Hover influence when moving across the stage
-      const hoverRatio = Math.min(1, Math.max(0, distFromCenter / (rect.width * 0.5)));
-      setPanelsOffset(hoverRatio * 0.75, true);
+    // Reduced motion check
+    const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) {
+      // Statically part curtains to sides so announcement text is clearly visible without motion
+      for (const p of leftPanel.particles) {
+        p.x = (p.x / (width * 0.55)) * (width * 0.18);
+      }
+      for (const p of rightPanel.particles) {
+        p.x = width - ((width - p.x) / (width * 0.55)) * (width * 0.18);
+      }
+      if (imgLoaded) {
+        ctx.clearRect(0, 0, width, height);
+        ctx.filter = 'saturate(80%)';
+        leftPanel.render(ctx, curtainImg);
+        rightPanel.render(ctx, curtainImg);
+        ctx.filter = 'none';
+      }
     }
   }
 
-  function startHold(clientX) {
-    isHolding = true;
-    stage.classList.add('is-dragging');
-    handlePointerMove(clientX, true);
+  function getPointerPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    return {
+      x: clientX - rect.left,
+      y: clientY - rect.top
+    };
   }
 
-  function endHold() {
-    if (!isHolding) return;
-    isHolding = false;
-    stage.classList.remove('is-dragging');
-    setPanelsOffset(0, true);
+  function startDrag(e) {
+    const pos = getPointerPos(e);
+    cursor.x = pos.x;
+    cursor.y = pos.y;
+    cursor.active = true;
+    isDragging = true;
+    stage.classList.add('is-grabbing');
+
+    // Grab particles within grabRadius
+    grabbedParticles = [];
+    const allParticles = [...leftPanel.particles, ...rightPanel.particles];
+    let closest = null;
+    let closestDist = Infinity;
+
+    for (const p of allParticles) {
+      const d = Math.hypot(p.x - pos.x, p.y - pos.y);
+      if (d < closestDist) {
+        closestDist = d;
+        closest = p;
+      }
+      if (d < CFG.grabRadius && !p.pinned) {
+        grabbedParticles.push({
+          particle: p,
+          offsetX: p.x - pos.x,
+          offsetY: p.y - pos.y,
+          weight: Math.pow(1 - d / CFG.grabRadius, 1.3)
+        });
+      }
+    }
+
+    if (grabbedParticles.length === 0 && closest && !closest.pinned) {
+      grabbedParticles.push({
+        particle: closest,
+        offsetX: closest.x - pos.x,
+        offsetY: closest.y - pos.y,
+        weight: 1
+      });
+    }
   }
 
-  // Mouse Events
-  stage.addEventListener('mousedown', (e) => {
-    e.preventDefault();
-    startHold(e.clientX);
-  });
+  function moveDrag(e) {
+    const pos = getPointerPos(e);
+    cursor.x = pos.x;
+    cursor.y = pos.y;
+    cursor.active = true;
 
-  window.addEventListener('mousemove', (e) => {
-    if (isHolding) {
-      handlePointerMove(e.clientX, true);
+    if (isDragging) {
+      for (const g of grabbedParticles) {
+        const targetX = pos.x + g.offsetX;
+        const targetY = pos.y + g.offsetY;
+        g.particle.x += (targetX - g.particle.x) * g.weight;
+        if (!g.particle.fixedY) {
+          g.particle.y += (targetY - g.particle.y) * g.weight;
+        }
+      }
     }
-  });
+  }
 
-  stage.addEventListener('mousemove', (e) => {
-    if (!isHolding) {
-      handlePointerMove(e.clientX, false);
+  function endDrag() {
+    isDragging = false;
+    grabbedParticles = [];
+    stage.classList.remove('is-grabbing');
+  }
+
+  const onMouseLeave = () => {
+    if (!isDragging) cursor.active = false;
+  };
+
+  const onTouchStart = (e) => {
+    startDrag(e);
+  };
+
+  const onTouchMove = (e) => {
+    if (isDragging && e.touches) {
+      moveDrag(e);
     }
-  });
+  };
 
-  window.addEventListener('mouseup', () => {
-    endHold();
-  });
-
-  stage.addEventListener('mouseleave', () => {
-    if (!isHolding) {
-      setPanelsOffset(0, true);
+  const onKeyDown = (e) => {
+    if (e.key === ' ' || e.key === 'Enter') {
+      e.preventDefault();
+      for (const p of leftPanel.particles) {
+        if (!p.pinned) p.x -= 40;
+      }
+      for (const p of rightPanel.particles) {
+        if (!p.pinned) p.x += 40;
+      }
     }
-  });
+  };
 
-  // Touch Events (mobile hold & drag)
-  stage.addEventListener('touchstart', (e) => {
-    if (e.touches && e.touches.length > 0) {
-      startHold(e.touches[0].clientX);
+  canvas.addEventListener('mousedown', startDrag);
+  window.addEventListener('mousemove', moveDrag);
+  window.addEventListener('mouseup', endDrag);
+
+  canvas.addEventListener('touchstart', onTouchStart, { passive: true });
+  window.addEventListener('touchmove', onTouchMove, { passive: true });
+  window.addEventListener('touchend', endDrag);
+
+  canvas.addEventListener('mouseleave', onMouseLeave);
+  stage.addEventListener('keydown', onKeyDown);
+  window.addEventListener('resize', resize);
+
+  // Animation Loop
+  function loop(time) {
+    const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+
+    animationFrameId = requestAnimationFrame(loop);
+
+    ctx.clearRect(0, 0, width, height);
+
+    leftPanel.update(time, cursor, isDragging);
+    rightPanel.update(time, cursor, isDragging);
+
+    if (imgLoaded) {
+      ctx.filter = 'saturate(80%)';
+      leftPanel.render(ctx, curtainImg);
+      rightPanel.render(ctx, curtainImg);
+      ctx.filter = 'none';
     }
-  }, { passive: true });
+  }
 
-  stage.addEventListener('touchmove', (e) => {
-    if (isHolding && e.touches && e.touches.length > 0) {
-      handlePointerMove(e.touches[0].clientX, true);
+  // Trigger initial resize & setup
+  resize();
+
+  if (curtainImg.complete) {
+    imgLoaded = true;
+    if (!animationFrameId) {
+      animationFrameId = requestAnimationFrame(loop);
     }
-  }, { passive: true });
+  }
 
-  stage.addEventListener('touchend', () => {
-    endHold();
-  });
-
-  stage.addEventListener('touchcancel', () => {
-    endHold();
-  });
-
-  // Keyboard accessibility
-  stage.addEventListener('focus', () => {
-    setPanelsOffset(0.75, true);
-  });
-
-  stage.addEventListener('blur', () => {
-    endHold();
-    setPanelsOffset(0, true);
-  });
+  // Cleanup handler registered globally for router teardown
+  window.cleanupCurtainSimulation = () => {
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = null;
+    }
+    window.removeEventListener('resize', resize);
+    window.removeEventListener('mousemove', moveDrag);
+    window.removeEventListener('mouseup', endDrag);
+    window.removeEventListener('touchmove', onTouchMove);
+    window.removeEventListener('touchend', endDrag);
+    if (canvas) {
+      canvas.removeEventListener('mousedown', startDrag);
+      canvas.removeEventListener('touchstart', onTouchStart);
+      canvas.removeEventListener('mouseleave', onMouseLeave);
+    }
+    if (stage) {
+      stage.removeEventListener('keydown', onKeyDown);
+    }
+  };
 }
 
 // --- Schedule Page Accordion Engine (Flat rows - no-op) ---

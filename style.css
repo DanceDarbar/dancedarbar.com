@@ -11,6 +11,7 @@
   --color-primary: #5EBBEA;        /* Refined Ice Blue accent */
   --color-primary-light: rgba(94, 187, 234, 0.12);  /* Subtle accent surface */
   --color-primary-dark: #5EBBEA;   /* Clear vibrant accent on dark */
+  --accent-blue: #5ab4f0;          /* Interactive curtain eyebrow accent */
   --color-navy: #FFFFFF;           /* Heading token (#FFFFFF) */
   --color-charcoal: #111111;       /* Section surface (#111111) */
   --color-white: #FFFFFF;          /* Pure white text/icon token */
@@ -1732,44 +1733,41 @@ h1, h2, h3, h4, h5, h6 {
   padding-bottom: 20px;
 }
 
-.curtain-stage-full-wrap {
+.curtain-stage-wrap {
   width: 100%;
   max-width: 100%;
   position: relative;
-  overflow: hidden;
   margin: 0;
   padding: 0;
 }
 
-.curtain-stage-card {
-  background: #000000;
-  border-radius: 0 !important;
-  border: none !important;
-  box-shadow: none !important;
-  isolation: isolate;
-  cursor: grab;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: pan-y;
+.curtain-stage {
+  position: relative;
   width: 100%;
   max-width: 100%;
-  min-height: clamp(480px, 42vw, 620px);
-  padding: 140px 24px;
+  min-height: clamp(440px, 40vw, 560px);
+  border-radius: 20px;
+  overflow: hidden;
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  -webkit-user-select: none;
+  isolation: isolate;
+  cursor: grab;
+  touch-action: none;
   box-sizing: border-box;
 }
 
-.curtain-stage-card.is-dragging {
+.curtain-stage.is-grabbing {
   cursor: grabbing;
 }
 
-.curtain-stage-card:focus-visible {
-  outline: 2px solid var(--color-primary, #5EBBEA);
+.curtain-stage:focus-visible {
+  outline: 2px solid var(--accent-blue, #5ab4f0);
   outline-offset: 3px;
-}
-
-/* Hidden rod to ensure zero hard seam at top */
-.curtain-rod {
-  display: none !important;
 }
 
 /* Centered Announcement Content Revealed Behind Curtains */
@@ -1780,16 +1778,30 @@ h1, h2, h3, h4, h5, h6 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 60px 24px;
+  text-align: center;
+  padding: 40px 24px;
   max-width: 960px;
   margin: 0 auto;
   pointer-events: none;
+  box-sizing: border-box;
+}
+
+.curtain-eyebrow {
+  display: inline-block;
+  font-family: 'Satoshi', var(--font-primary), sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--accent-blue, #5ab4f0);
+  margin-bottom: 16px;
+  text-align: center;
 }
 
 .curtain-headline {
   font-family: 'Satoshi', var(--font-primary), sans-serif;
   font-weight: 900;
-  font-size: clamp(32px, 5.5vw, 68px);
+  font-size: clamp(32px, 5.2vw, 64px);
   line-height: 1.15;
   letter-spacing: -0.025em;
   color: #FFFFFF;
@@ -1803,118 +1815,24 @@ h1, h2, h3, h4, h5, h6 {
 
 @keyframes curtainHeadlinePulse {
   0%, 100% {
-    opacity: 0.82;
-    text-shadow: 0 0 16px rgba(255, 50, 50, 0.3), 0 0 40px rgba(0, 0, 0, 0.85);
+    opacity: 0.84;
+    text-shadow: 0 0 20px rgba(255, 50, 50, 0.35), 0 0 50px rgba(0, 0, 0, 0.9);
   }
   50% {
     opacity: 1;
-    text-shadow: 0 0 28px rgba(255, 70, 70, 0.6), 0 0 60px rgba(255, 40, 40, 0.3);
+    text-shadow: 0 0 32px rgba(255, 70, 70, 0.65), 0 0 70px rgba(255, 40, 40, 0.35);
   }
 }
 
-/* Realistic Red Velvet Curtain Panels with Soft Alpha Feathering */
-.curtain-panel {
+/* Canvas for Mass-Spring Cloth Physics Simulation */
+.curtain-canvas {
   position: absolute;
   top: 0;
-  bottom: 0;
-  z-index: 4;
-  overflow: hidden;
-  pointer-events: none;
-  background-color: #000000;
-  will-change: transform;
-  mask-image: linear-gradient(
-    to bottom,
-    transparent 0%,
-    rgba(0, 0, 0, 0.08) 4%,
-    rgba(0, 0, 0, 0.4) 10%,
-    rgba(0, 0, 0, 0.85) 18%,
-    #000000 24%,
-    #000000 76%,
-    rgba(0, 0, 0, 0.85) 82%,
-    rgba(0, 0, 0, 0.4) 90%,
-    rgba(0, 0, 0, 0.08) 96%,
-    transparent 100%
-  );
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    transparent 0%,
-    rgba(0, 0, 0, 0.08) 4%,
-    rgba(0, 0, 0, 0.4) 10%,
-    rgba(0, 0, 0, 0.85) 18%,
-    #000000 24%,
-    #000000 76%,
-    rgba(0, 0, 0, 0.85) 82%,
-    rgba(0, 0, 0, 0.4) 90%,
-    rgba(0, 0, 0, 0.08) 96%,
-    transparent 100%
-  );
-}
-
-.curtain-panel-left {
   left: 0;
-  width: calc(50% + 2px);
-  z-index: 5;
-  box-shadow: 6px 0 24px rgba(0, 0, 0, 0.65);
-}
-
-.curtain-panel-right {
-  right: 0;
-  width: 50%;
-  z-index: 4;
-}
-
-/* Inner Image Layer with -20% Saturation and Wind Breeze Animation */
-.curtain-image-inner {
-  position: absolute;
-  top: 0;
-  bottom: 0;
+  width: 100%;
   height: 100%;
-  background-image: url('assets/red-curtain-stage.jpg');
-  background-size: cover;
-  background-repeat: no-repeat;
-  -webkit-filter: saturate(0.8);
-  filter: saturate(0.8);
-  will-change: transform;
-}
-
-.curtain-panel-left .curtain-image-inner {
-  left: 0;
-  width: 200%;
-  background-position: center center;
-  transform-origin: top center;
-  animation: curtainWindBreezeLeft 8s ease-in-out infinite;
-}
-
-.curtain-panel-right .curtain-image-inner {
-  right: 0;
-  width: 200%;
-  background-position: center center;
-  transform-origin: top center;
-  animation: curtainWindBreezeRight 8.8s ease-in-out infinite;
-}
-
-@keyframes curtainWindBreezeLeft {
-  0%, 100% {
-    transform: skewX(0deg) scale(1) translateY(0);
-  }
-  32% {
-    transform: skewX(-0.65deg) scale(1.006, 1.002) translateY(-1px);
-  }
-  68% {
-    transform: skewX(0.5deg) scale(0.996, 1) translateY(1px);
-  }
-}
-
-@keyframes curtainWindBreezeRight {
-  0%, 100% {
-    transform: skewX(0deg) scale(1) translateY(0);
-  }
-  36% {
-    transform: skewX(0.65deg) scale(1.005, 1.002) translateY(1px);
-  }
-  72% {
-    transform: skewX(-0.5deg) scale(0.996, 1) translateY(-1px);
-  }
+  z-index: 4;
+  touch-action: none;
 }
 
 /* Upper Multi-Stop Gradient Blend (Seamless Black Feather) */
@@ -1923,17 +1841,16 @@ h1, h2, h3, h4, h5, h6 {
   top: 0;
   left: 0;
   width: 100%;
-  height: 120px;
+  height: 80px;
   background: linear-gradient(
     to bottom,
     #000000 0%,
-    rgba(0, 0, 0, 0.95) 25%,
-    rgba(0, 0, 0, 0.7) 50%,
-    rgba(0, 0, 0, 0.25) 80%,
+    rgba(0, 0, 0, 0.8) 40%,
+    rgba(0, 0, 0, 0.25) 75%,
     transparent 100%
   );
   pointer-events: none;
-  z-index: 6;
+  z-index: 5;
 }
 
 /* Bottom Multi-Stop Gradient Blend (Seamless Black Feather) */
@@ -1942,17 +1859,44 @@ h1, h2, h3, h4, h5, h6 {
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 120px;
+  height: 95px;
   background: linear-gradient(
     to top,
     #000000 0%,
-    rgba(0, 0, 0, 0.95) 25%,
-    rgba(0, 0, 0, 0.7) 50%,
-    rgba(0, 0, 0, 0.25) 80%,
+    rgba(0, 0, 0, 0.85) 45%,
+    rgba(0, 0, 0, 0.3) 75%,
     transparent 100%
   );
   pointer-events: none;
+  z-index: 5;
+}
+
+/* Interaction Hint Pill */
+.curtain-hint {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 6;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 16px;
+  border-radius: 999px;
+  background: rgba(10, 10, 10, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #D4D4D4;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  pointer-events: none;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: opacity 0.35s ease;
+}
+
+.curtain-stage.is-grabbing .curtain-hint {
+  opacity: 0;
 }
 
 .coming-soon-heading {
@@ -2012,19 +1956,15 @@ h1, h2, h3, h4, h5, h6 {
     font-size: clamp(20px, 5.5vw, 28px);
     letter-spacing: 0.05em;
   }
-  .curtain-stage-card {
-    border-radius: 0 !important;
-    padding: 48px 12px;
+  .curtain-stage {
     min-height: 280px;
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
+    border-radius: 16px;
   }
   .curtain-fade-top {
-    height: 90px;
+    height: 70px;
   }
   .curtain-fade-bottom {
-    height: 90px;
+    height: 80px;
   }
   .curtain-content-wrap {
     padding: 20px 8px;
@@ -2040,18 +1980,6 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .curtain-panel {
-    transition: none !important;
-  }
-  .curtain-panel-left {
-    transform: translateX(-50%) !important;
-  }
-  .curtain-panel-right {
-    transform: translateX(50%) !important;
-  }
-  .curtain-image-inner {
-    animation: none !important;
-  }
   .curtain-headline {
     animation: none !important;
     opacity: 1 !important;
