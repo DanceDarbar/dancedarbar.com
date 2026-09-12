@@ -382,7 +382,6 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-right: 32px;
 }
 
 .logo-text-block {
@@ -422,7 +421,7 @@ h1, h2, h3, h4, h5, h6 {
 .desktop-nav {
   display: flex;
   align-items: center;
-  gap: clamp(20px, 2.2vw, 32px);
+  gap: clamp(24px, 2.6vw, 36px);
 }
 
 .nav-link {

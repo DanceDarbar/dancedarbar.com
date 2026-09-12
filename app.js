@@ -399,9 +399,9 @@ function renderApp() {
   } else if (route.startsWith('/programs/')) {
     const slug = route.split('/programs/')[1];
     appRoot.innerHTML = renderProgramDetailPage(slug);
-  } else if (route === '/schedule') {
-    appRoot.innerHTML = renderSchedulePage();
-    initSchedulePageEvents();
+  } else if (route === '/schedule' || route.startsWith('/schedule')) {
+    window.location.hash = '#/';
+    return;
   } else if (route === '/events') {
     appRoot.innerHTML = renderEventsPage();
   } else if (route.startsWith('/events/')) {
@@ -762,7 +762,6 @@ function renderProgramDetailPage(slug) {
                 <span>Claim Free Trial Seat</span>
                 <svg class="btn-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
               </a>
-              <a href="#/schedule" class="btn btn-secondary">Check Class Timings</a>
             </div>
           </div>
           <div class="editorial-media">
@@ -818,92 +817,6 @@ function renderProgramDetailPage(slug) {
       </div>
     </div>
   `;
-}
-
-// --- SCHEDULE PAGE TEMPLATE ---
-function renderSchedulePage() {
-  const schedData = renderScheduleRows(DANCE_DATA.schedules);
-  return `
-    <div style="padding-top: 140px; padding-bottom: 100px;">
-      <div class="section-container">
-        <span class="eyebrow">Class Schedule</span>
-        <h1 class="section-heading" style="margin-bottom: 16px;">Find a Batch That Works for You.</h1>
-        <p class="lead-text" style="margin-bottom: 40px;">Explore weekly batches, timings, and available seats across all academy disciplines.</p>
-
-        <!-- SCHEDULE DESKTOP TABLE (CSS Grid) -->
-        <div class="schedule-table-wrap schedule-desktop-view">
-          <div class="schedule-grid-container">
-            <div class="schedule-header">
-              <div class="col-class">Class</div>
-              <div class="col-day">Day</div>
-              <div class="col-instructor">Instructor</div>
-              <div class="col-status">Status</div>
-              <div class="col-action">Action</div>
-            </div>
-            <div class="schedule-rows-wrap" id="schedule-table-body">
-              ${schedData.table}
-            </div>
-          </div>
-        </div>
-
-        <!-- SCHEDULE MOBILE CARDS -->
-        <div class="schedule-mobile-view" id="schedule-mobile-cards-body">
-          ${schedData.cards}
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-function renderScheduleRows(items) {
-  if (items.length === 0) {
-    const emptyMsg = `No matching batch currently listed. <a href="#/claim-free-seat" style="color: var(--color-primary-dark); font-weight: 700;">Submit a trial request</a>`;
-    return {
-      table: `<div style="text-align: center; padding: 48px 24px; color: var(--color-muted-text); font-size: 15px;">${emptyMsg}</div>`,
-      cards: `<div style="text-align: center; padding: 32px 16px; color: var(--color-muted-text);">${emptyMsg}</div>`
-    };
-  }
-
-  const tableRowsHtml = items.map(item => `
-    <div class="schedule-row" data-class="${item.program}">
-      <div class="col-class">
-        <span class="class-title-text">${item.program}</span>
-      </div>
-      <div class="col-day">${item.day}</div>
-      <div class="col-instructor">${item.instructor}</div>
-      <div class="col-status">
-        <span class="status-badge">${item.availability}</span>
-      </div>
-      <div class="col-action">
-        <a href="#/claim-free-seat" class="btn btn-primary claim-seat-btn" style="padding: 8px 16px; font-size: 12px; min-height: 40px; border-radius: 999px;">
-          <span>Claim Seat</span>
-          <svg class="btn-arrow" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-      </div>
-    </div>
-  `).join('');
-
-  const cardsHtml = items.map(s => `
-    <div class="schedule-mobile-card">
-      <div class="schedule-card-top" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
-        <div>
-          <span class="eyebrow" style="font-size: 11px; margin-bottom: 2px;">Class Schedule</span>
-          <h3 class="schedule-card-title" style="font-size: 20px; font-weight: 700; color: #FFFFFF; margin: 0;">${s.program}</h3>
-        </div>
-        <span class="status-badge">${s.availability}</span>
-      </div>
-      <div class="schedule-card-details" style="font-size: 14px; color: #E5E5E5; line-height: 1.6; margin-bottom: 16px;">
-        <p style="margin: 0 0 6px 0;"><strong style="color: var(--color-muted-text);">Day / Timing:</strong> ${s.day}</p>
-        <p style="margin: 0;"><strong style="color: var(--color-muted-text);">Instructor:</strong> ${s.instructor}</p>
-      </div>
-      <a href="#/claim-free-seat" class="btn btn-primary full-width claim-seat-btn">
-        <span>Claim Seat</span>
-        <svg class="btn-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </a>
-    </div>
-  `).join('');
-
-  return { table: tableRowsHtml, cards: cardsHtml };
 }
 
 // --- EVENTS PAGE TEMPLATE ---
@@ -2263,10 +2176,6 @@ function initClothCurtainSimulation() {
   };
 }
 
-// --- Schedule Page Accordion Engine (Flat rows - no-op) ---
-function initSchedulePageEvents() {
-  // Flat schedule table rows - no accordion interaction needed
-}
 
 function getTrialRegistrations() {
   try {
