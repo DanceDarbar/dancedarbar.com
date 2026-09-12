@@ -138,6 +138,14 @@ async function sendCustomerConfirmationEmail(toEmail, subject, details) {
 // --------------------------------------------------------------------------
 // 1. DATA MODELS & CONTENT REGISTRY
 // --------------------------------------------------------------------------
+const CLASS_SCHEDULES = {
+  'Kathak': 'Monday & Friday, 4:00 PM – 8:00 PM',
+  'Bollywood': 'Tuesday & Thursday, 4:00 PM – 7:00 PM',
+  'Vocals': 'Wednesday & Saturday',
+  'Fine Arts': 'Online — visit to discuss batches',
+  'Yoga': 'Morning Batch, 7:00 PM'
+};
+
 const DANCE_DATA = {
   programs: [
     {
@@ -163,7 +171,8 @@ const DANCE_DATA = {
         'Ghungroo Practice & Stage Performance Technique'
       ],
       instructor: 'Guru Bhagwan Singh',
-      schedulePreview: 'Tue & Thu: 5:00 PM - 6:30 PM | Sat & Sun: 10:00 AM - 11:30 AM'
+      schedule: CLASS_SCHEDULES['Kathak'],
+      schedulePreview: CLASS_SCHEDULES['Kathak']
     },
     {
       id: 'bollywood',
@@ -187,7 +196,8 @@ const DANCE_DATA = {
         'Stamina & Body Conditioning'
       ],
       instructor: 'Senior Dance Choreographer',
-      schedulePreview: 'Mon & Wed: 6:00 PM - 7:00 PM | Sat: 4:00 PM - 5:30 PM'
+      schedule: CLASS_SCHEDULES['Bollywood'],
+      schedulePreview: CLASS_SCHEDULES['Bollywood']
     },
     {
       id: 'vocal-music',
@@ -211,7 +221,8 @@ const DANCE_DATA = {
         'Bhajan, Sugam Sangeet & Performance Training'
       ],
       instructor: 'Guest Faculty Master Singers',
-      schedulePreview: 'Fri: 5:00 PM - 6:30 PM | Sun: 11:30 AM - 1:00 PM'
+      schedule: CLASS_SCHEDULES['Vocals'],
+      schedulePreview: CLASS_SCHEDULES['Vocals']
     },
     {
       id: 'fine-arts',
@@ -234,7 +245,8 @@ const DANCE_DATA = {
         'Exhibition Preparation & Portfolio Guidance'
       ],
       instructor: 'Senior Art Mentor',
-      schedulePreview: 'Sat & Sun: 2:00 PM - 4:00 PM'
+      schedule: CLASS_SCHEDULES['Fine Arts'],
+      schedulePreview: CLASS_SCHEDULES['Fine Arts']
     },
     {
       id: 'yoga',
@@ -258,21 +270,17 @@ const DANCE_DATA = {
         'Guided Relaxation & Mindfulness Meditation'
       ],
       instructor: 'Certified Yoga Acharya',
-      schedulePreview: 'Mon, Wed & Fri: 7:00 AM - 8:00 AM | Sat: 8:00 AM - 9:00 AM'
+      schedule: CLASS_SCHEDULES['Yoga'],
+      schedulePreview: CLASS_SCHEDULES['Yoga']
     }
   ],
 
   schedules: [
-    { program: 'Kathak', level: 'Beginner', ageGroup: '5–12 Years', day: 'Monday & Friday', timeSlot: 'Evening', time: '4:00 PM – 5:30 PM', instructor: 'Guru Bhagwan Singh', availability: 'Available' },
-    { program: 'Kathak', level: 'Intermediate', ageGroup: '13–17 Years', day: 'Monday & Friday', timeSlot: 'Evening', time: '5:30 PM – 6:45 PM', instructor: 'Guru Bhagwan Singh', availability: 'Available' },
-    { program: 'Kathak', level: 'Advanced', ageGroup: '18+ Years', day: 'Monday & Friday', timeSlot: 'Evening', time: '6:45 PM – 8:00 PM', instructor: 'Guru Bhagwan Singh', availability: 'Available' },
-    { program: 'Bollywood', level: 'Beginner', ageGroup: 'All Age Groups', day: 'Tuesday & Thursday', timeSlot: 'Evening', time: 'Timing Coming Soon', instructor: 'Simar Mehendiratta', availability: 'Available' },
-    { program: 'Bollywood', level: 'Intermediate', ageGroup: 'All Age Groups', day: 'Tuesday & Thursday', timeSlot: 'Evening', time: 'Timing Coming Soon', instructor: 'Simar Mehendiratta', availability: 'Available' },
-    { program: 'Vocals', level: 'Beginner', ageGroup: 'All Age Groups', day: 'Wednesday & Saturday', timeSlot: 'Evening', time: 'Timing Coming Soon', instructor: 'Punit Tiwari', availability: 'Available' },
-    { program: 'Vocals', level: 'Intermediate', ageGroup: 'All Age Groups', day: 'Wednesday & Saturday', timeSlot: 'Evening', time: 'Timing Coming Soon', instructor: 'Punit Tiwari', availability: 'Available' },
-    { program: 'Fine Arts', level: 'Beginner', ageGroup: '5–12 Years', day: 'Saturday', timeSlot: 'Afternoon', time: 'Timing Coming Soon', instructor: 'Guru Bhagwan Singh', availability: 'Available' },
-    { program: 'Fine Arts', level: 'Intermediate', ageGroup: '13+ Years', day: 'Saturday', timeSlot: 'Afternoon', time: 'Timing Coming Soon', instructor: 'Guru Bhagwan Singh', availability: 'Available' },
-    { program: 'Yoga', level: 'Morning Batch', ageGroup: 'Adults & Senior Citizens', day: 'Monday to Saturday', timeSlot: 'Morning', time: '7:00 AM – 8:00 AM', instructor: 'Mrs. Meena Kuthal', availability: 'Available' }
+    { program: 'Kathak', day: CLASS_SCHEDULES['Kathak'], instructor: 'Guru Bhagwan Singh', availability: 'Available' },
+    { program: 'Bollywood', day: CLASS_SCHEDULES['Bollywood'], instructor: 'Simar Mehendiratta', availability: 'Available' },
+    { program: 'Vocals', day: CLASS_SCHEDULES['Vocals'], instructor: 'Punit Tiwari', availability: 'Available' },
+    { program: 'Fine Arts', day: CLASS_SCHEDULES['Fine Arts'], instructor: 'Guru Bhagwan Singh', availability: 'Available' },
+    { program: 'Yoga', day: CLASS_SCHEDULES['Yoga'], instructor: 'Mrs. Meena Kuthal', availability: 'Available' }
   ],
 
   events: [
@@ -505,7 +513,8 @@ function renderHomePage() {
                 image: 'assets/bollywood-class.jpg',
                 alt: 'Bollywood',
                 position: '25% center',
-                desc: 'Energetic choreography, performance skills, musicality and confidence.'
+                desc: 'Energetic choreography, performance skills, musicality and confidence.',
+                schedule: CLASS_SCHEDULES['Bollywood']
               },
               {
                 name: 'Vocals',
@@ -513,7 +522,8 @@ function renderHomePage() {
                 image: 'assets/vocals-class.jpg',
                 alt: 'Vocals',
                 position: '35% top',
-                desc: 'Voice culture, rhythm, melody, breathing and performance practice.'
+                desc: 'Voice culture, rhythm, melody, breathing and performance practice.',
+                schedule: CLASS_SCHEDULES['Vocals']
               },
               {
                 name: 'Kathak',
@@ -521,7 +531,8 @@ function renderHomePage() {
                 image: 'assets/kathak-class.jpg',
                 alt: 'Kathak',
                 position: 'center 30%',
-                desc: 'Classical technique, footwork, rhythm, expression and storytelling.'
+                desc: 'Classical technique, footwork, rhythm, expression and storytelling.',
+                schedule: CLASS_SCHEDULES['Kathak']
               },
               {
                 name: 'Fine Arts',
@@ -529,7 +540,8 @@ function renderHomePage() {
                 image: 'assets/fine-arts-local.png',
                 alt: 'Fine Arts',
                 position: '60% center',
-                desc: 'Drawing, composition, color theory and visual creative expression.'
+                desc: 'Drawing, composition, color theory and visual creative expression.',
+                schedule: CLASS_SCHEDULES['Fine Arts']
               },
               {
                 name: 'Yoga',
@@ -537,7 +549,8 @@ function renderHomePage() {
                 image: 'assets/yoga-class.jpg',
                 alt: 'Yoga',
                 position: 'center 40%',
-                desc: 'Mindful movement, flexibility, balance, breathing and inner strength.'
+                desc: 'Mindful movement, flexibility, balance, breathing and inner strength.',
+                schedule: CLASS_SCHEDULES['Yoga']
               }
             ].map((cls, idx) => `
               <div class="magnetic-item-wrap" data-carousel-index="${idx}">
@@ -547,6 +560,7 @@ function renderHomePage() {
                   <div class="magnetic-detail-overlay">
                     <h3 class="magnetic-detail-title">${cls.name}</h3>
                     <p class="magnetic-detail-desc">${cls.desc}</p>
+                    <p class="magnetic-detail-schedule">${cls.schedule}</p>
                     <a href="#/programs/${cls.slug}" class="btn btn-primary magnetic-detail-btn">
                       <span>View Details</span>
                       <svg class="btn-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -686,6 +700,10 @@ function renderProgramsPage() {
                   <div>
                     <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--color-muted-text); display: block;">Levels</span>
                     <span style="font-weight: 600;">${p.levels.join(', ')}</span>
+                  </div>
+                  <div>
+                    <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--color-muted-text); display: block;">Schedule</span>
+                    <span style="font-weight: 600;">${p.schedule}</span>
                   </div>
                 </div>
                 <div class="program-card-actions">
@@ -831,113 +849,46 @@ function renderScheduleRows(items) {
     };
   }
 
-  // Group items by program (class name)
-  const groupMap = new Map();
-  items.forEach(item => {
-    if (!groupMap.has(item.program)) {
-      groupMap.set(item.program, []);
-    }
-    groupMap.get(item.program).push(item);
-  });
-
-  let groupIndex = 0;
-  const tableGroupsHtml = [];
-
-  groupMap.forEach((batches, className) => {
-    groupIndex++;
-    const groupId = `sched-group-${groupIndex}`;
-
-    // Merge logic: check if DAY and INSTRUCTOR are identical across all batches in this group
-    const uniqueDays = [...new Set(batches.map(b => (b.day || '').trim()))].filter(Boolean);
-    const summaryDay = uniqueDays.length === 1 ? uniqueDays[0] : 'Multiple Batches';
-
-    const uniqueInstructors = [...new Set(batches.map(b => (b.instructor || '').trim()))].filter(Boolean);
-    const summaryInstructor = uniqueInstructors.length === 1 ? uniqueInstructors[0] : 'Multiple Batches';
-
-    // Summary availability
-    const hasAvailable = batches.some(b => (b.availability || '').toLowerCase() === 'available');
-    const summaryStatus = hasAvailable ? 'Available' : (batches[0].availability || 'Available');
-
-    // Sub-rows HTML
-    const subRowsHtml = batches.map(batch => `
-      <div class="schedule-row schedule-sub-row">
-        <div class="col-class sub-col-class">
-          <span class="sub-branch-icon" aria-hidden="true">↳</span>
-          <span class="sub-level-badge">${batch.level}</span>
-          <span class="sub-age-text">(${batch.ageGroup})</span>
-        </div>
-        <div class="col-day">
-          <div class="sub-day-info">
-            <span>${batch.day}</span>
-            ${batch.time && batch.time !== 'Timing Coming Soon' ? `<span class="sub-time-text">${batch.time}</span>` : ''}
-          </div>
-        </div>
-        <div class="col-instructor">${batch.instructor}</div>
-        <div class="col-status">
-          <span class="status-badge">${batch.availability}</span>
-        </div>
-        <div class="col-action">
-          <a href="#/claim-free-seat" class="btn btn-primary claim-seat-btn" style="padding: 8px 16px; font-size: 12px; min-height: 40px; border-radius: 999px;">
-            <span>Claim Seat</span>
-            <svg class="btn-arrow" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
-        </div>
+  const tableRowsHtml = items.map(item => `
+    <div class="schedule-row" data-class="${item.program}">
+      <div class="col-class">
+        <span class="class-title-text">${item.program}</span>
       </div>
-    `).join('');
-
-    tableGroupsHtml.push(`
-      <div class="schedule-group" id="${groupId}" data-class="${className}">
-        <div class="schedule-row schedule-summary-row" role="button" tabindex="0" aria-expanded="false" aria-controls="subrows-${groupId}" title="Click to view batches for ${className}">
-          <div class="col-class">
-            <span class="schedule-chevron" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
-            </span>
-            <span class="class-title-text">${className}</span>
-            ${batches.length > 1 ? `<span class="batch-count-pill">${batches.length} Batches</span>` : ''}
-          </div>
-          <div class="col-day">${summaryDay}</div>
-          <div class="col-instructor">${summaryInstructor}</div>
-          <div class="col-status">
-            <span class="status-badge">${summaryStatus}</span>
-          </div>
-          <div class="col-action">
-            <a href="#/claim-free-seat" class="btn btn-primary claim-seat-btn" style="padding: 8px 16px; font-size: 12px; min-height: 40px; border-radius: 999px;">
-              <span>Claim Seat</span>
-              <svg class="btn-arrow" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
-          </div>
-        </div>
-        <div class="schedule-sub-rows" id="subrows-${groupId}" style="display: none;">
-          ${subRowsHtml}
-        </div>
+      <div class="col-day">${item.day}</div>
+      <div class="col-instructor">${item.instructor}</div>
+      <div class="col-status">
+        <span class="status-badge">${item.availability}</span>
       </div>
-    `);
-  });
+      <div class="col-action">
+        <a href="#/claim-free-seat" class="btn btn-primary claim-seat-btn" style="padding: 8px 16px; font-size: 12px; min-height: 40px; border-radius: 999px;">
+          <span>Claim Seat</span>
+          <svg class="btn-arrow" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  `).join('');
 
   const cardsHtml = items.map(s => `
     <div class="schedule-mobile-card">
-      <div class="schedule-card-top">
+      <div class="schedule-card-top" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
         <div>
-          <span class="eyebrow">Weekly Batch</span>
-          <h3 class="schedule-card-title">${s.program}</h3>
+          <span class="eyebrow" style="font-size: 11px; margin-bottom: 2px;">Class Schedule</span>
+          <h3 class="schedule-card-title" style="font-size: 20px; font-weight: 700; color: #FFFFFF; margin: 0;">${s.program}</h3>
         </div>
         <span class="status-badge">${s.availability}</span>
       </div>
-      <div class="schedule-card-details">
-        <p><strong>Instructor:</strong> ${s.instructor}</p>
-        <p><strong>Days:</strong> ${s.day}</p>
-        <p><strong>Timing:</strong> Evening Batch</p>
+      <div class="schedule-card-details" style="font-size: 14px; color: #E5E5E5; line-height: 1.6; margin-bottom: 16px;">
+        <p style="margin: 0 0 6px 0;"><strong style="color: var(--color-muted-text);">Day / Timing:</strong> ${s.day}</p>
+        <p style="margin: 0;"><strong style="color: var(--color-muted-text);">Instructor:</strong> ${s.instructor}</p>
       </div>
-      <a href="#/claim-free-seat" class="btn btn-primary full-width claim-seat-btn" style="margin-top: 14px;">
+      <a href="#/claim-free-seat" class="btn btn-primary full-width claim-seat-btn">
         <span>Claim Seat</span>
         <svg class="btn-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </a>
     </div>
   `).join('');
 
-  return { table: tableGroupsHtml.join(''), cards: cardsHtml };
+  return { table: tableRowsHtml, cards: cardsHtml };
 }
 
 // --- EVENTS PAGE TEMPLATE ---
@@ -1807,50 +1758,9 @@ function initCurtainReveal() {
   });
 }
 
-// --- Schedule Page Accordion Engine ---
+// --- Schedule Page Accordion Engine (Flat rows - no-op) ---
 function initSchedulePageEvents() {
-  const tableBody = document.getElementById('schedule-table-body');
-
-  function toggleScheduleGroup(target) {
-    // If clicked on Claim Seat button or its contents, let navigation happen
-    if (target.closest('.claim-seat-btn')) return;
-
-    const summaryRow = target.closest('.schedule-summary-row');
-    if (!summaryRow) return;
-
-    const group = summaryRow.closest('.schedule-group');
-    if (!group) return;
-
-    const subRows = group.querySelector('.schedule-sub-rows');
-    if (!subRows) return;
-
-    const isExpanded = group.classList.contains('is-expanded');
-    if (isExpanded) {
-      group.classList.remove('is-expanded');
-      subRows.style.display = 'none';
-      summaryRow.setAttribute('aria-expanded', 'false');
-    } else {
-      group.classList.add('is-expanded');
-      subRows.style.display = 'block';
-      summaryRow.setAttribute('aria-expanded', 'true');
-    }
-  }
-
-  if (tableBody) {
-    tableBody.addEventListener('click', (e) => {
-      toggleScheduleGroup(e.target);
-    });
-
-    tableBody.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        const summaryRow = e.target.closest('.schedule-summary-row');
-        if (summaryRow && e.target === summaryRow) {
-          e.preventDefault();
-          toggleScheduleGroup(e.target);
-        }
-      }
-    });
-  }
+  // Flat schedule table rows - no accordion interaction needed
 }
 
 function getTrialRegistrations() {
