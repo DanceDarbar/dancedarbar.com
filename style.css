@@ -990,7 +990,7 @@ h1, h2, h3, h4, h5, h6 {
 .testimonials-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 32px;
+  gap: 22px;
 }
 
 /* 1. Eyebrow, Heading, and Subheading Entrance (Fade-Up) */
@@ -1020,7 +1020,7 @@ h1, h2, h3, h4, h5, h6 {
 .testimonial-card {
   background-color: #1A1A1A;
   border-radius: var(--radius-large);
-  padding: 40px 32px;
+  padding: 30px 28px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   flex-direction: column;
@@ -1061,10 +1061,10 @@ h1, h2, h3, h4, h5, h6 {
 
 .motion-quote-mark {
   position: absolute;
-  top: 10px;
-  right: 24px;
+  top: 14px;
+  right: 20px;
   font-family: var(--font-display);
-  font-size: 110px;
+  font-size: 68px;
   line-height: 1;
   color: rgba(255, 255, 255, 0.04);
   pointer-events: none;
@@ -1073,7 +1073,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .testimonial-card:hover .motion-quote-mark {
   color: rgba(255, 255, 255, 0.12);
-  transform: scale(1.15) rotate(-8deg);
+  transform: scale(1.1) rotate(-6deg);
 }
 
 .card-glow-border {
@@ -1098,9 +1098,9 @@ h1, h2, h3, h4, h5, h6 {
   position: relative;
   z-index: 2;
   color: #F59E0B;
-  font-size: 18px;
-  letter-spacing: 2px;
-  margin-bottom: 20px;
+  font-size: 15px;
+  letter-spacing: 1.5px;
+  margin-bottom: 14px;
   transition: transform 0.3s ease;
 }
 
@@ -1137,23 +1137,23 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .testimonial-quote {
-  font-size: 16px;
-  line-height: 1.7;
+  font-size: 14.5px;
+  line-height: 1.62;
   color: #E5E5E5;
   font-style: italic;
-  margin-bottom: 28px;
+  margin-bottom: 18px;
   flex-grow: 1;
 }
 
 .author-name {
   font-family: var(--font-heading);
-  font-size: 16px;
+  font-size: 14.5px;
   font-weight: 700;
   color: #FFFFFF;
 }
 
 .author-role {
-  font-size: 13px;
+  font-size: 12px;
   color: #A0A0A0;
   margin-top: 2px;
   display: block;
@@ -3702,17 +3702,42 @@ h1, h2, h3, h4, h5, h6 {
     display: flex !important;
     overflow-x: auto !important;
     scroll-snap-type: x mandatory !important;
-    gap: 16px !important;
+    gap: 14px !important;
     padding-bottom: 16px !important;
     -webkit-overflow-scrolling: touch !important;
   }
 
   .testimonial-card {
-    flex: 0 0 88% !important;
-    min-width: 88% !important;
+    flex: 0 0 85% !important;
+    min-width: 85% !important;
     scroll-snap-align: start !important;
-    border-radius: 24px !important;
-    padding: 24px 20px !important;
+    border-radius: 20px !important;
+    padding: 22px 18px !important;
+  }
+
+  .motion-quote-mark {
+    font-size: 50px !important;
+    top: 10px !important;
+    right: 14px !important;
+  }
+
+  .testimonial-rating {
+    font-size: 13.5px !important;
+    margin-bottom: 10px !important;
+  }
+
+  .testimonial-quote {
+    font-size: 13.5px !important;
+    line-height: 1.55 !important;
+    margin-bottom: 14px !important;
+  }
+
+  .author-name {
+    font-size: 14px !important;
+  }
+
+  .author-role {
+    font-size: 11.5px !important;
   }
 
   /* Schedule Cards for Mobile */
