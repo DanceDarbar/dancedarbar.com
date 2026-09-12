@@ -1835,6 +1835,81 @@ h1, h2, h3, h4, h5, h6 {
   touch-action: none;
 }
 
+/* Decorative Top Curtain Rod */
+.curtain-rod {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(to bottom, #4a4a4a 0%, #1a1a1a 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  z-index: 6;
+  pointer-events: none;
+}
+
+/* Lightweight Mobile Fallback Curtain Panels */
+.curtain-panels-mobile {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 4;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.curtain-panels-mobile .curtain-panel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 4;
+  overflow: hidden;
+  pointer-events: none;
+  background-color: #000000;
+  will-change: transform;
+}
+
+.curtain-panels-mobile .curtain-panel-left {
+  left: 0;
+  width: calc(50% + 2px);
+  z-index: 5;
+  box-shadow: 6px 0 20px rgba(0, 0, 0, 0.6);
+}
+
+.curtain-panels-mobile .curtain-panel-right {
+  right: 0;
+  width: 50%;
+  z-index: 4;
+}
+
+.curtain-panels-mobile .curtain-image-inner {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  height: 100%;
+  background-image: url('assets/curtain-texture-mobile.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  filter: saturate(0.8);
+  -webkit-filter: saturate(0.8);
+  will-change: transform;
+}
+
+.curtain-panels-mobile .curtain-panel-left .curtain-image-inner {
+  left: 0;
+  width: 200%;
+  background-position: left center;
+}
+
+.curtain-panels-mobile .curtain-panel-right .curtain-image-inner {
+  right: 0;
+  width: 200%;
+  background-position: right center;
+}
+
 /* Upper Multi-Stop Gradient Blend (Seamless Black Feather) */
 .curtain-fade-top {
   position: absolute;
@@ -1985,6 +2060,15 @@ h1, h2, h3, h4, h5, h6 {
     opacity: 1 !important;
     color: #FFFFFF !important;
     text-shadow: 0 0 16px rgba(255, 60, 60, 0.3) !important;
+  }
+  .curtain-panels-mobile .curtain-panel {
+    transition: none !important;
+  }
+  .curtain-panels-mobile .curtain-panel-left {
+    transform: translate3d(-50%, 0, 0) !important;
+  }
+  .curtain-panels-mobile .curtain-panel-right {
+    transform: translate3d(50%, 0, 0) !important;
   }
 }
 

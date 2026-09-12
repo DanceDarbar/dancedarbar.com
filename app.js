@@ -591,8 +591,21 @@ function renderHomePage() {
               <h2 class="curtain-headline">WAIT THEY ARE PREPARING</h2>
             </div>
 
-            <!-- Canvas for Verlet Mass-Spring Cloth Physics Simulation -->
+            <!-- Lightweight Fallback Panels for Mobile & Touch Devices -->
+            <div class="curtain-panels-mobile" id="curtainPanelsMobile" aria-hidden="true">
+              <div class="curtain-panel curtain-panel-left" id="curtainPanelLeft">
+                <div class="curtain-image-inner"></div>
+              </div>
+              <div class="curtain-panel curtain-panel-right" id="curtainPanelRight">
+                <div class="curtain-image-inner"></div>
+              </div>
+            </div>
+
+            <!-- Canvas for Desktop Verlet Mass-Spring Cloth Simulation -->
             <canvas id="curtainCanvas" class="curtain-canvas"></canvas>
+
+            <!-- Decorative Top Curtain Rod -->
+            <div class="curtain-rod" aria-hidden="true"></div>
 
             <!-- Soft Edge Vignette Blends into Black -->
             <div class="curtain-fade-top" aria-hidden="true"></div>
@@ -1638,16 +1651,157 @@ function initMagneticCarousel() {
   renderSizes();
 }
 
-// --- Interactive Verlet Cloth Physics Curtain Engine ---
+// --- Dual-Engine Interactive Curtain System (Desktop Canvas Verlet Physics + Mobile CSS Fallback) ---
 function initClothCurtainSimulation() {
-  // Always clean up any existing simulation instance first
   if (window.cleanupCurtainSimulation) {
     window.cleanupCurtainSimulation();
   }
 
   const stage = document.getElementById('curtainStage');
   const canvas = document.getElementById('curtainCanvas');
-  if (!stage || !canvas) return;
+  const mobilePanels = document.getElementById('curtainPanelsMobile');
+  const leftPanel = document.getElementById('curtainPanelLeft');
+  const rightPanel = document.getElementById('curtainPanelRight');
+
+  if (!stage) return;
+
+  // 2. Exact device-detection branch as requested:
+  const isLightweight = window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 900;
+
+  if (isLightweight) {
+    // ------------------------------------------------------------------------
+    // LIGHTWEIGHT MOBILE / TOUCH FALLBACK
+    // ------------------------------------------------------------------------
+    if (canvas) canvas.style.display = 'none';
+    if (mobilePanels) mobilePanels.style.display = 'block';
+
+    if (!leftPanel || !rightPanel) return;
+
+    const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) {
+      leftPanel.style.transform = 'translate3d(-50%, 0, 0)';
+      rightPanel.style.transform = 'translate3d(50%, 0, 0)';
+      window.cleanupCurtainSimulation = () => {};
+      return;
+    }
+
+    const MAX_OPEN_RATIO = 0.58;
+    let isHolding = false;
+
+    function setPanelsOffset(ratio, animate = false) {
+      const rect = stage.getBoundingClientRect();
+      const maxOffset = (rect.width > 0 ? rect.width : 360) * MAX_OPEN_RATIO;
+      const clampedRatio = Math.min(1, Math.max(0, ratio));
+      const offsetPx = clampedRatio * maxOffset;
+
+      const transition = animate ? 'transform 450ms cubic-bezier(0.22, 1, 0.36, 1)' : 'none';
+      leftPanel.style.transition = transition;
+      rightPanel.style.transition = transition;
+      leftPanel.style.transform = `translate3d(${-offsetPx}px, 0, 0)`;
+      rightPanel.style.transform = `translate3d(${offsetPx}px, 0, 0)`;
+    }
+
+    function handlePointerMove(clientX) {
+      const rect = stage.getBoundingClientRect();
+      if (rect.width <= 0) return;
+      const x = clientX - rect.left;
+      const centerX = rect.width / 2;
+      const distFromCenter = Math.abs(x - centerX);
+      const ratio = Math.min(1, Math.max(0, distFromCenter / (rect.width * 0.42)));
+      setPanelsOffset(ratio, false);
+    }
+
+    function startHold(clientX) {
+      isHolding = true;
+      stage.classList.add('is-grabbing');
+      handlePointerMove(clientX);
+    }
+
+    function endHold() {
+      if (!isHolding) return;
+      isHolding = false;
+      stage.classList.remove('is-grabbing');
+      setPanelsOffset(0, true);
+    }
+
+    const onTouchStart = (e) => {
+      if (e.touches && e.touches.length > 0) {
+        startHold(e.touches[0].clientX);
+      }
+    };
+
+    const onTouchMove = (e) => {
+      if (isHolding && e.touches && e.touches.length > 0) {
+        handlePointerMove(e.touches[0].clientX);
+      }
+    };
+
+    const onTouchEnd = () => endHold();
+    const onTouchCancel = () => endHold();
+
+    const onMouseDown = (e) => {
+      startHold(e.clientX);
+    };
+
+    const onMouseMove = (e) => {
+      if (isHolding) {
+        handlePointerMove(e.clientX);
+      }
+    };
+
+    const onMouseUp = () => endHold();
+
+    stage.addEventListener('touchstart', onTouchStart, { passive: true });
+    window.addEventListener('touchmove', onTouchMove, { passive: true });
+    window.addEventListener('touchend', onTouchEnd);
+    window.addEventListener('touchcancel', onTouchCancel);
+
+    stage.addEventListener('mousedown', onMouseDown);
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+
+    const onKeyDown = (e) => {
+      if (e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        setPanelsOffset(0.75, true);
+        setTimeout(() => setPanelsOffset(0, true), 1600);
+      }
+    };
+    stage.addEventListener('keydown', onKeyDown);
+
+    let resizeTimer = null;
+    const onResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        const nowLightweight = window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 900;
+        if (!nowLightweight) {
+          initClothCurtainSimulation();
+        }
+      }, 150);
+    };
+    window.addEventListener('resize', onResize);
+
+    window.cleanupCurtainSimulation = () => {
+      stage.removeEventListener('touchstart', onTouchStart);
+      window.removeEventListener('touchmove', onTouchMove);
+      window.removeEventListener('touchend', onTouchEnd);
+      window.removeEventListener('touchcancel', onTouchCancel);
+      stage.removeEventListener('mousedown', onMouseDown);
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+      stage.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener('resize', onResize);
+    };
+
+    return;
+  }
+
+  // --------------------------------------------------------------------------
+  // DESKTOP CANVAS VERLET CLOTH PHYSICS ENGINE
+  // --------------------------------------------------------------------------
+  if (mobilePanels) mobilePanels.style.display = 'none';
+  if (canvas) canvas.style.display = 'block';
+  if (!canvas) return;
 
   const ctx = canvas.getContext('2d');
   const CFG = {
@@ -1660,13 +1814,15 @@ function initClothCurtainSimulation() {
     shearStiffness: 0.65,
     ambientWind: 0.45,
     grabRadius: 90,
-    imageSrc: 'assets/curtain-texture.png'
+    imageSrc: 'assets/curtain-texture.jpg'
   };
 
   let width = 0;
   let height = 0;
   let dpr = 1;
   let animationFrameId = null;
+  let isVisible = false;
+  let intersectionObserver = null;
 
   const curtainImg = new Image();
   curtainImg.crossOrigin = 'anonymous';
@@ -1674,7 +1830,7 @@ function initClothCurtainSimulation() {
   let imgLoaded = false;
   curtainImg.onload = () => {
     imgLoaded = true;
-    if (!animationFrameId) {
+    if (isVisible && !animationFrameId) {
       animationFrameId = requestAnimationFrame(loop);
     }
   };
@@ -1736,7 +1892,6 @@ function initClothCurtainSimulation() {
 
       const cols = CFG.cols;
       const rows = CFG.rows;
-      // Slight 5% center overlap for realistic theater drapery seam
       const overlap = stageWidth * 0.05;
       const startX = this.isLeft ? 0 : stageWidth * 0.5 - overlap;
       const endX = this.isLeft ? stageWidth * 0.5 + overlap : stageWidth;
@@ -1747,13 +1902,11 @@ function initClothCurtainSimulation() {
           const x = startX + (c / (cols - 1)) * panelWidth;
           const y = (r / (rows - 1)) * stageHeight;
 
-          // UV coordinates mapping across the curtain texture
           const u = this.isLeft
             ? (c / (cols - 1)) * 0.53
             : 0.47 + (c / (cols - 1)) * 0.53;
           const v = r / (rows - 1);
 
-          // Outer top corner is pinned in space; top rod particles slide horizontally
           const isOuterTop = (r === 0) && (this.isLeft ? c === 0 : c === cols - 1);
           const isTopRow = (r === 0);
 
@@ -1761,22 +1914,16 @@ function initClothCurtainSimulation() {
         }
       }
 
-      // Structural Constraints
       for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
           const idx = r * cols + c;
 
-          // Horizontal spring
           if (c < cols - 1) {
             this.constraints.push(new Constraint(this.particles[idx], this.particles[idx + 1], CFG.stiffness));
           }
-
-          // Vertical spring
           if (r < rows - 1) {
             this.constraints.push(new Constraint(this.particles[idx], this.particles[idx + cols], CFG.stiffness));
           }
-
-          // Shear diagonal springs
           if (c < cols - 1 && r < rows - 1) {
             this.constraints.push(new Constraint(this.particles[idx], this.particles[idx + cols + 1], CFG.shearStiffness));
             this.constraints.push(new Constraint(this.particles[idx + 1], this.particles[idx + cols], CFG.shearStiffness));
@@ -1798,7 +1945,6 @@ function initClothCurtainSimulation() {
         p.ox = p.x;
         p.oy = p.y;
 
-        // Ambient gentle wind breeze varying across space & time
         const breeze = Math.sin(time * 0.0018 + p.y * 0.008 + (this.isLeft ? 0 : 2.5)) * windAmp;
         const breezeY = Math.cos(time * 0.0014 + p.x * 0.006) * (windAmp * 0.15);
 
@@ -1807,11 +1953,9 @@ function initClothCurtainSimulation() {
           p.y += vy + gravity + breezeY;
         } else {
           p.y = 0;
-          // Soft horizontal spring for top rings returning towards rest position
           p.x += (p.restX - p.x) * 0.06;
         }
 
-        // Center hover breeze push: gently parts curtains as cursor approaches center
         if (cursor.active && !isDragging) {
           const dx = p.x - cursor.x;
           const dy = p.y - cursor.y;
@@ -1825,7 +1969,6 @@ function initClothCurtainSimulation() {
         }
       }
 
-      // Relax constraints
       for (let iter = 0; iter < CFG.iterations; iter++) {
         for (const c of this.constraints) {
           c.resolve();
@@ -1846,7 +1989,6 @@ function initClothCurtainSimulation() {
           const p01 = this.particles[(r + 1) * cols + c];
           const p11 = this.particles[(r + 1) * cols + c + 1];
 
-          // Triangle 1: p00, p10, p01
           drawAffineTriangle(
             ctx, img,
             p00.x, p00.y, p10.x, p10.y, p01.x, p01.y,
@@ -1855,7 +1997,6 @@ function initClothCurtainSimulation() {
             p01.u * imgW, p01.v * imgH
           );
 
-          // Triangle 2: p10, p11, p01
           drawAffineTriangle(
             ctx, img,
             p10.x, p10.y, p11.x, p11.y, p01.x, p01.y,
@@ -1880,7 +2021,6 @@ function initClothCurtainSimulation() {
     const d = (y0 * (u2 - u1) + y1 * (u0 - u2) + y2 * (u1 - u0)) / delta;
     const f = (y0 * (u1 * v2 - u2 * v1) + y1 * (u2 * v0 - u0 * v2) + y2 * (u0 * v1 - u1 * v0)) / delta;
 
-    // Centroid dilation to eliminate sub-pixel antialiasing seams
     const cx = (x0 + x1 + x2) / 3;
     const cy = (y0 + y1 + y2) / 3;
     const expand = 1.4;
@@ -1910,8 +2050,8 @@ function initClothCurtainSimulation() {
     ctx.restore();
   }
 
-  const leftPanel = new CurtainPanel(true);
-  const rightPanel = new CurtainPanel(false);
+  const leftClothPanel = new CurtainPanel(true);
+  const rightClothPanel = new CurtainPanel(false);
 
   const cursor = { x: 0, y: 0, active: false };
   let isDragging = false;
@@ -1928,24 +2068,22 @@ function initClothCurtainSimulation() {
     canvas.height = height * dpr;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    leftPanel.build(width, height);
-    rightPanel.build(width, height);
+    leftClothPanel.build(width, height);
+    rightClothPanel.build(width, height);
 
-    // Reduced motion check
     const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReduced) {
-      // Statically part curtains to sides so announcement text is clearly visible without motion
-      for (const p of leftPanel.particles) {
+      for (const p of leftClothPanel.particles) {
         p.x = (p.x / (width * 0.55)) * (width * 0.18);
       }
-      for (const p of rightPanel.particles) {
+      for (const p of rightClothPanel.particles) {
         p.x = width - ((width - p.x) / (width * 0.55)) * (width * 0.18);
       }
       if (imgLoaded) {
         ctx.clearRect(0, 0, width, height);
         ctx.filter = 'saturate(80%)';
-        leftPanel.render(ctx, curtainImg);
-        rightPanel.render(ctx, curtainImg);
+        leftClothPanel.render(ctx, curtainImg);
+        rightClothPanel.render(ctx, curtainImg);
         ctx.filter = 'none';
       }
     }
@@ -1969,9 +2107,8 @@ function initClothCurtainSimulation() {
     isDragging = true;
     stage.classList.add('is-grabbing');
 
-    // Grab particles within grabRadius
     grabbedParticles = [];
-    const allParticles = [...leftPanel.particles, ...rightPanel.particles];
+    const allParticles = [...leftClothPanel.particles, ...rightClothPanel.particles];
     let closest = null;
     let closestDist = Infinity;
 
@@ -2029,23 +2166,13 @@ function initClothCurtainSimulation() {
     if (!isDragging) cursor.active = false;
   };
 
-  const onTouchStart = (e) => {
-    startDrag(e);
-  };
-
-  const onTouchMove = (e) => {
-    if (isDragging && e.touches) {
-      moveDrag(e);
-    }
-  };
-
   const onKeyDown = (e) => {
     if (e.key === ' ' || e.key === 'Enter') {
       e.preventDefault();
-      for (const p of leftPanel.particles) {
+      for (const p of leftClothPanel.particles) {
         if (!p.pinned) p.x -= 40;
       }
-      for (const p of rightPanel.particles) {
+      for (const p of rightClothPanel.particles) {
         if (!p.pinned) p.x += 40;
       }
     }
@@ -2054,17 +2181,36 @@ function initClothCurtainSimulation() {
   canvas.addEventListener('mousedown', startDrag);
   window.addEventListener('mousemove', moveDrag);
   window.addEventListener('mouseup', endDrag);
-
-  canvas.addEventListener('touchstart', onTouchStart, { passive: true });
-  window.addEventListener('touchmove', onTouchMove, { passive: true });
-  window.addEventListener('touchend', endDrag);
-
   canvas.addEventListener('mouseleave', onMouseLeave);
   stage.addEventListener('keydown', onKeyDown);
-  window.addEventListener('resize', resize);
+
+  // 3. Keep the IntersectionObserver pause logic on the desktop path:
+  intersectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        isVisible = true;
+        if (!animationFrameId && imgLoaded) {
+          animationFrameId = requestAnimationFrame(loop);
+        }
+      } else {
+        isVisible = false;
+        if (animationFrameId) {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = null;
+        }
+      }
+    });
+  }, { threshold: 0.05 });
+
+  intersectionObserver.observe(stage);
 
   // Animation Loop
   function loop(time) {
+    if (!isVisible) {
+      animationFrameId = null;
+      return;
+    }
+
     const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReduced) return;
 
@@ -2072,41 +2218,46 @@ function initClothCurtainSimulation() {
 
     ctx.clearRect(0, 0, width, height);
 
-    leftPanel.update(time, cursor, isDragging);
-    rightPanel.update(time, cursor, isDragging);
+    leftClothPanel.update(time, cursor, isDragging);
+    rightClothPanel.update(time, cursor, isDragging);
 
     if (imgLoaded) {
       ctx.filter = 'saturate(80%)';
-      leftPanel.render(ctx, curtainImg);
-      rightPanel.render(ctx, curtainImg);
+      leftClothPanel.render(ctx, curtainImg);
+      rightClothPanel.render(ctx, curtainImg);
       ctx.filter = 'none';
     }
   }
 
-  // Trigger initial resize & setup
   resize();
 
-  if (curtainImg.complete) {
-    imgLoaded = true;
-    if (!animationFrameId) {
-      animationFrameId = requestAnimationFrame(loop);
-    }
-  }
+  let resizeTimer = null;
+  const onWindowResize = () => {
+    resize();
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      const nowLightweight = window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 900;
+      if (nowLightweight) {
+        initClothCurtainSimulation();
+      }
+    }, 150);
+  };
+  window.addEventListener('resize', onWindowResize);
 
-  // Cleanup handler registered globally for router teardown
   window.cleanupCurtainSimulation = () => {
+    if (intersectionObserver) {
+      intersectionObserver.disconnect();
+      intersectionObserver = null;
+    }
     if (animationFrameId) {
       cancelAnimationFrame(animationFrameId);
       animationFrameId = null;
     }
-    window.removeEventListener('resize', resize);
+    window.removeEventListener('resize', onWindowResize);
     window.removeEventListener('mousemove', moveDrag);
     window.removeEventListener('mouseup', endDrag);
-    window.removeEventListener('touchmove', onTouchMove);
-    window.removeEventListener('touchend', endDrag);
     if (canvas) {
       canvas.removeEventListener('mousedown', startDrag);
-      canvas.removeEventListener('touchstart', onTouchStart);
       canvas.removeEventListener('mouseleave', onMouseLeave);
     }
     if (stage) {
