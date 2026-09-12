@@ -422,7 +422,7 @@ h1, h2, h3, h4, h5, h6 {
 .desktop-nav {
   display: flex;
   align-items: center;
-  gap: 36px;
+  gap: clamp(20px, 2.2vw, 32px);
 }
 
 .nav-link {
@@ -470,19 +470,21 @@ h1, h2, h3, h4, h5, h6 {
 .header-cta-wrap {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 22px;
 }
 
 .site-header .nav-cta {
-  height: 38px;
-  padding: 0 18px;
-  font-size: 14px;
+  height: 33px;
+  min-height: 33px;
+  padding: 0 14px;
+  font-size: 13px;
   font-weight: 600;
+  gap: 6px;
 }
 
 .site-header .nav-cta .btn-arrow {
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
 }
 
 .mobile-menu-toggle {
@@ -3110,7 +3112,7 @@ h1, h2, h3, h4, h5, h6 {
     box-sizing: border-box !important;
   }
 
-  .desktop-nav, .header-cta-wrap .nav-cta {
+  .desktop-nav, .header-cta-wrap .nav-cta, .header-cta-wrap .header-about-link {
     display: none !important;
   }
 

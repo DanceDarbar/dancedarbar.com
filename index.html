@@ -18,7 +18,7 @@
   <!-- Satoshi Font (Fontshare CDN) -->
   <link href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,600,500,400&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="style.css?v=80">
+  <link rel="stylesheet" href="style.css?v=81">
   
   <style>
     /* Critical entrance style: ensures opacity: 0 on initial paint to avoid FOUC */
@@ -68,9 +68,10 @@
 
       <!-- Header Primary CTA -->
       <div class="header-cta-wrap">
+        <a href="#/about" class="nav-link header-about-link" data-route="/about">About Us</a>
         <a href="#/claim-free-seat" class="btn btn-primary nav-cta claim-seat-btn">
           <span>Claim Free Seat</span>
-          <svg class="btn-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          <svg class="btn-arrow" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
         <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle Navigation Menu">
           <span class="bar bar-1"></span>
@@ -91,6 +92,7 @@
       </div>
       <nav class="mobile-nav-links">
         <a href="#/" class="mobile-link" data-route="/">Home</a>
+        <a href="#/about" class="mobile-link" data-route="/about">About Us</a>
         <a href="#/programs" class="mobile-link" data-route="/programs">Classes</a>
         <a href="#/schedule" class="mobile-link" data-route="/schedule">View Schedule</a>
         <a href="#/events" class="mobile-link" data-route="/events">Events</a>
@@ -417,6 +419,6 @@
     </div>
   </div>
 
-  <script src="app.js?v=80"></script>
+  <script src="app.js?v=81"></script>
 </body>
 </html>
