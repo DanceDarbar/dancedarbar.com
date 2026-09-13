@@ -416,7 +416,7 @@ function renderApp() {
     initTrialFormEvents();
   } else if (route === '/about' || route === '/about-us') {
     appRoot.innerHTML = renderAboutPage();
-    initFlipGallery();
+    initGrainyCarousel();
   } else if (route === '/contact') {
     appRoot.innerHTML = renderContactPage();
     initContactFormEvents();
@@ -939,31 +939,17 @@ function renderAboutPage() {
           <h1 class="about-heading">Dance Darbar Kala Sansthan</h1>
         </div>
 
-        <!-- 3, 4, 5: ~64px gap, Centered Flip Gallery Photo Card, ~64px gap -->
+        <!-- 3, 4, 5: ~64px gap, Grainy Carousel Multi-Image Component, ~64px gap -->
         <div class="about-gallery-wrap">
-          <div class="flip-gallery-container" id="flip-gallery-container" style="width: 100%; max-width: 100%; aspect-ratio: 16 / 9; margin: 0 auto;">
-            <div class="flip-gallery-card" id="flip-gallery-card" role="region" aria-label="Dance Darbar Kala Sansthan community cast photo">
-              <div class="flip-gallery-inner" id="flip-gallery-inner">
-                <div class="flip-gallery-face flip-gallery-face-front">
-                  <img 
-                    src="assets/community-celebration.jpg" 
-                    alt="Dance Darbar Kala Sansthan students, faculty, and families on stage with award trophies" 
-                    class="flip-gallery-img"
-                    loading="eager" 
-                    decoding="async"
-                  >
-                </div>
-                <div class="flip-gallery-face flip-gallery-face-back">
-                  <img 
-                    src="assets/community-celebration.jpg" 
-                    alt="Dance Darbar Kala Sansthan students, faculty, and families on stage with award trophies" 
-                    class="flip-gallery-img"
-                    loading="eager" 
-                    decoding="async"
-                  >
-                </div>
-              </div>
-            </div>
+          <div 
+            class="grainy-carousel-host" 
+            id="grainy-carousel-host" 
+            role="region" 
+            aria-label="Dance Darbar Kala Sansthan Community Showcase Carousel" 
+            style="width: 100%; height: 380px; min-width: 0; min-height: 0; border-radius: 16px; overflow: hidden; position: relative; isolation: isolate; cursor: pointer; touch-action: none; background: rgba(0, 0, 0, 0);"
+          >
+            <canvas id="grainy-carousel-gl" style="position: absolute; inset: 0; width: 100%; height: 100%;"></canvas>
+            <canvas id="grainy-carousel-fallback" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; pointer-events: none;"></canvas>
           </div>
         </div>
 
@@ -1004,53 +990,509 @@ function renderAboutPage() {
   `;
 }
 
-// --- FLIP GALLERY CONTROLLER ---
-function initFlipGallery() {
-  const container = document.getElementById('flip-gallery-container');
-  const card = document.getElementById('flip-gallery-card');
-  const inner = document.getElementById('flip-gallery-inner');
-  if (!container || !card || !inner) return;
+// --- GRAINY CAROUSEL CONTROLLER ---
+function initGrainyCarousel() {
+  if (window.__grainyCarouselCleanup) {
+    try { window.__grainyCarouselCleanup(); } catch (e) {}
+    window.__grainyCarouselCleanup = null;
+  }
+
+  const host = document.getElementById('grainy-carousel-host');
+  const canvas = document.getElementById('grainy-carousel-gl');
+  const fallback = document.getElementById('grainy-carousel-fallback');
+  if (!host || !canvas || !fallback) return;
 
   const images = [
-    {
-      src: 'assets/community-celebration.jpg',
-      alt: 'Dance Darbar Kala Sansthan students, faculty, and families on stage with award trophies',
-      focusY: 40
-    }
+    'assets/community-1.jpg',
+    'assets/community-2.jpg',
+    'assets/community-3.jpg',
+    'assets/community-4.jpg',
+    'assets/community-5.jpg',
+    'assets/community-6.jpg'
   ];
 
-  const tiltLimit = 20;
-  const scale = 1.06;
-  const mult = -1; // repel effect
-  const halfTurn = 180;
-  let angle = 0;
-  let index = 0;
+  const baseCardW = 600;
+  const baseCardH = 360;
+  const gap = 16;
+  const rounded = 16;
+  const speed = 65;
+  const mode = 'snap';
+  const dragGain = 0.5 + (51 / 100) * (2.5 - 0.5);
+  const smoothRate = (speed / 50) * 90;
+  const snapInterval = 5 * (50 / speed);
+  const damping = (60 / 100) * 0.5;
+  const zoom = 5 / 100;
+  const edgeWidth = 1;
+  const noiseSpeed = (100 / 50) * 0.15;
+  const grainAmount = 12 / 100;
+  const grainScale = 300;
+  const clickSlop = 5;
+
+  const VERT = `
+attribute vec2 position;
+attribute vec2 uv;
+varying vec2 vUv;
+void main() {
+    vUv = uv;
+    gl_Position = vec4(position, 0.0, 1.0);
+}`;
+
+  const FRAG = `
+precision highp float;
+
+uniform sampler2D tDiffuse;
+uniform float uTime;
+uniform vec2  uResolution;
+uniform float uEdgeWidth;
+uniform float uNoiseSpeed;
+uniform float uGrainScale;
+uniform float uGrainAmount;
+
+varying vec2 vUv;
+
+vec3 permute(vec3 x) { return mod(((x * 34.0) + 1.0) * x, 289.0); }
+
+float snoise(vec2 v) {
+  const vec4 C = vec4(0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439);
+  vec2 i  = floor(v + dot(v, C.yy));
+  vec2 x0 = v - i + dot(i, C.xx);
+  vec2 i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
+  vec4 x12 = x0.xyxy + C.xxzz;
+  x12.xy -= i1;
+  i = mod(i, 289.0);
+  vec3 p = permute(permute(i.y + vec3(0.0, i1.y, 1.0)) + i.x + vec3(0.0, i1.x, 1.0));
+  vec3 m  = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);
+  m = m * m * m * m;
+  vec3 x  = 2.0 * fract(p * C.www) - 1.0;
+  vec3 h  = abs(x) - 0.5;
+  vec3 ox = floor(x + 0.5);
+  vec3 a0 = x - ox;
+  m *= 1.79284291400159 - 0.85373472095314 * (a0*a0 + h*h);
+  vec3 g;
+  g.x  = a0.x  * x0.x  + h.x  * x0.y;
+  g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+  return 130.0 * dot(m, g);
+}
+
+float fbm(vec2 p) {
+  float v = 0.0;
+  float a = 0.5;
+  for (int i = 0; i < 4; i++) {
+    v += a * snoise(p);
+    p  = p * 2.1 + vec2(1.7, 9.2);
+    a *= 0.5;
+  }
+  return v;
+}
+
+void main() {
+  float leftBand  = 1.0 - smoothstep(0.0, uEdgeWidth, vUv.x);
+  float rightBand = smoothstep(1.0 - uEdgeWidth, 1.0, vUv.x);
+  float xMask     = max(leftBand, rightBand);
+
+  if (xMask <= 0.001) {
+      gl_FragColor = texture2D(tDiffuse, vUv);
+      return;
+  }
+
+  float mask = pow(xMask, 3.0) * 3.0;
+  float ar = uResolution.x / max(uResolution.y, 1.0);
+
+  float t = uTime * uNoiseSpeed * (uGrainScale * 0.015);
+
+  vec2 noiseUV = vec2(vUv.x * ar, vUv.y) * uGrainScale;
+
+  float dx = fbm(noiseUV + vec2(t, t * 0.5)) * uGrainAmount;
+  float dy = fbm(noiseUV + vec2(-t * 0.3, t * 0.8)) * uGrainAmount;
+
+  vec2 warpedUV = vUv + vec2(dx, dy) * mask;
+
+  vec4 col = vec4(0.0);
+  if (warpedUV.x >= 0.0 && warpedUV.x <= 1.0 && warpedUV.y >= 0.0 && warpedUV.y <= 1.0) {
+      col = texture2D(tDiffuse, warpedUV);
+  }
+
+  float colorDecay = max(smoothstep(1.0, 0.1, mask / 6.0), 0.1);
+
+  gl_FragColor = vec4(col.rgb * colorDecay, col.a);
+}`;
+
+  function compileShader(gl, type, src) {
+    const s = gl.createShader(type);
+    if (!s) return null;
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+      console.warn('GrainyCarousel shader:', gl.getShaderInfoLog(s));
+    }
+    return s;
+  }
+
+  function drawCover(ctx, img, boxX, boxY, boxW, boxH, pct) {
+    const t = Math.max(0, Math.min(100, pct)) / 100;
+    const short = Math.min(boxW, boxH);
+    const x = boxX + (t * (boxW - short)) / 2;
+    const y = boxY + (t * (boxH - short)) / 2;
+    const w = boxW - t * (boxW - short);
+    const h = boxH - t * (boxH - short);
+    const r = (t * short) / 2;
+    if (!img.complete || !img.naturalWidth) return;
+    const imgRatio = img.naturalWidth / img.naturalHeight;
+    const boxRatio = w / h;
+    let sx, sy, sw, sh;
+    if (imgRatio > boxRatio) {
+      sh = img.naturalHeight;
+      sw = sh * boxRatio;
+      sx = (img.naturalWidth - sw) / 2;
+      sy = 0;
+    } else {
+      sw = img.naturalWidth;
+      sh = sw / boxRatio;
+      sx = 0;
+      sy = (img.naturalHeight - sh) / 2;
+    }
+    const rr = Math.max(0, Math.min(r, w / 2, h / 2));
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(x + rr, y);
+    ctx.lineTo(x + w - rr, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + rr);
+    ctx.lineTo(x + w, y + h - rr);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - rr, y + h);
+    ctx.lineTo(x + rr, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - rr);
+    ctx.lineTo(x, y + rr);
+    ctx.quadraticCurveTo(x, y, x + rr, y);
+    ctx.closePath();
+    ctx.clip();
+    ctx.drawImage(img, sx, sy, sw, sh, x, y, w, h);
+    ctx.restore();
+  }
+
+  function createCubicBezier(x1, y1, x2, y2) {
+    return function(t) {
+      if (t <= 0) return 0;
+      if (t >= 1) return 1;
+      let curT = t;
+      for (let i = 0; i < 6; i++) {
+        const currentX = 3 * (1 - curT) * (1 - curT) * curT * x1 + 3 * (1 - curT) * curT * curT * x2 + curT * curT * curT;
+        const currentSlope = 3 * (1 - curT) * (1 - curT) * x1 + 6 * (1 - curT) * curT * (x2 - x1) + 3 * curT * curT * (1 - x2);
+        if (Math.abs(currentSlope) < 1e-5) break;
+        curT -= (currentX - t) / currentSlope;
+        curT = Math.max(0, Math.min(1, curT));
+      }
+      return 3 * (1 - curT) * (1 - curT) * curT * y1 + 3 * (1 - curT) * curT * curT * y2 + curT * curT * curT;
+    };
+  }
+  const easeSnap = createCubicBezier(0, 0, 0.58, 1);
+
+  const strip = document.createElement('canvas');
+  const stripCtx = strip.getContext('2d');
+
+  const gl = canvas.getContext('webgl', {
+    alpha: true,
+    premultipliedAlpha: false
+  });
+
+  let prog = null;
+  let tex = null;
+  let uTime = null;
+  let uResolution = null;
+  let uEdgeWidth = null;
+  let uNoiseSpeed = null;
+  let uGrainScale = null;
+  let uGrainAmount = null;
+  let posBuf = null;
+  let uvBuf = null;
+  let hasGL = false;
+
+  if (gl) {
+    prog = gl.createProgram();
+    const vs = compileShader(gl, gl.VERTEX_SHADER, VERT);
+    const fs = compileShader(gl, gl.FRAGMENT_SHADER, FRAG);
+    if (prog && vs && fs) {
+      gl.attachShader(prog, vs);
+      gl.attachShader(prog, fs);
+      gl.linkProgram(prog);
+      if (gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+        hasGL = true;
+        gl.useProgram(prog);
+
+        const verts = new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]);
+        const uvs = new Float32Array([0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1]);
+
+        posBuf = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, posBuf);
+        gl.bufferData(gl.ARRAY_BUFFER, verts, gl.STATIC_DRAW);
+        const aPos = gl.getAttribLocation(prog, 'position');
+        gl.enableVertexAttribArray(aPos);
+        gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+        uvBuf = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, uvBuf);
+        gl.bufferData(gl.ARRAY_BUFFER, uvs, gl.STATIC_DRAW);
+        const aUv = gl.getAttribLocation(prog, 'uv');
+        gl.enableVertexAttribArray(aUv);
+        gl.vertexAttribPointer(aUv, 2, gl.FLOAT, false, 0, 0);
+
+        uTime = gl.getUniformLocation(prog, 'uTime');
+        uResolution = gl.getUniformLocation(prog, 'uResolution');
+        uEdgeWidth = gl.getUniformLocation(prog, 'uEdgeWidth');
+        uNoiseSpeed = gl.getUniformLocation(prog, 'uNoiseSpeed');
+        uGrainScale = gl.getUniformLocation(prog, 'uGrainScale');
+        uGrainAmount = gl.getUniformLocation(prog, 'uGrainAmount');
+
+        tex = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, tex);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+      }
+    }
+  }
+
+  canvas.style.opacity = hasGL ? '1' : '0';
+  fallback.style.opacity = hasGL ? '0' : '1';
+
+  let loaded = images.map(src => {
+    const img = new Image();
+    if (src.startsWith('http://') || src.startsWith('https://')) {
+      img.crossOrigin = 'anonymous';
+    }
+    img.src = src;
+    return img;
+  });
+
+  let vw = 1;
+  let vh = 1;
+  let dpr = 1;
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    vw = Math.max(1, host.clientWidth);
+    vh = Math.max(1, host.clientHeight);
+    const bw = Math.round(vw * dpr);
+    const bh = Math.round(vh * dpr);
+    [canvas, fallback, strip].forEach(c => {
+      c.width = bw;
+      c.height = bh;
+    });
+    if (gl && hasGL) gl.viewport(0, 0, bw, bh);
+  }
+  resize();
+
+  let ro = null;
+  if (window.ResizeObserver) {
+    ro = new ResizeObserver(resize);
+    ro.observe(host);
+  } else {
+    window.addEventListener('resize', resize);
+  }
+
+  let scrollX = 0;
+  let snapAnim = null;
+  function stopSnap() {
+    if (snapAnim) {
+      if (snapAnim.stop) snapAnim.stop();
+      snapAnim = null;
+    }
+  }
+
+  let targetX = 0;
+  let snapTimer = 0;
+  let itemWidth = 1;
+  let centerOffset = 0;
+  const drag = { active: false, id: -1, last: 0, x0: 0, y0: 0, click: true };
+
+  function onDown(e) {
+    drag.active = true;
+    stopSnap();
+    drag.id = e.pointerId;
+    drag.last = e.clientX;
+    drag.x0 = e.clientX;
+    drag.y0 = e.clientY;
+    drag.click = true;
+  }
 
   function onMove(e) {
-    const rect = card.getBoundingClientRect();
-    if (!rect.width || !rect.height) return;
-    const tiltX = ((e.clientY - rect.top) / rect.height - 0.5) * (tiltLimit * 2) * mult;
-    const tiltY = ((e.clientX - rect.left) / rect.width - 0.5) * -(tiltLimit * 2) * mult;
-    card.style.transform = `rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg) scale3d(${scale}, ${scale}, ${scale})`;
+    if (!drag.active || e.pointerId !== drag.id) return;
+    targetX -= (e.clientX - drag.last) * dragGain;
+    drag.last = e.clientX;
+    snapTimer = 0;
+    if (Math.abs(e.clientX - drag.x0) > clickSlop || Math.abs(e.clientY - drag.y0) > clickSlop) {
+      drag.click = false;
+    }
   }
 
-  function onLeave() {
-    card.style.transform = 'rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+  function onUp(e) {
+    if (!drag.active || e.pointerId !== drag.id) return;
+    drag.active = false;
+    if (!loaded.length || itemWidth <= 0) return;
+    const current = Math.round((targetX + centerOffset) / itemWidth);
+    if (drag.click) {
+      const rect = host.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const steps = Math.round((clickX - vw / 2) / itemWidth);
+      targetX = (current + steps) * itemWidth - centerOffset;
+      snapTimer = 0;
+    } else if (mode === 'snap') {
+      targetX = current * itemWidth - centerOffset;
+    }
   }
 
-  function onClick(e) {
-    if (images.length < 2) return;
-    const rect = card.getBoundingClientRect();
-    const isLeft = (e.clientX - rect.left) < rect.width / 2;
-    const dir = isLeft ? -1 : 1;
-    index = (index + dir + images.length) % images.length;
-    angle += dir * halfTurn;
-    inner.style.transform = `rotateY(${angle}deg)`;
+  function onWheel(e) {
+    if (mode === 'smooth') {
+      targetX += e.deltaX || e.deltaY;
+    }
   }
 
-  card.addEventListener('mousemove', onMove);
-  card.addEventListener('mouseleave', onLeave);
-  card.addEventListener('click', onClick);
+  host.addEventListener('pointerdown', onDown);
+  window.addEventListener('pointermove', onMove);
+  window.addEventListener('pointerup', onUp);
+  window.addEventListener('pointercancel', onUp);
+  host.addEventListener('wheel', onWheel, { passive: true });
+
+  let raf = 0;
+  let last = performance.now();
+
+  function frame(now) {
+    raf = requestAnimationFrame(frame);
+    const dt = Math.min((now - last) / 1000, 0.1);
+    last = now;
+
+    const drawW = vw < 640 ? Math.min(baseCardW, Math.max(280, Math.round(vw * 0.84))) : baseCardW;
+    const drawH = vw < 640 ? Math.round(drawW * (baseCardH / baseCardW)) : baseCardH;
+
+    itemWidth = drawW + gap;
+    const total = Math.max(1, loaded.length * itemWidth);
+    centerOffset = (vw - drawW) / 2;
+
+    const edge = (drawW / vw) * edgeWidth;
+
+    if (!drag.active && loaded.length && Number.isFinite(snapInterval)) {
+      if (mode === 'smooth') {
+        targetX += smoothRate * dt;
+      } else if (Number.isFinite(snapInterval)) {
+        snapTimer += dt;
+        if (snapTimer >= snapInterval) {
+          const current = Math.round((targetX + centerOffset) / itemWidth);
+          const nextTarget = (current + 1) * itemWidth - centerOffset;
+          snapTimer = 0;
+
+          const from = scrollX;
+          const delta = nextTarget - from;
+          stopSnap();
+          const snapStart = performance.now();
+          const duration = 0.5;
+          targetX = nextTarget;
+          snapAnim = {
+            update: (n) => {
+              const p = Math.min((n - snapStart) / (duration * 1000), 1);
+              scrollX = from + delta * easeSnap(p);
+              if (p >= 1) snapAnim = null;
+            },
+            stop: () => { snapAnim = null; }
+          };
+        }
+      }
+    }
+
+    if (snapAnim) {
+      snapAnim.update(now);
+    } else {
+      const lf = 1 - Math.pow(1 - damping, dt * 60);
+      scrollX += (targetX - scrollX) * lf;
+    }
+
+    let visualScale = 1;
+    if (mode === 'snap' && zoom > 0) {
+      const nearest = Math.round((scrollX + centerOffset) / itemWidth) * itemWidth - centerOffset;
+      let ratio = Math.min(Math.abs(scrollX - nearest) / (itemWidth / 2), 1);
+      ratio = ratio * ratio * (3 - 2 * ratio);
+      visualScale = 1 - ratio * zoom;
+    }
+
+    if (stripCtx) {
+      stripCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      stripCtx.clearRect(0, 0, vw, vh);
+      if (loaded.length) {
+        stripCtx.save();
+        if (visualScale !== 1) {
+          stripCtx.translate(vw / 2, vh / 2);
+          stripCtx.scale(visualScale, visualScale);
+          stripCtx.translate(-vw / 2, -vh / 2);
+        }
+        const y = (vh - drawH) / 2;
+        let wrapped = scrollX % total;
+        if (wrapped < 0) wrapped += total;
+        let x = -wrapped;
+        const leftBound = -vw * 1.5;
+        const rightBound = vw * 2.5;
+        while (x < rightBound) {
+          for (let i = 0; i < loaded.length; i++) {
+            const px = x + i * itemWidth;
+            if (px + drawW > leftBound && px < rightBound) {
+              drawCover(stripCtx, loaded[i], px, y, drawW, drawH, rounded);
+            }
+          }
+          x += total;
+        }
+        stripCtx.restore();
+      }
+    }
+
+    let drewGL = false;
+    if (gl && hasGL) {
+      try {
+        gl.bindTexture(gl.TEXTURE_2D, tex);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, strip);
+        gl.clearColor(0, 0, 0, 0);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.uniform1f(uTime, now * 0.001);
+        gl.uniform2f(uResolution, canvas.width, canvas.height);
+        gl.uniform1f(uEdgeWidth, edge);
+        gl.uniform1f(uNoiseSpeed, noiseSpeed);
+        gl.uniform1f(uGrainScale, grainScale);
+        gl.uniform1f(uGrainAmount, grainAmount);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+        drewGL = true;
+      } catch (err) {
+        hasGL = false;
+        canvas.style.opacity = '0';
+        fallback.style.opacity = '1';
+      }
+    }
+    if (!drewGL) {
+      const fb = fallback.getContext('2d');
+      if (fb) {
+        fb.setTransform(1, 0, 0, 1, 0, 0);
+        fb.clearRect(0, 0, fallback.width, fallback.height);
+        fb.drawImage(strip, 0, 0);
+      }
+    }
+  }
+
+  raf = requestAnimationFrame(frame);
+
+  window.__grainyCarouselCleanup = function() {
+    cancelAnimationFrame(raf);
+    stopSnap();
+    if (ro) ro.disconnect();
+    window.removeEventListener('resize', resize);
+    host.removeEventListener('pointerdown', onDown);
+    window.removeEventListener('pointermove', onMove);
+    window.removeEventListener('pointerup', onUp);
+    window.removeEventListener('pointercancel', onUp);
+    host.removeEventListener('wheel', onWheel);
+    if (gl && hasGL) {
+      if (tex) gl.deleteTexture(tex);
+      if (posBuf) gl.deleteBuffer(posBuf);
+      if (uvBuf) gl.deleteBuffer(uvBuf);
+      if (prog) gl.deleteProgram(prog);
+    }
+  };
 }
 
 // --- CONTACT PAGE TEMPLATE ---
