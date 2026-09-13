@@ -4103,7 +4103,7 @@ select.modal-input-field {
 /* 1 & 2: Center-aligned Hero Header */
 .about-hero-header {
   text-align: center;
-  max-width: 900px;
+  max-width: 960px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -4136,7 +4136,7 @@ select.modal-input-field {
 /* 3, 4, 5: Flip Gallery with ~64px vertical gap above and below */
 .about-gallery-wrap {
   width: 100%;
-  max-width: 900px;
+  max-width: 100%;
   margin: 64px auto;
   display: flex;
   justify-content: center;
@@ -4145,7 +4145,7 @@ select.modal-input-field {
 .flip-gallery-container {
   position: relative;
   width: 100%;
-  max-width: 900px;
+  max-width: 100%;
   aspect-ratio: 16 / 9;
   margin: 0 auto;
   display: flex;
@@ -4203,19 +4203,19 @@ select.modal-input-field {
   user-select: none;
 }
 
-/* 6, 7, 8: Content Block (History, Mission, Offerings Pills) */
+/* 6 & 7: Content Block (History & Mission) */
 .about-content-block {
-  max-width: 900px;
+  max-width: 960px;
   margin: 0 auto;
 }
 
 .about-paragraph {
   font-family: 'Satoshi', var(--font-body), sans-serif;
-  font-size: clamp(16px, 1.25vw, 18px);
-  line-height: 1.8;
+  font-size: 15.5px;
+  line-height: 1.75;
   color: var(--color-body-text, #E5E5E5);
-  margin: 0 0 24px 0;
-  max-width: 72ch;
+  margin: 0 0 12px 0;
+  max-width: 100%;
 }
 
 .about-paragraph:last-child {
@@ -4229,7 +4229,7 @@ select.modal-input-field {
   margin-top: 56px;
   padding-top: 48px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-  max-width: 900px;
+  max-width: 960px;
   margin-left: auto;
   margin-right: auto;
 }

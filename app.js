@@ -941,7 +941,7 @@ function renderAboutPage() {
 
         <!-- 3, 4, 5: ~64px gap, Centered Flip Gallery Photo Card, ~64px gap -->
         <div class="about-gallery-wrap">
-          <div class="flip-gallery-container" id="flip-gallery-container" style="width: 100%; max-width: 900px; aspect-ratio: 16 / 9; margin: 0 auto;">
+          <div class="flip-gallery-container" id="flip-gallery-container" style="width: 100%; max-width: 100%; aspect-ratio: 16 / 9; margin: 0 auto;">
             <div class="flip-gallery-card" id="flip-gallery-card" role="region" aria-label="Dance Darbar Kala Sansthan community cast photo">
               <div class="flip-gallery-inner" id="flip-gallery-inner">
                 <div class="flip-gallery-face flip-gallery-face-front">
