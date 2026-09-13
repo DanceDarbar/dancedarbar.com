@@ -944,55 +944,16 @@ function renderAboutPage() {
   return `
     <div class="about-page-wrap">
       <div class="section-container">
-        <div class="about-content-block">
+        <!-- 1 & 2: Centered Eyebrow & Heading -->
+        <div class="about-hero-header">
           <span class="eyebrow about-eyebrow">OUR STORY</span>
           <h1 class="about-heading">Dance Darbar Kala Sansthan</h1>
-          
-          <p class="about-paragraph">
-            Dance Darbar Kala Sansthan began in 1995 as Hare Krishna Bhartiya Kala Kendra, founded with the divine blessings of Guru Pt. Ram Mohan Maharaj Ji and Su Shri Rani Khanam Ji. In 2020, the institute was renamed Dance Darbar Kala Sansthan.
-          </p>
-          
-          <p class="about-paragraph">
-            Dance Darbar Kala Sansthan is built on value-based cultural education — nurturing love, sharing, and care alongside artistic training. Our programs span Kathak, Folk Dance, Western, Bollywood, Painting, Instruments, Vocal, and Yoga.
-          </p>
-
-          <div class="offerings-grid">
-            ${offerings.map(item => `<span class="offering-pill">${item}</span>`).join('')}
-          </div>
         </div>
 
-        <!-- FOUNDER PROFILE SECTION -->
-        <section class="founder-section" aria-label="Founder Profile">
-          <div class="founder-card">
-            <div class="founder-media">
-              <img 
-                src="assets/founder-guru-bhagwan-singh.jpg" 
-                alt="Guru Bhagwan Singh - Founder" 
-                class="founder-img"
-                loading="lazy" 
-                decoding="async"
-              >
-            </div>
-            <div class="founder-info">
-              <span class="eyebrow founder-eyebrow">FOUNDER</span>
-              <h2 class="founder-name">Guru Bhagwan Singh</h2>
-              <p class="founder-bio">
-                Guru Bhagwan Singh has over 30+ years of experience in teaching, choreography &amp; performance. Committed to cultural education and inclusive training for special children.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <!-- OUR COMMUNITY / CELEBRATING TOGETHER SECTION (FLIP GALLERY) -->
-        <section class="community-section" aria-label="Our Community">
-          <div class="community-header">
-            <span class="eyebrow community-eyebrow">OUR COMMUNITY</span>
-            <h2 class="community-heading">Celebrating Together</h2>
-            <p class="community-subtext">Moments from our students, faculty, and families on stage.</p>
-          </div>
-
+        <!-- 3, 4, 5: ~64px gap, Centered Flip Gallery Photo Card, ~64px gap -->
+        <div class="about-gallery-wrap">
           <div class="flip-gallery-container" id="flip-gallery-container" style="width: 100%; max-width: 900px; aspect-ratio: 16 / 9; margin: 0 auto;">
-            <div class="flip-gallery-card" id="flip-gallery-card" role="region" aria-label="Community celebration photo gallery">
+            <div class="flip-gallery-card" id="flip-gallery-card" role="region" aria-label="Dance Darbar Kala Sansthan community cast photo">
               <div class="flip-gallery-inner" id="flip-gallery-inner">
                 <div class="flip-gallery-face flip-gallery-face-front">
                   <img 
@@ -1013,6 +974,43 @@ function renderAboutPage() {
                   >
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6, 7, 8: History paragraph, Mission paragraph, Row of 8 pill tags -->
+        <div class="about-content-block">
+          <p class="about-paragraph">
+            Dance Darbar Kala Sansthan began in 1995 as Hare Krishna Bhartiya Kala Kendra, founded with the divine blessings of Guru Pt. Ram Mohan Maharaj Ji and Su Shri Rani Khanam Ji. In 2020, the institute was renamed Dance Darbar Kala Sansthan.
+          </p>
+          
+          <p class="about-paragraph">
+            Dance Darbar Kala Sansthan is built on value-based cultural education — nurturing love, sharing, and care alongside artistic training. Our programs span Kathak, Folk Dance, Western, Bollywood, Painting, Instruments, Vocal, and Yoga.
+          </p>
+
+          <div class="offerings-grid">
+            ${offerings.map(item => `<span class="offering-pill">${item}</span>`).join('')}
+          </div>
+        </div>
+
+        <!-- 9: Founder Profile Section (Guru Bhagwan Singh photo + bio) -->
+        <section class="founder-section" aria-label="Founder Profile">
+          <div class="founder-card">
+            <div class="founder-media">
+              <img 
+                src="assets/founder-guru-bhagwan-singh.jpg" 
+                alt="Guru Bhagwan Singh - Founder" 
+                class="founder-img"
+                loading="lazy" 
+                decoding="async"
+              >
+            </div>
+            <div class="founder-info">
+              <span class="eyebrow founder-eyebrow">FOUNDER</span>
+              <h2 class="founder-name">Guru Bhagwan Singh</h2>
+              <p class="founder-bio">
+                Guru Bhagwan Singh has over 30+ years of experience in teaching, choreography &amp; performance. Committed to cultural education and inclusive training for special children.
+              </p>
             </div>
           </div>
         </section>
