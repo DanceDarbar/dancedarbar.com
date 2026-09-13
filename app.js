@@ -1008,7 +1008,10 @@ function initGrainyCarousel() {
     'assets/community-3.jpg',
     'assets/community-4.jpg',
     'assets/community-5.jpg',
-    'assets/community-6.jpg'
+    'assets/community-6.jpg',
+    'assets/community-7.jpg',
+    'assets/community-8.jpg',
+    'assets/community-9.jpg'
   ];
 
   const baseCardW = 600;
@@ -1023,8 +1026,8 @@ function initGrainyCarousel() {
   const damping = (60 / 100) * 0.5;
   const zoom = 5 / 100;
   const edgeWidth = 1;
-  const noiseSpeed = (100 / 50) * 0.15;
-  const grainAmount = 12 / 100;
+  const noiseSpeed = 0;
+  const grainAmount = 0;
   const grainScale = 300;
   const clickSlop = 5;
 
@@ -1086,6 +1089,11 @@ float fbm(vec2 p) {
 }
 
 void main() {
+  if (uGrainAmount <= 0.0001) {
+    gl_FragColor = texture2D(tDiffuse, vUv);
+    return;
+  }
+
   float leftBand  = 1.0 - smoothstep(0.0, uEdgeWidth, vUv.x);
   float rightBand = smoothstep(1.0 - uEdgeWidth, 1.0, vUv.x);
   float xMask     = max(leftBand, rightBand);
