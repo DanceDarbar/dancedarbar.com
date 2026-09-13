@@ -930,17 +930,6 @@ function renderClaimFreeSeatPage() {
 
 // --- ABOUT PAGE TEMPLATE ---
 function renderAboutPage() {
-  const offerings = [
-    'Kathak',
-    'Folk Dance',
-    'Western',
-    'Bollywood',
-    'Painting',
-    'Instruments',
-    'Vocal',
-    'Yoga'
-  ];
-
   return `
     <div class="about-page-wrap">
       <div class="section-container">
@@ -978,7 +967,7 @@ function renderAboutPage() {
           </div>
         </div>
 
-        <!-- 6, 7, 8: History paragraph, Mission paragraph, Row of 8 pill tags -->
+        <!-- 6 & 7: History paragraph & Mission paragraph -->
         <div class="about-content-block">
           <p class="about-paragraph">
             Dance Darbar Kala Sansthan began in 1995 as Hare Krishna Bhartiya Kala Kendra, founded with the divine blessings of Guru Pt. Ram Mohan Maharaj Ji and Su Shri Rani Khanam Ji. In 2020, the institute was renamed Dance Darbar Kala Sansthan.
@@ -987,10 +976,6 @@ function renderAboutPage() {
           <p class="about-paragraph">
             Dance Darbar Kala Sansthan is built on value-based cultural education — nurturing love, sharing, and care alongside artistic training. Our programs span Kathak, Folk Dance, Western, Bollywood, Painting, Instruments, Vocal, and Yoga.
           </p>
-
-          <div class="offerings-grid">
-            ${offerings.map(item => `<span class="offering-pill">${item}</span>`).join('')}
-          </div>
         </div>
 
         <!-- 9: Founder Profile Section (Guru Bhagwan Singh photo + bio) -->
