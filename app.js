@@ -381,7 +381,8 @@ function renderApp() {
   // Active Link Styling
   document.querySelectorAll('.nav-link, .mobile-link').forEach(link => {
     const targetRoute = link.getAttribute('data-route');
-    if (targetRoute === route || (targetRoute !== '/' && route.startsWith(targetRoute))) {
+    const isAbout = (route === '/about' || route === '/about-us') && (targetRoute === '/about' || targetRoute === '/about-us');
+    if (isAbout || targetRoute === route || (targetRoute !== '/' && route.startsWith(targetRoute))) {
       link.classList.add('active');
     } else {
       link.classList.remove('active');
@@ -413,7 +414,7 @@ function renderApp() {
   } else if (route === '/claim-free-seat') {
     appRoot.innerHTML = renderClaimFreeSeatPage();
     initTrialFormEvents();
-  } else if (route === '/about') {
+  } else if (route === '/about' || route === '/about-us') {
     appRoot.innerHTML = renderAboutPage();
   } else if (route === '/contact') {
     appRoot.innerHTML = renderContactPage();
@@ -928,21 +929,34 @@ function renderClaimFreeSeatPage() {
 
 // --- ABOUT PAGE TEMPLATE ---
 function renderAboutPage() {
-  return `
-    <div style="padding-top: 140px; padding-bottom: 100px;">
-      <div class="section-container">
-        <span class="eyebrow">About Dance Darbar</span>
-        <h1 class="section-heading" style="font-size: 52px; margin-bottom: 20px;">Dedicated to Art, Discipline & Cultural Excellence.</h1>
-        <p class="lead-text" style="margin-bottom: 60px;">Dance Darbar Kala Sansthan was established to foster artistic education combining traditional Indian roots with contemporary presentation standards.</p>
+  const offerings = [
+    'Kathak',
+    'Folk Dance',
+    'Western',
+    'Bollywood',
+    'Painting',
+    'Instruments',
+    'Vocal',
+    'Yoga'
+  ];
 
-        <div class="editorial-split" style="margin-bottom: 80px;">
-          <div>
-            <h2 style="font-size: 32px; margin-bottom: 16px;">Our Story & Vision</h2>
-            <p>Founded by Guru Bhagwan Singh in Dwarka, Delhi, Dance Darbar Kala Sansthan began as a dedicated classical Kathak and creative learning space. Over years of disciplined instruction, the academy expanded into multi-disciplinary fine arts, vocal music, Bollywood choreography, and holistic yoga.</p>
-            <p>Our vision is to nurture confident, expressive artists who embody poise, cultural literacy, and creative self-assurance on stage and in life.</p>
-          </div>
-          <div class="editorial-media">
-            <img src="assets/amrapali.jpg" alt="Academy Milestone" loading="lazy" decoding="async" class="editorial-img" style="height: 400px;">
+  return `
+    <div class="about-page-wrap">
+      <div class="section-container">
+        <div class="about-content-block">
+          <span class="eyebrow about-eyebrow">OUR STORY</span>
+          <h1 class="about-heading">Dance Darbar Kala Sansthan</h1>
+          
+          <p class="about-paragraph">
+            Dance Darbar Kala Sansthan began in 1995 as Hare Krishna Bhartiya Kala Kendra, founded with the divine blessings of Guru Pt. Ram Mohan Maharaj Ji and Su Shri Rani Khanam Ji. In 2020, the institute was renamed Dance Darbar Kala Sansthan.
+          </p>
+          
+          <p class="about-paragraph">
+            Dance Darbar Kala Sansthan is built on value-based cultural education — nurturing love, sharing, and care alongside artistic training. Our programs span Kathak, Folk Dance, Western, Bollywood, Painting, Instruments, Vocal, and Yoga.
+          </p>
+
+          <div class="offerings-grid">
+            ${offerings.map(item => `<span class="offering-pill">${item}</span>`).join('')}
           </div>
         </div>
       </div>
