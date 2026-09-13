@@ -416,6 +416,7 @@ function renderApp() {
     initTrialFormEvents();
   } else if (route === '/about' || route === '/about-us') {
     appRoot.innerHTML = renderAboutPage();
+    initFlipGallery();
   } else if (route === '/contact') {
     appRoot.innerHTML = renderContactPage();
     initContactFormEvents();
@@ -981,9 +982,92 @@ function renderAboutPage() {
             </div>
           </div>
         </section>
+
+        <!-- OUR COMMUNITY / CELEBRATING TOGETHER SECTION (FLIP GALLERY) -->
+        <section class="community-section" aria-label="Our Community">
+          <div class="community-header">
+            <span class="eyebrow community-eyebrow">OUR COMMUNITY</span>
+            <h2 class="community-heading">Celebrating Together</h2>
+            <p class="community-subtext">Moments from our students, faculty, and families on stage.</p>
+          </div>
+
+          <div class="flip-gallery-container" id="flip-gallery-container" style="width: 100%; max-width: 900px; aspect-ratio: 16 / 9; margin: 0 auto;">
+            <div class="flip-gallery-card" id="flip-gallery-card" role="region" aria-label="Community celebration photo gallery">
+              <div class="flip-gallery-inner" id="flip-gallery-inner">
+                <div class="flip-gallery-face flip-gallery-face-front">
+                  <img 
+                    src="assets/community-celebration.jpg" 
+                    alt="Dance Darbar Kala Sansthan students, faculty, and families on stage with award trophies" 
+                    class="flip-gallery-img"
+                    loading="eager" 
+                    decoding="async"
+                  >
+                </div>
+                <div class="flip-gallery-face flip-gallery-face-back">
+                  <img 
+                    src="assets/community-celebration.jpg" 
+                    alt="Dance Darbar Kala Sansthan students, faculty, and families on stage with award trophies" 
+                    class="flip-gallery-img"
+                    loading="eager" 
+                    decoding="async"
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   `;
+}
+
+// --- FLIP GALLERY CONTROLLER ---
+function initFlipGallery() {
+  const container = document.getElementById('flip-gallery-container');
+  const card = document.getElementById('flip-gallery-card');
+  const inner = document.getElementById('flip-gallery-inner');
+  if (!container || !card || !inner) return;
+
+  const images = [
+    {
+      src: 'assets/community-celebration.jpg',
+      alt: 'Dance Darbar Kala Sansthan students, faculty, and families on stage with award trophies',
+      focusY: 40
+    }
+  ];
+
+  const tiltLimit = 20;
+  const scale = 1.06;
+  const mult = -1; // repel effect
+  const halfTurn = 180;
+  let angle = 0;
+  let index = 0;
+
+  function onMove(e) {
+    const rect = card.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+    const tiltX = ((e.clientY - rect.top) / rect.height - 0.5) * (tiltLimit * 2) * mult;
+    const tiltY = ((e.clientX - rect.left) / rect.width - 0.5) * -(tiltLimit * 2) * mult;
+    card.style.transform = `rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg) scale3d(${scale}, ${scale}, ${scale})`;
+  }
+
+  function onLeave() {
+    card.style.transform = 'rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+  }
+
+  function onClick(e) {
+    if (images.length < 2) return;
+    const rect = card.getBoundingClientRect();
+    const isLeft = (e.clientX - rect.left) < rect.width / 2;
+    const dir = isLeft ? -1 : 1;
+    index = (index + dir + images.length) % images.length;
+    angle += dir * halfTurn;
+    inner.style.transform = `rotateY(${angle}deg)`;
+  }
+
+  card.addEventListener('mousemove', onMove);
+  card.addEventListener('mouseleave', onLeave);
+  card.addEventListener('click', onClick);
 }
 
 // --- CONTACT PAGE TEMPLATE ---
