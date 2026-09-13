@@ -959,6 +959,28 @@ function renderAboutPage() {
             ${offerings.map(item => `<span class="offering-pill">${item}</span>`).join('')}
           </div>
         </div>
+
+        <!-- FOUNDER PROFILE SECTION -->
+        <section class="founder-section" aria-label="Founder Profile">
+          <div class="founder-card">
+            <div class="founder-media">
+              <img 
+                src="assets/founder-guru-bhagwan-singh.jpg" 
+                alt="Guru Bhagwan Singh - Founder" 
+                class="founder-img"
+                loading="lazy" 
+                decoding="async"
+              >
+            </div>
+            <div class="founder-info">
+              <span class="eyebrow founder-eyebrow">FOUNDER</span>
+              <h2 class="founder-name">Guru Bhagwan Singh</h2>
+              <p class="founder-bio">
+                Guru Bhagwan Singh has over 30+ years of experience in teaching, choreography &amp; performance. Committed to cultural education and inclusive training for special children.
+              </p>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   `;
