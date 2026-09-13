@@ -1777,7 +1777,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .curtain-stage {
   position: relative;
-  width: min(1200px, 100%);
+  width: 100%;
   aspect-ratio: 2.4 / 1;
   max-height: 76vh;
   margin: 0 auto;

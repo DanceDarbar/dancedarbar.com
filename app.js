@@ -1823,8 +1823,18 @@ function initClothCurtainSimulation() {
       const topOffset = 0;
       const panelH = stageH - topOffset;
       const panelW = stageW * CFG.panelWidthRatio;
+      const prevRatioLeft = (left && left.maxOpen) ? (left.openAmount / left.maxOpen) : 0;
+      const prevRatioRight = (right && right.maxOpen) ? (right.openAmount / right.maxOpen) : 0;
       left = makeMesh(0, topOffset, panelW, panelH, false);
       right = makeMesh(stageW - panelW, topOffset, panelW, panelH, true);
+      if (prevRatioLeft > 0) {
+        left.openAmount = left.maxOpen * prevRatioLeft;
+        left.openAmountSmoothed = left.openAmount;
+      }
+      if (prevRatioRight > 0) {
+        right.openAmount = right.maxOpen * prevRatioRight;
+        right.openAmountSmoothed = right.openAmount;
+      }
     }
 
     function nearestPoint(x, y) {
@@ -2142,6 +2152,7 @@ function initClothCurtainSimulation() {
           initClothCurtainSimulation();
         } else {
           buildStage();
+          ensureRunning();
         }
       }, 150);
     };
