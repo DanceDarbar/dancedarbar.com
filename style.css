@@ -4425,12 +4425,13 @@ select.modal-input-field {
   position: relative;
   z-index: 3;
   width: 100%;
-  max-width: var(--container-width);
+  max-width: 880px;
   margin: 0 auto;
   padding: 80px 32px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  text-align: center;
   opacity: 0.35;
   transform: translateY(28px);
   transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
@@ -4444,6 +4445,7 @@ select.modal-input-field {
 .wwc-number-badge {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   font-family: var(--font-heading);
   font-size: 14px;
@@ -4471,6 +4473,7 @@ select.modal-input-field {
   color: #FFFFFF;
   margin-bottom: 8px;
   letter-spacing: -0.02em;
+  text-align: center;
 }
 
 .wwc-tagline {
@@ -4479,6 +4482,7 @@ select.modal-input-field {
   font-style: italic;
   color: #93C5FD;
   margin-bottom: 20px;
+  text-align: center;
 }
 
 .wwc-description {
@@ -4486,7 +4490,8 @@ select.modal-input-field {
   line-height: 1.65;
   color: #D4D4D8;
   max-width: 680px;
-  margin-bottom: 28px;
+  margin: 0 auto 28px auto;
+  text-align: center;
 }
 
 .wwc-mobile-image-card {
@@ -4494,8 +4499,14 @@ select.modal-input-field {
 }
 
 .wwc-examples-wrap {
-  margin-bottom: 32px;
+  margin: 0 auto 32px auto;
   max-width: 720px;
+  text-align: center;
+}
+
+#panel-events .wwc-examples-wrap,
+#panel-annual .wwc-examples-wrap {
+  margin-bottom: 0;
 }
 
 .wwc-examples-label {
@@ -4504,8 +4515,9 @@ select.modal-input-field {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #71717A;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   display: block;
+  text-align: center;
 }
 
 .wwc-examples-list {
@@ -4513,6 +4525,7 @@ select.modal-input-field {
   flex-wrap: wrap;
   gap: 8px 12px;
   align-items: center;
+  justify-content: center;
 }
 
 .wwc-example-pill {
@@ -4539,7 +4552,7 @@ select.modal-input-field {
   color: #93C5FD;
   font-size: 13px;
   font-weight: 600;
-  margin-bottom: 28px;
+  margin: 0 auto 24px auto;
   cursor: pointer;
   transition: background 0.2s ease, transform 0.2s ease;
 }
@@ -4557,17 +4570,21 @@ select.modal-input-field {
 .wwc-note {
   font-size: 13px;
   color: #A1A1AA;
-  margin-bottom: 24px;
+  margin: 0 auto 24px auto;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
+  text-align: center;
 }
 
 .wwc-actions {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 16px;
   flex-wrap: wrap;
+  margin: 0 auto;
 }
 
 .wwc-cta-btn {
@@ -4603,7 +4620,7 @@ select.modal-input-field {
     min-height: auto;
     padding: 36px 0;
     flex-direction: column;
-    align-items: stretch;
+    align-items: center;
   }
 
   .wwc-panel-bg {
@@ -4618,15 +4635,18 @@ select.modal-input-field {
     opacity: 1;
     transform: none;
     padding: 0 18px;
+    align-items: center;
+    text-align: center;
   }
 
   .wwc-mobile-image-card {
     display: block;
     width: 100%;
+    max-width: 360px;
     height: 220px;
     border-radius: 16px;
     overflow: hidden;
-    margin: 18px 0 24px 0;
+    margin: 18px auto 24px auto;
     position: relative;
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
@@ -4646,6 +4666,7 @@ select.modal-input-field {
 
   .wwc-examples-list {
     gap: 6px 8px;
+    justify-content: center;
   }
 
   .wwc-example-pill {

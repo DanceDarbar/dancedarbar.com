@@ -859,13 +859,6 @@ function renderEventsPage() {
                 <span class="wwc-example-pill">Academy events</span>
               </div>
             </div>
-
-            <div class="wwc-actions">
-              <a href="#events-calendar" class="btn btn-primary wwc-cta-btn" onclick="document.getElementById('events-calendar')?.scrollIntoView({behavior: 'smooth'}); return false;">
-                <span>Explore Events</span>
-                <svg class="btn-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-              </a>
-            </div>
           </div>
         </section>
 
@@ -889,6 +882,12 @@ function renderEventsPage() {
               <div class="wwc-mobile-image-overlay"></div>
             </div>
 
+            <div class="wwc-amrapali-badge" onclick="window.openAmrapaliModal()" role="button" tabindex="0" title="As seen in AMRAPALI 2026" aria-label="As seen in AMRAPALI 2026">
+              <span class="wwc-badge-icon">✦</span>
+              <span class="wwc-badge-text">As seen in <strong>AMRAPALI 2026</strong></span>
+              <span class="wwc-badge-arrow">&rarr;</span>
+            </div>
+
             <div class="wwc-examples-wrap">
               <span class="wwc-examples-label">Highlights &amp; Experience</span>
               <div class="wwc-examples-list">
@@ -898,19 +897,6 @@ function renderEventsPage() {
                 <span class="wwc-example-pill">Performance opportunities</span>
                 <span class="wwc-example-pill">Student achievements</span>
               </div>
-            </div>
-
-            <div class="wwc-amrapali-badge" onclick="window.openAmrapaliModal()" role="button" tabindex="0" title="As seen in AMRAPALI 2026" aria-label="As seen in AMRAPALI 2026">
-              <span class="wwc-badge-icon">✦</span>
-              <span class="wwc-badge-text">As seen in <strong>AMRAPALI 2026</strong></span>
-              <span class="wwc-badge-arrow">&rarr;</span>
-            </div>
-
-            <div class="wwc-actions">
-              <a href="#events-calendar" class="btn btn-primary wwc-cta-btn" onclick="document.getElementById('events-calendar')?.scrollIntoView({behavior: 'smooth'}); return false;">
-                <span>View Our Events</span>
-                <svg class="btn-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-              </a>
             </div>
           </div>
         </section>
