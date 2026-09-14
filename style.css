@@ -4822,6 +4822,30 @@ select.modal-input-field {
   gap: 18px;
 }
 
+.wedding-error-banner {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  border-radius: var(--radius-small, 10px);
+  padding: 14px 18px;
+  color: #FCA5A5;
+  font-size: 14px;
+  line-height: 1.5;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.wedding-error-banner a {
+  color: #FFFFFF;
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.wedding-error-banner a:hover {
+  color: #93C5FD;
+}
+
 .wedding-success-container {
   text-align: center;
   padding: 40px 24px;

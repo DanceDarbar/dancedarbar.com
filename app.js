@@ -10,6 +10,14 @@ const EMAIL_CONFIG = {
   adminEmail: 'dancedarbar96@gmail.com'
 };
 
+// --------------------------------------------------------------------------
+// FORMSPREE CONFIG (Plan Your Performance - Wedding & Family Performances)
+// --------------------------------------------------------------------------
+const FORMSPREE_CONFIG = {
+  endpoint: 'https://formspree.io/f/YOUR_FORM_ID',
+  recipientEmail: 'dancedarbar96@gmail.com'
+};
+
 const EMAIL_QUEUE_KEY = 'dance_darbar_email_queue_v1';
 
 function sanitizeInput(str) {
@@ -1028,60 +1036,56 @@ function renderWeddingInquiryPage() {
                 Tell us about your celebration. Our choreographers will design a routine tailored to your family's favorite music and schedule.
               </p>
 
+              <!-- Submission Error Banner (shown on status === "error") -->
+              <div id="wedding-error-banner" class="wedding-error-banner" style="display: none;">
+                <span class="error-banner-icon">⚠️</span>
+                <div>
+                  Something went wrong — please try again or contact us directly at <a href="mailto:dancedarbar96@gmail.com">dancedarbar96@gmail.com</a>.
+                </div>
+              </div>
+
               <form id="wedding-inquiry-form" class="wedding-inquiry-form" novalidate>
+                <!-- Formspree basic spam protection honeypot -->
+                <input type="text" name="_gotcha" style="display:none !important" tabindex="-1" autocomplete="off">
+
                 <div class="form-group">
                   <label for="wedding-name" class="form-label">Full Name *</label>
-                  <input type="text" id="wedding-name" name="name" class="form-control" placeholder="e.g. Ananya Gupta" required autocomplete="name">
+                  <input type="text" id="wedding-name" name="name" class="form-control" placeholder="Full name" required autocomplete="name">
                   <span class="error-text" id="wedding-name-error" style="display: none;">Please enter your full name</span>
                 </div>
 
                 <div class="form-row-2col">
                   <div class="form-group">
-                    <label for="wedding-phone" class="form-label">Phone Number *</label>
-                    <input type="tel" id="wedding-phone" name="phone" class="form-control" placeholder="10-digit mobile number" required autocomplete="tel">
-                    <span class="error-text" id="wedding-phone-error" style="display: none;">Please enter a valid 10-digit number</span>
+                    <label for="wedding-phone" class="form-label">Contact Number *</label>
+                    <input type="tel" id="wedding-phone" name="phone" class="form-control" placeholder="Contact number" required autocomplete="tel">
+                    <span class="error-text" id="wedding-phone-error" style="display: none;">Please enter a valid contact number</span>
                   </div>
 
                   <div class="form-group">
-                    <label for="wedding-date" class="form-label">Event / Sangeet Date *</label>
+                    <label for="wedding-date" class="form-label">Event Date *</label>
                     <input type="date" id="wedding-date" name="eventDate" class="form-control" required>
                     <span class="error-text" id="wedding-date-error" style="display: none;">Please select the event date</span>
                   </div>
                 </div>
 
-                <div class="form-row-2col">
-                  <div class="form-group">
-                    <label for="wedding-type" class="form-label">Celebration Type *</label>
-                    <select id="wedding-type" name="celebrationType" class="form-control" required>
-                      <option value="" disabled selected>Select Celebration Type</option>
-                      <option value="Sangeet Night Choreography">Sangeet Night Choreography</option>
-                      <option value="Wedding Reception Performance">Wedding Reception Performance</option>
-                      <option value="Bride &amp; Groom Solo / Duet Routine">Bride &amp; Groom Solo / Duet Routine</option>
-                      <option value="Family &amp; Friends Group Routine">Family &amp; Friends Group Routine</option>
-                      <option value="Anniversary / Milestone Celebration">Anniversary / Milestone Celebration</option>
-                      <option value="Other Family Celebration">Other Family Celebration</option>
-                    </select>
-                    <span class="error-text" id="wedding-type-error" style="display: none;">Please choose a celebration type</span>
-                  </div>
-
-                  <div class="form-group">
-                    <label for="wedding-participants" class="form-label">Estimated Participants</label>
-                    <select id="wedding-participants" name="participants" class="form-control">
-                      <option value="Couple / Solo (1–2 dancers)" selected>Couple / Solo (1–2 dancers)</option>
-                      <option value="Small Group (3–6 dancers)">Small Group (3–6 dancers)</option>
-                      <option value="Large Group (7–15 dancers)">Large Group (7–15 dancers)</option>
-                      <option value="Grand Family Ensemble (15+ dancers)">Grand Family Ensemble (15+ dancers)</option>
-                    </select>
-                  </div>
+                <div class="form-group">
+                  <label for="wedding-type" class="form-label">Type of Celebration *</label>
+                  <select id="wedding-type" name="celebrationType" class="form-control" required>
+                    <option value="" disabled selected>Type of celebration</option>
+                    <option value="Wedding">Wedding</option>
+                    <option value="Sangeet">Sangeet</option>
+                    <option value="Other">Other</option>
+                  </select>
+                  <span class="error-text" id="wedding-type-error" style="display: none;">Please choose the type of celebration</span>
                 </div>
 
                 <div class="form-group">
-                  <label for="wedding-notes" class="form-label">Songs &amp; Special Requirements (Optional)</label>
-                  <textarea id="wedding-notes" name="notes" class="form-control" rows="3" placeholder="Share your favorite songs, preferred dance style (Bollywood, Semi-Classical, Folk), or rehearsal schedule preferences..."></textarea>
+                  <label for="wedding-message" class="form-label">Message</label>
+                  <textarea id="wedding-message" name="message" class="form-control" rows="4" placeholder="Tell us about your event"></textarea>
                 </div>
 
                 <button type="submit" class="btn btn-primary full-width" id="wedding-submit-btn">
-                  <span>Submit Performance Inquiry</span>
+                  <span>Plan Your Performance</span>
                   <svg class="btn-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                 </button>
               </form>
@@ -1091,9 +1095,9 @@ function renderWeddingInquiryPage() {
               <div class="wedding-success-icon-wrap">
                 <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
               </div>
-              <h2 class="wedding-success-heading">Inquiry Received with Warmth</h2>
+              <h2 class="wedding-success-heading">Thanks — we've received your details!</h2>
               <p class="wedding-success-desc">
-                Thank you for reaching out to Dance Darbar. Guru Bhagwan Singh and our choreography team will connect with you via WhatsApp or phone shortly to discuss your music, dance routine, and rehearsal timeline.
+                We've received your details and will reach out shortly to discuss your celebration and performance routine.
               </p>
               <div class="wedding-success-actions">
                 <a href="#/events" class="btn btn-secondary light">Back to What We Create</a>
@@ -1342,33 +1346,33 @@ function initWeddingInquiryEvents() {
   const form = document.getElementById('wedding-inquiry-form');
   const formContainer = document.getElementById('wedding-form-container');
   const successContainer = document.getElementById('wedding-success-container');
+  const errorBanner = document.getElementById('wedding-error-banner');
   if (!form) return;
 
   const nameInput = document.getElementById('wedding-name');
   const phoneInput = document.getElementById('wedding-phone');
   const dateInput = document.getElementById('wedding-date');
   const typeSelect = document.getElementById('wedding-type');
-  const participantsSelect = document.getElementById('wedding-participants');
-  const notesTextarea = document.getElementById('wedding-notes');
+  const messageTextarea = document.getElementById('wedding-message');
   const submitBtn = document.getElementById('wedding-submit-btn');
 
   // Real-time error hiding on input
-  [nameInput, phoneInput, dateInput, typeSelect].forEach(input => {
+  [nameInput, phoneInput, dateInput, typeSelect, messageTextarea].forEach(input => {
     if (!input) return;
-    input.addEventListener('input', () => {
+    const hideErr = () => {
       const err = document.getElementById(`${input.id}-error`);
       if (err) err.style.display = 'none';
       input.classList.remove('error');
-    });
-    input.addEventListener('change', () => {
-      const err = document.getElementById(`${input.id}-error`);
-      if (err) err.style.display = 'none';
-      input.classList.remove('error');
-    });
+      if (errorBanner) errorBanner.style.display = 'none';
+    };
+    input.addEventListener('input', hideErr);
+    input.addEventListener('change', hideErr);
   });
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    if (errorBanner) errorBanner.style.display = 'none';
+
     let isValid = true;
 
     // Validate Name
@@ -1409,31 +1413,49 @@ function initWeddingInquiryEvents() {
 
     if (!isValid) return;
 
-    // Disable button to prevent double-submit
+    // Set sending state on submit button
     if (submitBtn) {
       submitBtn.disabled = true;
-      submitBtn.innerHTML = '<span>Submitting Inquiry...</span>';
+      submitBtn.textContent = 'Sending...';
     }
 
-    const payload = {
-      'Inquiry Category': 'Wedding & Celebration Performance Choreography',
-      'Client Name': nameVal,
-      'Contact Phone': phoneVal,
-      'Event Date': dateVal,
-      'Celebration Type': typeVal,
-      'Estimated Participants': participantsSelect ? participantsSelect.value : 'Not specified',
-      'Songs & Creative Vision': notesTextarea ? (notesTextarea.value.trim() || 'No specific notes provided') : 'None',
-      'Submitted At': new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
-    };
+    const formData = new FormData(form);
 
-    // Send email notification to academy administration
-    await sendEmailNotification('💍 New Wedding & Celebration Choreography Inquiry', payload);
+    try {
+      const res = await fetch(FORMSPREE_CONFIG.endpoint, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          Accept: 'application/json'
+        }
+      });
 
-    // Transition to success state
-    if (formContainer && successContainer) {
-      formContainer.style.display = 'none';
-      successContainer.style.display = 'block';
-      successContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (res.ok) {
+        form.reset();
+        if (formContainer && successContainer) {
+          formContainer.style.display = 'none';
+          successContainer.style.display = 'block';
+          successContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      } else {
+        showErrorFeedback();
+      }
+    } catch (err) {
+      showErrorFeedback();
+    }
+
+    function showErrorFeedback() {
+      if (errorBanner) {
+        errorBanner.style.display = 'flex';
+        errorBanner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `
+          <span>Plan Your Performance</span>
+          <svg class="btn-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        `;
+      }
     }
   });
 }
