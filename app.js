@@ -822,7 +822,7 @@ function renderEventsPage() {
     <div class="what-we-create-section">
       <!-- SECTION HEADER -->
       <div class="wwc-header">
-        <span class="eyebrow light">WHAT WE CREATE</span>
+        <span class="eyebrow light">OUR CRAFT</span>
         <h1 class="section-heading">What We Create</h1>
         <p class="lead-text">Performances, annual productions, and personalised celebrations—brought to life through dance.</p>
       </div>
@@ -853,6 +853,7 @@ function renderEventsPage() {
                 <span class="wwc-example-pill">Stage productions</span>
                 <span class="wwc-example-pill">Special performances</span>
                 <span class="wwc-example-pill">Academy events</span>
+                <span class="wwc-example-pill">School &amp; College Choreography</span>
               </div>
             </div>
           </div>
@@ -874,11 +875,11 @@ function renderEventsPage() {
               <div class="wwc-mobile-image-overlay"></div>
             </div>
 
-            <div class="wwc-amrapali-badge" onclick="window.openAmrapaliModal()" role="button" tabindex="0" title="As seen in AMRAPALI 2026" aria-label="As seen in AMRAPALI 2026">
+            <a href="https://www.youtube.com/@dance_darbar" target="_blank" rel="noopener noreferrer" class="wwc-amrapali-badge" title="As seen in AMRAPALI 2026" aria-label="As seen in AMRAPALI 2026">
               <span class="wwc-badge-icon">✦</span>
               <span class="wwc-badge-text">As seen in <strong>AMRAPALI 2026</strong></span>
               <span class="wwc-badge-arrow">&rarr;</span>
-            </div>
+            </a>
 
             <div class="wwc-examples-wrap">
               <span class="wwc-examples-label">Highlights &amp; Experience</span>
@@ -936,44 +937,6 @@ function renderEventsPage() {
           </div>
         </section>
       </div>
-
-      <!-- SHOWCASE & ANNUAL PRODUCTIONS CALENDAR -->
-      <section id="events-calendar" class="events-calendar-section" style="padding: 100px 0; border-top: 1px solid rgba(255, 255, 255, 0.08); background-color: #050507;">
-        <div class="section-container">
-          <span class="eyebrow light">Events &amp; Performances</span>
-          <h2 class="section-heading" style="margin-top: 8px; margin-bottom: 16px; color: #FFFFFF;">Where Practice Meets the Stage.</h2>
-          <p class="lead-text light" style="margin-bottom: 48px; max-width: 720px;">Discover upcoming annual productions, stage shows and grand cultural showcases at Dance Darbar Kala Sansthan.</p>
-
-          <div class="events-showcase-grid">
-            <div class="event-card-featured" style="background: #121214; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: var(--radius-large); overflow: hidden; display: grid; grid-template-columns: 48% 52%; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);">
-              <div style="position: relative; overflow: hidden; min-height: 360px;">
-                <img src="assets/amrapali.jpg" alt="AMRAPALI 2026 Annual Student Dance Ballet" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-                <div style="position: absolute; top: 20px; left: 20px; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); padding: 6px 14px; border-radius: 9999px; border: 1px solid rgba(255, 255, 255, 0.2); font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: #60A5FA;">
-                  ANNUAL PRODUCTION
-                </div>
-              </div>
-              <div style="padding: 40px 36px; display: flex; flex-direction: column; justify-content: center;">
-                <span class="eyebrow" style="color: #60A5FA; margin-bottom: 6px;">DANCE DARBAR KALA SANSTHAN PRESENTS</span>
-                <h3 style="font-family: var(--font-heading); font-size: clamp(28px, 3vw, 36px); font-weight: 700; color: #FFFFFF; margin-bottom: 8px;">AMRAPALI 2026</h3>
-                <p style="font-size: 14px; font-weight: 600; color: #93C5FD; margin-bottom: 16px;">Annual Student Dance Ballet · Sunday, 23 August 2026</p>
-                <p style="font-size: 14px; color: #D4D4D8; line-height: 1.6; margin-bottom: 20px;">
-                  Witness the remarkable performances of Dance Darbar students as they present AMRAPALI 2026, an annual showcase celebrating passion, discipline, and artistic expression through Kathak, Bollywood, Vocal Music, Fine Arts, and Yoga.
-                </p>
-                <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px; font-size: 13px; color: #A1A1AA;">
-                  <span>📍 CCRT Auditorium, Dwarka Sector 7, New Delhi</span>
-                </div>
-                <div style="display: flex; gap: 14px; align-items: center; flex-wrap: wrap;">
-                  <button type="button" class="btn btn-primary claim-seat-btn" onclick="window.openAmrapaliModal()">
-                    <span>Reserve Guest Seat</span>
-                    <svg class="btn-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                  </button>
-                  <span class="coming-soon-heading" style="font-size: 13px; font-weight: 700; letter-spacing: 0.1em; color: #9CA3AF; padding: 10px 18px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px;">COMING SOON</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   `;
 }

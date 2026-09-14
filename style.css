@@ -4563,12 +4563,15 @@ select.modal-input-field {
   font-weight: 600;
   margin: 0 auto 24px auto;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease;
+  text-decoration: none;
+  transition: background 0.2s ease, transform 0.2s ease, color 0.2s ease;
 }
 
 .wwc-amrapali-badge:hover {
   background: rgba(37, 99, 235, 0.25);
   transform: translateY(-2px);
+  color: #BFDBFE;
+  text-decoration: none;
 }
 
 .wwc-badge-icon {
@@ -4684,10 +4687,6 @@ select.modal-input-field {
   .wwc-example-pill {
     font-size: 12px;
     padding: 5px 10px;
-  }
-
-  .event-card-featured {
-    grid-template-columns: 1fr !important;
   }
 }
 
