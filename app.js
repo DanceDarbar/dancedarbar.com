@@ -10,14 +10,6 @@ const EMAIL_CONFIG = {
   adminEmail: 'dancedarbar96@gmail.com'
 };
 
-// --------------------------------------------------------------------------
-// FORMSPREE CONFIG (Plan Your Performance - Wedding & Family Performances)
-// --------------------------------------------------------------------------
-const FORMSPREE_CONFIG = {
-  endpoint: 'https://formspree.io/f/YOUR_FORM_ID',
-  recipientEmail: 'dancedarbar96@gmail.com'
-};
-
 const EMAIL_QUEUE_KEY = 'dance_darbar_email_queue_v1';
 
 function sanitizeInput(str) {
@@ -1045,9 +1037,6 @@ function renderWeddingInquiryPage() {
               </div>
 
               <form id="wedding-inquiry-form" class="wedding-inquiry-form" novalidate>
-                <!-- Formspree basic spam protection honeypot -->
-                <input type="text" name="_gotcha" style="display:none !important" tabindex="-1" autocomplete="off">
-
                 <div class="form-group">
                   <label for="wedding-name" class="form-label">Full Name *</label>
                   <input type="text" id="wedding-name" name="name" class="form-control" placeholder="Full name" required autocomplete="name">
@@ -1419,26 +1408,43 @@ function initWeddingInquiryEvents() {
       submitBtn.textContent = 'Sending...';
     }
 
-    const formData = new FormData(form);
+    const messageVal = messageTextarea ? messageTextarea.value.trim() : '';
+
+    // Create and save local inquiry record (like trial registrations)
+    const list = getWeddingInquiries();
+    const newEntry = {
+      id: `WED-2026-${String(list.length + 1).padStart(4, '0')}`,
+      name: nameVal,
+      phone: phoneVal,
+      eventDate: dateVal,
+      celebrationType: typeVal,
+      message: messageVal || 'No specific notes provided',
+      submittedAt: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
+    };
+    list.unshift(newEntry);
+    saveWeddingInquiries(list);
+
+    // Prepare direct email notification payload
+    const payload = {
+      'Inquiry Category': 'Wedding & Family Performance Choreography',
+      'Inquiry ID': newEntry.id,
+      'Full Name': nameVal,
+      'Contact Number': phoneVal,
+      'Event Date': dateVal,
+      'Type of Celebration': typeVal,
+      'Message & Creative Notes': messageVal || 'No specific notes provided',
+      'Submission Timestamp': newEntry.submittedAt
+    };
 
     try {
-      const res = await fetch(FORMSPREE_CONFIG.endpoint, {
-        method: 'POST',
-        body: formData,
-        headers: {
-          Accept: 'application/json'
-        }
-      });
+      // Send directly to dancedarbar96@gmail.com using the academy's email notification pipeline
+      await sendEmailNotification('💍 New Wedding & Celebration Choreography Inquiry', payload);
 
-      if (res.ok) {
-        form.reset();
-        if (formContainer && successContainer) {
-          formContainer.style.display = 'none';
-          successContainer.style.display = 'block';
-          successContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-      } else {
-        showErrorFeedback();
+      form.reset();
+      if (formContainer && successContainer) {
+        formContainer.style.display = 'none';
+        successContainer.style.display = 'block';
+        successContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
     } catch (err) {
       showErrorFeedback();
@@ -3240,6 +3246,21 @@ function getTrialRegistrations() {
 function saveTrialRegistrations(list) {
   try {
     localStorage.setItem('trial_registrations_v1', JSON.stringify(list));
+  } catch (e) {}
+}
+
+function getWeddingInquiries() {
+  try {
+    const data = localStorage.getItem('wedding_inquiries_v1');
+    return data ? JSON.parse(data) : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveWeddingInquiries(list) {
+  try {
+    localStorage.setItem('wedding_inquiries_v1', JSON.stringify(list));
   } catch (e) {}
 }
 
