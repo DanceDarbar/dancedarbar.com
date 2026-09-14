@@ -851,13 +851,12 @@ function renderClaimFreeSeatPage() {
           <div class="trial-visual-side">
             <div class="trial-video-wrapper">
               <iframe
-                src="https://www.youtube.com/embed/EFqSL52TeHs?autoplay=1&mute=1&loop=1&playlist=EFqSL52TeHs&controls=0&modestbranding=1&playsinline=1&rel=0&showinfo=0&disablekb=1"
+                src="https://player.vimeo.com/video/1226502869?autoplay=1&loop=1&muted=1&background=1&autopause=0"
                 title="Dance Darbar Kala Sansthan"
                 frameborder="0"
-                allow="autoplay; encrypted-media"
-                allowfullscreen
+                allow="autoplay; fullscreen; picture-in-picture"
+                referrerpolicy="strict-origin-when-cross-origin"
               ></iframe>
-              <div class="trial-video-click-blocker"></div>
             </div>
             <div class="trial-visual-overlay">
               <span class="eyebrow light">Trial Class Admission</span>

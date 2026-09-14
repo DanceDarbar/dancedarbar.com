@@ -2313,14 +2313,6 @@ canvas#curtainCanvas.grabbing { cursor: grabbing; }
   z-index: 1;
 }
 
-.trial-video-click-blocker {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  background: transparent;
-  pointer-events: auto; /* this is intentional — it exists purely to absorb clicks */
-}
-
 .trial-visual-overlay {
   position: absolute;
   bottom: 0;
@@ -2328,7 +2320,7 @@ canvas#curtainCanvas.grabbing { cursor: grabbing; }
   right: 0;
   padding: 36px 32px 32px 32px;
   background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.6) 65%, rgba(0, 0, 0, 0) 100%);
-  z-index: 3;
+  z-index: 2;
   color: #FFFFFF;
 }
 
@@ -3439,17 +3431,8 @@ canvas#curtainCanvas.grabbing { cursor: grabbing; }
     z-index: 1 !important;
   }
 
-  .trial-video-click-blocker {
-    position: absolute !important;
-    inset: 0 !important;
-    z-index: 2 !important;
-    border-radius: 20px !important;
-    background: transparent !important;
-    pointer-events: auto !important;
-  }
-
   .trial-visual-overlay {
-    z-index: 3 !important;
+    z-index: 2 !important;
     padding: 16px 18px !important;
     background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.5) 70%, rgba(0, 0, 0, 0) 100%) !important;
   }
