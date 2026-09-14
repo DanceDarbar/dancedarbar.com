@@ -1248,27 +1248,39 @@ function initWhatWeCreateScroll() {
   // Set the first panel active by default
   panels[0].classList.add('is-active');
 
-  // IntersectionObserver to detect dominant panel
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting && entry.intersectionRatio >= 0.35) {
-        panels.forEach(p => p.classList.remove('is-active'));
-        entry.target.classList.add('is-active');
+  // Continuous active panel determination based on viewport proximity
+  const updateActivePanel = () => {
+    const viewportCenter = window.innerHeight / 2;
+    let bestPanel = null;
+    let minDistance = Infinity;
+
+    panels.forEach(panel => {
+      const rect = panel.getBoundingClientRect();
+      if (rect.bottom > 0 && rect.top < window.innerHeight) {
+        const panelCenter = rect.top + rect.height / 2;
+        const dist = Math.abs(panelCenter - viewportCenter);
+        if (dist < minDistance) {
+          minDistance = dist;
+          bestPanel = panel;
+        }
       }
     });
-  }, {
-    root: null,
-    threshold: [0.2, 0.35, 0.5, 0.7]
-  });
 
-  panels.forEach(p => observer.observe(p));
+    if (bestPanel && !bestPanel.classList.contains('is-active')) {
+      panels.forEach(p => {
+        if (p !== bestPanel) p.classList.remove('is-active');
+      });
+      bestPanel.classList.add('is-active');
+    }
+  };
 
-  // Subtle parallax on scroll for desktop (only if > 768px and not reduced motion)
-  if (window.innerWidth > 768) {
-    let ticking = false;
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
+  // Parallax & smooth state transitions on scroll
+  let ticking = false;
+  const handleScroll = () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        updateActivePanel();
+        if (window.innerWidth > 768) {
           panels.forEach(panel => {
             const rect = panel.getBoundingClientRect();
             if (rect.top < window.innerHeight && rect.bottom > 0) {
@@ -1283,14 +1295,15 @@ function initWhatWeCreateScroll() {
               }
             }
           });
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
+        }
+        ticking = false;
+      });
+      ticking = true;
+    }
+  };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-  }
+  window.addEventListener('scroll', handleScroll, { passive: true });
+  updateActivePanel();
 }
 
 // --- WEDDING INQUIRY FORM CONTROLLER ---
