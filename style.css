@@ -4359,7 +4359,7 @@ select.modal-input-field {
 
 .wwc-header {
   text-align: center;
-  max-width: 860px;
+  max-width: 1050px;
   margin: 0 auto 64px auto;
   padding: 0 24px;
 }
@@ -4374,9 +4374,25 @@ select.modal-input-field {
 }
 
 .wwc-header .lead-text {
-  font-size: clamp(16px, 1.8vw, 20px);
+  font-size: 17.5px;
   color: #A3A3A3;
   line-height: 1.6;
+  margin: 0 auto;
+}
+
+@media (min-width: 900px) {
+  .wwc-header .lead-text {
+    font-size: 17.5px;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 899px) {
+  .wwc-header .lead-text {
+    font-size: clamp(15px, 3.8vw, 17px);
+    white-space: normal;
+    max-width: 680px;
+  }
 }
 
 .wwc-panels-container {
@@ -4416,8 +4432,8 @@ select.modal-input-field {
 .wwc-panel-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.82) 48%, rgba(0, 0, 0, 0.45) 82%, rgba(0, 0, 0, 0.65) 100%),
-              linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, transparent 20%, transparent 80%, rgba(0, 0, 0, 0.8) 100%);
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.78) 0%, rgba(0, 0, 0, 0.88) 100%),
+              linear-gradient(180deg, rgba(0, 0, 0, 0.75) 0%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.85) 100%);
   z-index: 2;
 }
 
@@ -4425,13 +4441,14 @@ select.modal-input-field {
   position: relative;
   z-index: 3;
   width: 100%;
-  max-width: 880px;
+  max-width: 680px;
   margin: 0 auto;
-  padding: 80px 32px;
+  padding: 68px 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
+  box-sizing: border-box;
   opacity: 0.35;
   transform: translateY(28px);
   transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
@@ -4443,26 +4460,7 @@ select.modal-input-field {
 }
 
 .wwc-number-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  font-family: var(--font-heading);
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--color-primary-light, #60A5FA);
-  margin-bottom: 12px;
-}
-
-.wwc-number {
-  font-size: clamp(32px, 4vw, 44px);
-  font-weight: 800;
-  line-height: 1;
-  color: #2563EB;
-  display: inline-block;
-  margin-right: 6px;
+  display: none;
 }
 
 .wwc-panel-title {
@@ -4471,9 +4469,11 @@ select.modal-input-field {
   font-weight: 700;
   line-height: 1.15;
   color: #FFFFFF;
-  margin-bottom: 8px;
+  margin: 0 auto 8px auto;
   letter-spacing: -0.02em;
   text-align: center;
+  width: 100%;
+  max-width: 100%;
 }
 
 .wwc-tagline {
@@ -4481,15 +4481,18 @@ select.modal-input-field {
   font-weight: 500;
   font-style: italic;
   color: #93C5FD;
-  margin-bottom: 20px;
+  margin: 0 auto 20px auto;
   text-align: center;
+  width: 100%;
+  max-width: 100%;
 }
 
 .wwc-description {
   font-size: clamp(15px, 1.6vw, 18px);
   line-height: 1.65;
   color: #D4D4D8;
-  max-width: 680px;
+  width: 100%;
+  max-width: 100%;
   margin: 0 auto 28px auto;
   text-align: center;
 }
@@ -4499,8 +4502,9 @@ select.modal-input-field {
 }
 
 .wwc-examples-wrap {
-  margin: 0 auto 32px auto;
-  max-width: 720px;
+  margin: 0 auto 28px auto;
+  width: 100%;
+  max-width: 100%;
   text-align: center;
 }
 
@@ -4512,12 +4516,13 @@ select.modal-input-field {
 .wwc-examples-label {
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: #71717A;
-  margin-bottom: 12px;
+  margin: 0 auto 12px auto;
   display: block;
   text-align: center;
+  width: 100%;
 }
 
 .wwc-examples-list {
@@ -4526,6 +4531,9 @@ select.modal-input-field {
   gap: 8px 12px;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
 }
 
 .wwc-example-pill {
@@ -4539,6 +4547,7 @@ select.modal-input-field {
   font-weight: 500;
   color: #E4E4E7;
   backdrop-filter: blur(4px);
+  text-align: center;
 }
 
 .wwc-amrapali-badge {
@@ -4559,7 +4568,7 @@ select.modal-input-field {
 
 .wwc-amrapali-badge:hover {
   background: rgba(37, 99, 235, 0.25);
-  transform: translateX(4px);
+  transform: translateY(-2px);
 }
 
 .wwc-badge-icon {
@@ -4576,6 +4585,8 @@ select.modal-input-field {
   justify-content: center;
   gap: 8px;
   text-align: center;
+  width: 100%;
+  max-width: 100%;
 }
 
 .wwc-actions {
@@ -4585,6 +4596,7 @@ select.modal-input-field {
   gap: 16px;
   flex-wrap: wrap;
   margin: 0 auto;
+  width: 100%;
 }
 
 .wwc-cta-btn {

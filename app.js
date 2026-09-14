@@ -834,10 +834,6 @@ function renderEventsPage() {
           <div class="wwc-panel-bg" style="background-image: url('assets/stage-spotlight-bg.jpg');"></div>
           <div class="wwc-panel-overlay"></div>
           <div class="wwc-panel-content">
-            <div class="wwc-number-badge">
-              <span class="wwc-number">01</span>
-              <span>— Experience</span>
-            </div>
             <h2 class="wwc-panel-title">Events &amp; Performances</h2>
             <p class="wwc-tagline">Stage. Expression. Celebration.</p>
             <p class="wwc-description">
@@ -867,10 +863,6 @@ function renderEventsPage() {
           <div class="wwc-panel-bg" style="background-image: url('assets/amrapali.jpg');"></div>
           <div class="wwc-panel-overlay"></div>
           <div class="wwc-panel-content">
-            <div class="wwc-number-badge">
-              <span class="wwc-number">02</span>
-              <span>— Experience</span>
-            </div>
             <h2 class="wwc-panel-title">Academy Annual Programs</h2>
             <p class="wwc-tagline">A Year of Learning. A Stage to Remember.</p>
             <p class="wwc-description">
@@ -906,10 +898,6 @@ function renderEventsPage() {
           <div class="wwc-panel-bg" style="background-image: url('assets/bollywood.jpg');"></div>
           <div class="wwc-panel-overlay"></div>
           <div class="wwc-panel-content">
-            <div class="wwc-number-badge">
-              <span class="wwc-number">03</span>
-              <span>— Experience</span>
-            </div>
             <h2 class="wwc-panel-title">Wedding &amp; Family Performances</h2>
             <p class="wwc-tagline">Make Your Celebration Unforgettable.</p>
             <p class="wwc-description">
