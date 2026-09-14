@@ -382,7 +382,8 @@ function renderApp() {
   document.querySelectorAll('.nav-link, .mobile-link').forEach(link => {
     const targetRoute = link.getAttribute('data-route');
     const isAbout = (route === '/about' || route === '/about-us') && (targetRoute === '/about' || targetRoute === '/about-us');
-    if (isAbout || targetRoute === route || (targetRoute !== '/' && route.startsWith(targetRoute))) {
+    const isEvents = (route === '/events' || route.startsWith('/events/') || route === '/wedding-inquiry' || route === '/plan-performance') && targetRoute === '/events';
+    if (isAbout || isEvents || targetRoute === route || (targetRoute !== '/' && route.startsWith(targetRoute))) {
       link.classList.add('active');
     } else {
       link.classList.remove('active');
@@ -405,9 +406,13 @@ function renderApp() {
     return;
   } else if (route === '/events') {
     appRoot.innerHTML = renderEventsPage();
+    initWhatWeCreateScroll();
   } else if (route.startsWith('/events/')) {
     const slug = route.split('/events/')[1];
     appRoot.innerHTML = renderEventDetailPage(slug);
+  } else if (route === '/wedding-inquiry' || route === '/plan-performance') {
+    appRoot.innerHTML = renderWeddingInquiryPage();
+    initWeddingInquiryEvents();
   } else if (route === '/gallery' || route.startsWith('/gallery')) {
     window.location.hash = '#/';
     return;
@@ -811,17 +816,317 @@ function renderProgramDetailPage(slug) {
   `;
 }
 
-// --- EVENTS PAGE TEMPLATE ---
+// --- EVENTS PAGE TEMPLATE (WHAT WE CREATE CINEMATIC STORYTELLING) ---
 function renderEventsPage() {
   return `
-    <div style="padding-top: 140px; padding-bottom: 100px;">
-      <div class="section-container">
-        <span class="eyebrow">Events & Performances</span>
-        <h1 class="section-heading" style="margin-bottom: 16px;">Where Practice Meets the Stage.</h1>
-        <p class="lead-text" style="margin-bottom: 60px;">Discover upcoming annual productions, stage shows and grand cultural showcases at Dance Darbar Kala Sansthan.</p>
+    <div class="what-we-create-section">
+      <!-- SECTION HEADER -->
+      <div class="wwc-header">
+        <span class="eyebrow light">WHAT WE CREATE</span>
+        <h1 class="section-heading">What We Create</h1>
+        <p class="lead-text">Performances, annual productions, and personalised celebrations—brought to life through dance.</p>
+      </div>
 
-        <div class="coming-soon-card">
-          <h2 class="coming-soon-heading">COMING SOON</h2>
+      <!-- THREE CINEMATIC PANELS -->
+      <div class="wwc-panels-container">
+        <!-- PANEL 01: Events & Performances -->
+        <section class="wwc-panel" id="panel-events" data-panel="01">
+          <div class="wwc-panel-bg" style="background-image: url('assets/stage-spotlight-bg.jpg');"></div>
+          <div class="wwc-panel-overlay"></div>
+          <div class="wwc-panel-content">
+            <div class="wwc-number-badge">
+              <span class="wwc-number">01</span>
+              <span>— Experience</span>
+            </div>
+            <h2 class="wwc-panel-title">Events &amp; Performances</h2>
+            <p class="wwc-tagline">Stage. Expression. Celebration.</p>
+            <p class="wwc-description">
+              Dance Darbar creates and presents live performances, cultural events, showcases, and special stage productions featuring trained artists and academy students.
+            </p>
+
+            <div class="wwc-mobile-image-card">
+              <img src="assets/stage-spotlight-bg.jpg" alt="Dance Darbar Events and Performances stage spotlight" loading="lazy">
+              <div class="wwc-mobile-image-overlay"></div>
+            </div>
+
+            <div class="wwc-examples-wrap">
+              <span class="wwc-examples-label">What We Bring to the Stage</span>
+              <div class="wwc-examples-list">
+                <span class="wwc-example-pill">Cultural performances</span>
+                <span class="wwc-example-pill">Dance showcases</span>
+                <span class="wwc-example-pill">Stage productions</span>
+                <span class="wwc-example-pill">Special performances</span>
+                <span class="wwc-example-pill">Academy events</span>
+              </div>
+            </div>
+
+            <div class="wwc-actions">
+              <a href="#events-calendar" class="btn btn-primary wwc-cta-btn" onclick="document.getElementById('events-calendar')?.scrollIntoView({behavior: 'smooth'}); return false;">
+                <span>Explore Events</span>
+                <svg class="btn-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- PANEL 02: Academy Annual Programs -->
+        <section class="wwc-panel" id="panel-annual" data-panel="02">
+          <div class="wwc-panel-bg" style="background-image: url('assets/amrapali.jpg');"></div>
+          <div class="wwc-panel-overlay"></div>
+          <div class="wwc-panel-content">
+            <div class="wwc-number-badge">
+              <span class="wwc-number">02</span>
+              <span>— Experience</span>
+            </div>
+            <h2 class="wwc-panel-title">Academy Annual Programs</h2>
+            <p class="wwc-tagline">A Year of Learning. A Stage to Remember.</p>
+            <p class="wwc-description">
+              Our annual academy programmes give students the opportunity to present their learning on a professional stage, build confidence, and celebrate their artistic journey with family and the community.
+            </p>
+
+            <div class="wwc-mobile-image-card">
+              <img src="assets/amrapali.jpg" alt="Academy Annual Programs stage production" loading="lazy">
+              <div class="wwc-mobile-image-overlay"></div>
+            </div>
+
+            <div class="wwc-examples-wrap">
+              <span class="wwc-examples-label">Highlights &amp; Experience</span>
+              <div class="wwc-examples-list">
+                <span class="wwc-example-pill">Annual productions</span>
+                <span class="wwc-example-pill">Student showcases</span>
+                <span class="wwc-example-pill">Cultural celebrations</span>
+                <span class="wwc-example-pill">Performance opportunities</span>
+                <span class="wwc-example-pill">Student achievements</span>
+              </div>
+            </div>
+
+            <div class="wwc-amrapali-badge" onclick="window.openAmrapaliModal()" role="button" tabindex="0" title="As seen in AMRAPALI 2026" aria-label="As seen in AMRAPALI 2026">
+              <span class="wwc-badge-icon">✦</span>
+              <span class="wwc-badge-text">As seen in <strong>AMRAPALI 2026</strong></span>
+              <span class="wwc-badge-arrow">&rarr;</span>
+            </div>
+
+            <div class="wwc-actions">
+              <a href="#events-calendar" class="btn btn-primary wwc-cta-btn" onclick="document.getElementById('events-calendar')?.scrollIntoView({behavior: 'smooth'}); return false;">
+                <span>View Our Events</span>
+                <svg class="btn-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- PANEL 03: Wedding & Family Performances -->
+        <section class="wwc-panel" id="panel-wedding" data-panel="03">
+          <div class="wwc-panel-bg" style="background-image: url('assets/bollywood.jpg');"></div>
+          <div class="wwc-panel-overlay"></div>
+          <div class="wwc-panel-content">
+            <div class="wwc-number-badge">
+              <span class="wwc-number">03</span>
+              <span>— Experience</span>
+            </div>
+            <h2 class="wwc-panel-title">Wedding &amp; Family Performances</h2>
+            <p class="wwc-tagline">Make Your Celebration Unforgettable.</p>
+            <p class="wwc-description">
+              We create personalised dance experiences for weddings and family celebrations—from choreography for the bride, groom, and family members to complete group performances designed around your story.
+            </p>
+
+            <div class="wwc-mobile-image-card">
+              <img src="assets/bollywood.jpg" alt="Wedding and Family Dance Choreography" loading="lazy">
+              <div class="wwc-mobile-image-overlay"></div>
+            </div>
+
+            <div class="wwc-examples-wrap">
+              <span class="wwc-examples-label">Personalised Choreography Offerings</span>
+              <div class="wwc-examples-list">
+                <span class="wwc-example-pill" title="Bride & Groom choreography">Bride &amp; Groom choreography</span>
+                <span class="wwc-example-pill">Family dance performances</span>
+                <span class="wwc-example-pill">Sangeet choreography</span>
+                <span class="wwc-example-pill">Group performances</span>
+                <span class="wwc-example-pill">Custom routines</span>
+                <span class="wwc-example-pill">Practice sessions for family members</span>
+                <span class="wwc-example-pill">Event-day performance preparation</span>
+              </div>
+            </div>
+
+            <div class="wwc-note">
+              <span style="color: #60A5FA;">ℹ</span>
+              <span>Choreography &amp; Rehearsal Sessions (Wedding &amp; Sangeet performance gallery coming soon)</span>
+            </div>
+
+            <div class="wwc-actions">
+              <a href="#/wedding-inquiry" class="btn btn-primary wwc-cta-btn">
+                <span>Plan Your Performance</span>
+                <svg class="btn-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- SHOWCASE & ANNUAL PRODUCTIONS CALENDAR -->
+      <section id="events-calendar" class="events-calendar-section" style="padding: 100px 0; border-top: 1px solid rgba(255, 255, 255, 0.08); background-color: #050507;">
+        <div class="section-container">
+          <span class="eyebrow light">Events &amp; Performances</span>
+          <h2 class="section-heading" style="margin-top: 8px; margin-bottom: 16px; color: #FFFFFF;">Where Practice Meets the Stage.</h2>
+          <p class="lead-text light" style="margin-bottom: 48px; max-width: 720px;">Discover upcoming annual productions, stage shows and grand cultural showcases at Dance Darbar Kala Sansthan.</p>
+
+          <div class="events-showcase-grid">
+            <div class="event-card-featured" style="background: #121214; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: var(--radius-large); overflow: hidden; display: grid; grid-template-columns: 48% 52%; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);">
+              <div style="position: relative; overflow: hidden; min-height: 360px;">
+                <img src="assets/amrapali.jpg" alt="AMRAPALI 2026 Annual Student Dance Ballet" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                <div style="position: absolute; top: 20px; left: 20px; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); padding: 6px 14px; border-radius: 9999px; border: 1px solid rgba(255, 255, 255, 0.2); font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: #60A5FA;">
+                  ANNUAL PRODUCTION
+                </div>
+              </div>
+              <div style="padding: 40px 36px; display: flex; flex-direction: column; justify-content: center;">
+                <span class="eyebrow" style="color: #60A5FA; margin-bottom: 6px;">DANCE DARBAR KALA SANSTHAN PRESENTS</span>
+                <h3 style="font-family: var(--font-heading); font-size: clamp(28px, 3vw, 36px); font-weight: 700; color: #FFFFFF; margin-bottom: 8px;">AMRAPALI 2026</h3>
+                <p style="font-size: 14px; font-weight: 600; color: #93C5FD; margin-bottom: 16px;">Annual Student Dance Ballet · Sunday, 23 August 2026</p>
+                <p style="font-size: 14px; color: #D4D4D8; line-height: 1.6; margin-bottom: 20px;">
+                  Witness the remarkable performances of Dance Darbar students as they present AMRAPALI 2026, an annual showcase celebrating passion, discipline, and artistic expression through Kathak, Bollywood, Vocal Music, Fine Arts, and Yoga.
+                </p>
+                <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px; font-size: 13px; color: #A1A1AA;">
+                  <span>📍 CCRT Auditorium, Dwarka Sector 7, New Delhi</span>
+                </div>
+                <div style="display: flex; gap: 14px; align-items: center; flex-wrap: wrap;">
+                  <button type="button" class="btn btn-primary claim-seat-btn" onclick="window.openAmrapaliModal()">
+                    <span>Reserve Guest Seat</span>
+                    <svg class="btn-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                  </button>
+                  <span class="coming-soon-heading" style="font-size: 13px; font-weight: 700; letter-spacing: 0.1em; color: #9CA3AF; padding: 10px 18px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px;">COMING SOON</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  `;
+}
+
+// --- WEDDING & CELEBRATION PERFORMANCE INQUIRY PAGE TEMPLATE ---
+function renderWeddingInquiryPage() {
+  return `
+    <div class="wedding-inquiry-page-container">
+      <div class="section-container">
+        <a href="#/events" class="back-link">&larr; Back to What We Create</a>
+        <div class="wedding-inquiry-layout">
+          <!-- Visual Column -->
+          <div class="wedding-visual-side">
+            <div class="wedding-visual-bg" style="background-image: url('assets/bollywood.jpg');"></div>
+            <div class="wedding-visual-overlay"></div>
+            <div class="wedding-visual-content">
+              <span class="eyebrow light">WEDDING &amp; SANGEET CHOREOGRAPHY</span>
+              <h2 class="wedding-visual-title">Make Your Celebration Unforgettable.</h2>
+              <p class="wedding-visual-desc">
+                From intimate bride &amp; groom duets to energetic family group performances, we craft personalized choreography tailored to your chosen songs and schedule.
+              </p>
+              <div class="wedding-feature-list">
+                <div class="wedding-feature-item">
+                  <span class="wedding-feature-check">✓</span>
+                  <span>Choreography tailored to non-dancers &amp; beginners</span>
+                </div>
+                <div class="wedding-feature-item">
+                  <span class="wedding-feature-check">✓</span>
+                  <span>Custom song track editing &amp; medley mixing</span>
+                </div>
+                <div class="wedding-feature-item">
+                  <span class="wedding-feature-check">✓</span>
+                  <span>Flexible studio &amp; at-home rehearsal sessions</span>
+                </div>
+                <div class="wedding-feature-item">
+                  <span class="wedding-feature-check">✓</span>
+                  <span>Event-day stage positioning &amp; cue guidance</span>
+                </div>
+              </div>
+              <p class="wedding-scope-notice">
+                <strong>Service Scope:</strong> Dance Darbar provides dedicated dance instruction, music concept design, and rehearsal coaching for wedding parties and families.
+              </p>
+            </div>
+          </div>
+
+          <!-- Form Column -->
+          <div class="wedding-form-side">
+            <div id="wedding-form-container">
+              <span class="eyebrow">CUSTOM CHOREOGRAPHY INQUIRY</span>
+              <h1 class="wedding-form-heading">Plan Your Performance.</h1>
+              <p class="wedding-form-desc">
+                Tell us about your celebration. Our choreographers will design a routine tailored to your family's favorite music and schedule.
+              </p>
+
+              <form id="wedding-inquiry-form" class="wedding-inquiry-form" novalidate>
+                <div class="form-group">
+                  <label for="wedding-name" class="form-label">Full Name *</label>
+                  <input type="text" id="wedding-name" name="name" class="form-control" placeholder="e.g. Ananya Gupta" required autocomplete="name">
+                  <span class="error-text" id="wedding-name-error" style="display: none;">Please enter your full name</span>
+                </div>
+
+                <div class="form-row-2col">
+                  <div class="form-group">
+                    <label for="wedding-phone" class="form-label">Phone Number *</label>
+                    <input type="tel" id="wedding-phone" name="phone" class="form-control" placeholder="10-digit mobile number" required autocomplete="tel">
+                    <span class="error-text" id="wedding-phone-error" style="display: none;">Please enter a valid 10-digit number</span>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="wedding-date" class="form-label">Event / Sangeet Date *</label>
+                    <input type="date" id="wedding-date" name="eventDate" class="form-control" required>
+                    <span class="error-text" id="wedding-date-error" style="display: none;">Please select the event date</span>
+                  </div>
+                </div>
+
+                <div class="form-row-2col">
+                  <div class="form-group">
+                    <label for="wedding-type" class="form-label">Celebration Type *</label>
+                    <select id="wedding-type" name="celebrationType" class="form-control" required>
+                      <option value="" disabled selected>Select Celebration Type</option>
+                      <option value="Sangeet Night Choreography">Sangeet Night Choreography</option>
+                      <option value="Wedding Reception Performance">Wedding Reception Performance</option>
+                      <option value="Bride &amp; Groom Solo / Duet Routine">Bride &amp; Groom Solo / Duet Routine</option>
+                      <option value="Family &amp; Friends Group Routine">Family &amp; Friends Group Routine</option>
+                      <option value="Anniversary / Milestone Celebration">Anniversary / Milestone Celebration</option>
+                      <option value="Other Family Celebration">Other Family Celebration</option>
+                    </select>
+                    <span class="error-text" id="wedding-type-error" style="display: none;">Please choose a celebration type</span>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="wedding-participants" class="form-label">Estimated Participants</label>
+                    <select id="wedding-participants" name="participants" class="form-control">
+                      <option value="Couple / Solo (1–2 dancers)" selected>Couple / Solo (1–2 dancers)</option>
+                      <option value="Small Group (3–6 dancers)">Small Group (3–6 dancers)</option>
+                      <option value="Large Group (7–15 dancers)">Large Group (7–15 dancers)</option>
+                      <option value="Grand Family Ensemble (15+ dancers)">Grand Family Ensemble (15+ dancers)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="wedding-notes" class="form-label">Songs &amp; Special Requirements (Optional)</label>
+                  <textarea id="wedding-notes" name="notes" class="form-control" rows="3" placeholder="Share your favorite songs, preferred dance style (Bollywood, Semi-Classical, Folk), or rehearsal schedule preferences..."></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary full-width" id="wedding-submit-btn">
+                  <span>Submit Performance Inquiry</span>
+                  <svg class="btn-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
+              </form>
+            </div>
+
+            <div id="wedding-success-container" class="wedding-success-container" style="display: none;">
+              <div class="wedding-success-icon-wrap">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+              </div>
+              <h2 class="wedding-success-heading">Inquiry Received with Warmth</h2>
+              <p class="wedding-success-desc">
+                Thank you for reaching out to Dance Darbar. Guru Bhagwan Singh and our choreography team will connect with you via WhatsApp or phone shortly to discuss your music, dance routine, and rehearsal timeline.
+              </p>
+              <div class="wedding-success-actions">
+                <a href="#/events" class="btn btn-secondary light">Back to What We Create</a>
+                <a href="#/" class="btn btn-primary">Return Home</a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -996,6 +1301,167 @@ function renderAboutPage() {
       </div>
     </div>
   `;
+}
+
+// --- WHAT WE CREATE INTERACTION CONTROLLER ---
+function initWhatWeCreateScroll() {
+  const panels = document.querySelectorAll('.wwc-panel');
+  if (!panels.length) return;
+
+  // Reduced motion preference
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReducedMotion) {
+    panels.forEach(p => p.classList.add('is-active'));
+    return;
+  }
+
+  // Set the first panel active by default
+  panels[0].classList.add('is-active');
+
+  // IntersectionObserver to detect dominant panel
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && entry.intersectionRatio >= 0.35) {
+        panels.forEach(p => p.classList.remove('is-active'));
+        entry.target.classList.add('is-active');
+      }
+    });
+  }, {
+    root: null,
+    threshold: [0.2, 0.35, 0.5, 0.7]
+  });
+
+  panels.forEach(p => observer.observe(p));
+
+  // Subtle parallax on scroll for desktop (only if > 768px and not reduced motion)
+  if (window.innerWidth > 768) {
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          panels.forEach(panel => {
+            const rect = panel.getBoundingClientRect();
+            if (rect.top < window.innerHeight && rect.bottom > 0) {
+              const bg = panel.querySelector('.wwc-panel-bg');
+              if (bg) {
+                const speed = 0.12;
+                const yOffset = (rect.top) * speed;
+                const isAct = panel.classList.contains('is-active');
+                bg.style.transform = isAct
+                  ? `translate3d(0, ${yOffset}px, 0) scale(1.04)`
+                  : `translate3d(0, ${yOffset}px, 0) scale(1.0)`;
+              }
+            }
+          });
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+  }
+}
+
+// --- WEDDING INQUIRY FORM CONTROLLER ---
+function initWeddingInquiryEvents() {
+  const form = document.getElementById('wedding-inquiry-form');
+  const formContainer = document.getElementById('wedding-form-container');
+  const successContainer = document.getElementById('wedding-success-container');
+  if (!form) return;
+
+  const nameInput = document.getElementById('wedding-name');
+  const phoneInput = document.getElementById('wedding-phone');
+  const dateInput = document.getElementById('wedding-date');
+  const typeSelect = document.getElementById('wedding-type');
+  const participantsSelect = document.getElementById('wedding-participants');
+  const notesTextarea = document.getElementById('wedding-notes');
+  const submitBtn = document.getElementById('wedding-submit-btn');
+
+  // Real-time error hiding on input
+  [nameInput, phoneInput, dateInput, typeSelect].forEach(input => {
+    if (!input) return;
+    input.addEventListener('input', () => {
+      const err = document.getElementById(`${input.id}-error`);
+      if (err) err.style.display = 'none';
+      input.classList.remove('error');
+    });
+    input.addEventListener('change', () => {
+      const err = document.getElementById(`${input.id}-error`);
+      if (err) err.style.display = 'none';
+      input.classList.remove('error');
+    });
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    let isValid = true;
+
+    // Validate Name
+    const nameVal = nameInput ? nameInput.value.trim() : '';
+    if (!nameVal) {
+      const err = document.getElementById('wedding-name-error');
+      if (err) err.style.display = 'block';
+      if (nameInput) nameInput.classList.add('error');
+      isValid = false;
+    }
+
+    // Validate Phone (10 digits)
+    const phoneVal = phoneInput ? phoneInput.value.trim().replace(/\D/g, '') : '';
+    if (!phoneVal || phoneVal.length < 10) {
+      const err = document.getElementById('wedding-phone-error');
+      if (err) err.style.display = 'block';
+      if (phoneInput) phoneInput.classList.add('error');
+      isValid = false;
+    }
+
+    // Validate Event Date
+    const dateVal = dateInput ? dateInput.value : '';
+    if (!dateVal) {
+      const err = document.getElementById('wedding-date-error');
+      if (err) err.style.display = 'block';
+      if (dateInput) dateInput.classList.add('error');
+      isValid = false;
+    }
+
+    // Validate Celebration Type
+    const typeVal = typeSelect ? typeSelect.value : '';
+    if (!typeVal) {
+      const err = document.getElementById('wedding-type-error');
+      if (err) err.style.display = 'block';
+      if (typeSelect) typeSelect.classList.add('error');
+      isValid = false;
+    }
+
+    if (!isValid) return;
+
+    // Disable button to prevent double-submit
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span>Submitting Inquiry...</span>';
+    }
+
+    const payload = {
+      'Inquiry Category': 'Wedding & Celebration Performance Choreography',
+      'Client Name': nameVal,
+      'Contact Phone': phoneVal,
+      'Event Date': dateVal,
+      'Celebration Type': typeVal,
+      'Estimated Participants': participantsSelect ? participantsSelect.value : 'Not specified',
+      'Songs & Creative Vision': notesTextarea ? (notesTextarea.value.trim() || 'No specific notes provided') : 'None',
+      'Submitted At': new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
+    };
+
+    // Send email notification to academy administration
+    await sendEmailNotification('💍 New Wedding & Celebration Choreography Inquiry', payload);
+
+    // Transition to success state
+    if (formContainer && successContainer) {
+      formContainer.style.display = 'none';
+      successContainer.style.display = 'block';
+      successContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  });
 }
 
 // --- GRAINY CAROUSEL CONTROLLER ---

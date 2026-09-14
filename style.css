@@ -4346,6 +4346,500 @@ select.modal-input-field {
   }
 }
 
+/* ==========================================================================
+   WHAT WE CREATE - CINEMATIC STORYTELLING SECTION
+   ========================================================================== */
+.what-we-create-section {
+  background-color: #000000;
+  color: #FFFFFF;
+  padding-top: 130px;
+  position: relative;
+  overflow: hidden;
+}
 
+.wwc-header {
+  text-align: center;
+  max-width: 860px;
+  margin: 0 auto 64px auto;
+  padding: 0 24px;
+}
 
+.wwc-header .section-heading {
+  font-family: var(--font-heading);
+  font-size: clamp(38px, 5vw, 56px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #FFFFFF;
+  margin: 12px 0 16px 0;
+}
 
+.wwc-header .lead-text {
+  font-size: clamp(16px, 1.8vw, 20px);
+  color: #A3A3A3;
+  line-height: 1.6;
+}
+
+.wwc-panels-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+}
+
+.wwc-panel {
+  position: relative;
+  width: 100%;
+  min-height: 85vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: #050507;
+}
+
+.wwc-panel-bg {
+  position: absolute;
+  inset: -40px 0 -40px 0;
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.0);
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease;
+  will-change: transform;
+  z-index: 1;
+}
+
+.wwc-panel.is-active .wwc-panel-bg {
+  transform: scale(1.04);
+}
+
+.wwc-panel-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.82) 48%, rgba(0, 0, 0, 0.45) 82%, rgba(0, 0, 0, 0.65) 100%),
+              linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, transparent 20%, transparent 80%, rgba(0, 0, 0, 0.8) 100%);
+  z-index: 2;
+}
+
+.wwc-panel-content {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 80px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  opacity: 0.35;
+  transform: translateY(28px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.wwc-panel.is-active .wwc-panel-content {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.wwc-number-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-primary-light, #60A5FA);
+  margin-bottom: 12px;
+}
+
+.wwc-number {
+  font-size: clamp(32px, 4vw, 44px);
+  font-weight: 800;
+  line-height: 1;
+  color: #2563EB;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+.wwc-panel-title {
+  font-family: var(--font-heading);
+  font-size: clamp(34px, 4.5vw, 54px);
+  font-weight: 700;
+  line-height: 1.15;
+  color: #FFFFFF;
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+
+.wwc-tagline {
+  font-size: clamp(17px, 2vw, 22px);
+  font-weight: 500;
+  font-style: italic;
+  color: #93C5FD;
+  margin-bottom: 20px;
+}
+
+.wwc-description {
+  font-size: clamp(15px, 1.6vw, 18px);
+  line-height: 1.65;
+  color: #D4D4D8;
+  max-width: 680px;
+  margin-bottom: 28px;
+}
+
+.wwc-mobile-image-card {
+  display: none;
+}
+
+.wwc-examples-wrap {
+  margin-bottom: 32px;
+  max-width: 720px;
+}
+
+.wwc-examples-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #71717A;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.wwc-examples-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  align-items: center;
+}
+
+.wwc-example-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #E4E4E7;
+  backdrop-filter: blur(4px);
+}
+
+.wwc-amrapali-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  background: rgba(37, 99, 235, 0.15);
+  border: 1px solid rgba(37, 99, 235, 0.35);
+  border-radius: 12px;
+  color: #93C5FD;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 28px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.wwc-amrapali-badge:hover {
+  background: rgba(37, 99, 235, 0.25);
+  transform: translateX(4px);
+}
+
+.wwc-badge-icon {
+  color: #60A5FA;
+  font-size: 14px;
+}
+
+.wwc-note {
+  font-size: 13px;
+  color: #A1A1AA;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.wwc-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.wwc-cta-btn {
+  font-size: 15px;
+  padding: 14px 28px;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .wwc-panel-content {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .wwc-panel-bg {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* Mobile Stacked Layout (strictly vertical) */
+@media (max-width: 767px) {
+  .what-we-create-section {
+    padding-top: 100px;
+  }
+  
+  .wwc-header {
+    margin-bottom: 40px;
+    padding: 0 16px;
+  }
+
+  .wwc-panel {
+    min-height: auto;
+    padding: 36px 0;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .wwc-panel-bg {
+    display: none;
+  }
+
+  .wwc-panel-overlay {
+    display: none;
+  }
+
+  .wwc-panel-content {
+    opacity: 1;
+    transform: none;
+    padding: 0 18px;
+  }
+
+  .wwc-mobile-image-card {
+    display: block;
+    width: 100%;
+    height: 220px;
+    border-radius: 16px;
+    overflow: hidden;
+    margin: 18px 0 24px 0;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .wwc-mobile-image-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .wwc-mobile-image-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 40%, rgba(0, 0, 0, 0.8) 100%);
+  }
+
+  .wwc-examples-list {
+    gap: 6px 8px;
+  }
+
+  .wwc-example-pill {
+    font-size: 12px;
+    padding: 5px 10px;
+  }
+
+  .event-card-featured {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ==========================================================================
+   WEDDING INQUIRY PAGE STYLES
+   ========================================================================== */
+.wedding-inquiry-page-container {
+  padding-top: 130px;
+  padding-bottom: 80px;
+  background-color: #000000;
+  min-height: 100vh;
+}
+
+.wedding-inquiry-layout {
+  display: grid;
+  grid-template-columns: 44% 56%;
+  background: #141417;
+  border-radius: var(--radius-large);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+  margin-top: 24px;
+}
+
+.wedding-visual-side {
+  position: relative;
+  background-color: #0A0A0C;
+  overflow: hidden;
+  padding: 48px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.wedding-visual-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center 30%;
+  opacity: 0.45;
+  transform: scale(1.03);
+  z-index: 1;
+}
+
+.wedding-visual-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(10, 10, 12, 0.4) 0%, rgba(10, 10, 12, 0.95) 70%, #0A0A0C 100%);
+  z-index: 2;
+}
+
+.wedding-visual-content {
+  position: relative;
+  z-index: 3;
+}
+
+.wedding-visual-title {
+  font-family: var(--font-heading);
+  font-size: clamp(28px, 3vw, 38px);
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.2;
+  margin: 10px 0 16px 0;
+}
+
+.wedding-visual-desc {
+  font-size: 15px;
+  color: #D4D4D8;
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+
+.wedding-feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.wedding-feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 14px;
+  color: #E4E4E7;
+}
+
+.wedding-feature-check {
+  color: #2563EB;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.wedding-scope-notice {
+  font-size: 12px;
+  color: #A1A1AA;
+  line-height: 1.5;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+}
+
+.wedding-form-side {
+  padding: 52px 48px;
+  background-color: #141417;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.wedding-form-heading {
+  font-family: var(--font-heading);
+  font-size: clamp(30px, 3.2vw, 40px);
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 8px 0 12px 0;
+  letter-spacing: -0.02em;
+}
+
+.wedding-form-desc {
+  font-size: 15px;
+  color: #A1A1AA;
+  line-height: 1.55;
+  margin-bottom: 32px;
+}
+
+.form-row-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.wedding-success-container {
+  text-align: center;
+  padding: 40px 24px;
+}
+
+.wedding-success-icon-wrap {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(37, 99, 235, 0.15);
+  border: 1px solid rgba(37, 99, 235, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px auto;
+}
+
+.wedding-success-heading {
+  font-family: var(--font-heading);
+  font-size: 28px;
+  color: #FFFFFF;
+  margin-bottom: 14px;
+}
+
+.wedding-success-desc {
+  font-size: 15px;
+  color: #D4D4D8;
+  line-height: 1.6;
+  max-width: 480px;
+  margin: 0 auto 32px auto;
+}
+
+.wedding-success-actions {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 900px) {
+  .wedding-inquiry-layout {
+    grid-template-columns: 1fr;
+  }
+  .wedding-visual-side {
+    padding: 36px 24px;
+  }
+  .wedding-form-side {
+    padding: 36px 24px;
+  }
+  .form-row-2col {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
