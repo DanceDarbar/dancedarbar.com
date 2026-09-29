@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dance Darbar Kala Sansthan | Dance, Yoga, Music and Fine Arts Academy</title>
-  <meta name="description" content="Learn Kathak, Bollywood, Yoga, Vocal Music and Fine Arts at Dance Darbar Kala Sansthan. Explore programmes, schedules, performances and claim your free trial seat.">
-  <meta name="keywords" content="Dance classes in Dwarka, Kathak classes in Dwarka, Bollywood dance classes, Yoga classes in Dwarka, Vocal music classes, Fine arts classes, Dance academy in Delhi">
+  <title>Dance Darbar Kala Sansthan | Dance Academy & Performing Arts in Delhi</title>
+  <meta name="description" content="Dance Darbar Kala Sansthan is a performing arts academy in Delhi offering Kathak, Bollywood dance, yoga, vocal music, and Fine Arts classes for different ages and skill levels. Selected Kathak and Fine Arts programmes are also available online for students in India and abroad.">
+  <meta name="keywords" content="Dance academy in Delhi, dance classes in Delhi, Kathak classes in Delhi, Bollywood dance classes in Delhi, yoga classes in Delhi, vocal music classes in Delhi, Fine Arts classes in Delhi, online Kathak classes, online Fine Arts classes">
   
-  <meta name="theme-color" content="#000000">
+  <meta name="theme-color" content="#08121E">
   
   <!-- Preconnect & Resource Hints for Fast Asset Loading -->
   <link rel="preconnect" href="https://api.fontshare.com" crossorigin>
@@ -19,7 +19,7 @@
   <link href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,600,500,400&display=swap" rel="stylesheet">
   
   <link rel="preload" as="image" href="assets/curtain-texture-mobile.jpg">
-  <link rel="stylesheet" href="style.css?v=105">
+  <link rel="stylesheet" href="style.css?v=106">
   
   <style>
     /* Critical entrance style: ensures opacity: 0 on initial paint to avoid FOUC */
@@ -43,12 +43,36 @@
       }
     }
   </style>
+
+  <!-- Instant Session Splash Check (Avoids Flash for Returning Users) -->
+  <script>
+    try {
+      if (sessionStorage.getItem('dd_splash_seen') === 'true') {
+        document.documentElement.classList.add('splash-already-seen');
+      }
+    } catch (e) {}
+  </script>
 </head>
 <body>
-  <!-- Global Header Navigation -->
+  <!-- Opening Cinematic Splash Screen (Horizontal Split) -->
+  <div id="splash-screen" class="splash-screen" aria-hidden="true">
+    <div class="splash-half splash-top"></div>
+    <div class="splash-half splash-bottom"></div>
+    <div class="splash-center">
+      <div class="splash-logo-frame">
+        <img src="assets/logo.png" alt="Dance Darbar Kala Sansthan Logo" class="splash-logo-img">
+      </div>
+      <div class="splash-text-block">
+        <span class="splash-brand-title">Dance Darbar</span>
+        <span class="splash-brand-subtitle">KALA SANSTHAN</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global Header Navigation (Strictly Visually Transparent) -->
   <header id="site-header" class="site-header">
     <div class="header-container">
-      <!-- Logo Container with 68% artwork sizing rule -->
+      <!-- Logo Container with Proportional Sizing -->
       <a href="#/" class="logo-link header-logo" id="header-logo-link">
         <div class="logo-circle-frame">
           <img src="assets/logo.png" alt="Dance Darbar Kala Sansthan Logo" class="logo-img">
@@ -59,16 +83,19 @@
         </div>
       </a>
 
-      <!-- Desktop Nav Links -->
+      <!-- Desktop Nav Links (7 Items Centered) -->
       <nav class="desktop-nav header-nav">
         <a href="#/" class="nav-link" data-route="/">Home</a>
         <a href="#/programs" class="nav-link" data-route="/programs">Classes</a>
+        <a href="#/schedule" class="nav-link" data-route="/schedule">Schedule</a>
         <a href="#/events" class="nav-link" data-route="/events">Events</a>
+        <a href="#/gallery" class="nav-link" data-route="/gallery">Gallery</a>
+        <a href="#/about" class="nav-link" data-route="/about">About Us</a>
+        <a href="#/contact" class="nav-link" data-route="/contact">Contact</a>
       </nav>
 
       <!-- Header Primary CTA -->
       <div class="header-cta-wrap header-actions">
-        <a href="#/about" class="nav-link header-about-link" data-route="/about">About Us</a>
         <a href="#/claim-free-seat" class="btn btn-primary nav-cta claim-seat-btn">
           <span>Claim Free Seat</span>
           <svg class="btn-arrow" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -92,9 +119,11 @@
       </div>
       <nav class="mobile-nav-links">
         <a href="#/" class="mobile-link" data-route="/">Home</a>
-        <a href="#/about" class="mobile-link" data-route="/about">About Us</a>
         <a href="#/programs" class="mobile-link" data-route="/programs">Classes</a>
+        <a href="#/schedule" class="mobile-link" data-route="/schedule">Schedule</a>
         <a href="#/events" class="mobile-link" data-route="/events">Events</a>
+        <a href="#/gallery" class="mobile-link" data-route="/gallery">Gallery</a>
+        <a href="#/about" class="mobile-link" data-route="/about">About Us</a>
         <a href="#/contact" class="mobile-link" data-route="/contact">Contact</a>
       </nav>
       <div class="mobile-menu-footer">
@@ -137,7 +166,9 @@
           <ul class="footer-links footer-accordion-content">
             <li><a href="#/">Home</a></li>
             <li><a href="#/programs">Classes</a></li>
+            <li><a href="#/schedule">Schedule</a></li>
             <li><a href="#/events">Events</a></li>
+            <li><a href="#/gallery">Gallery</a></li>
           </ul>
         </div>
 
@@ -211,7 +242,7 @@
         
         <div class="modal-event-pill-bar">
           <div>📅 <strong>23 August 2026</strong> • 4:00 PM – 9:00 PM</div>
-          <div>📍 <strong>CCRT Auditorium</strong>, Dwarka Sector 7, New Delhi</div>
+          <div>📍 <strong>CCRT Auditorium</strong>, New Delhi</div>
         </div>
       </div>
 
@@ -387,7 +418,7 @@
             <div class="summary-item"><strong>Event:</strong> AMRAPALI 2026</div>
             <div class="summary-item"><strong>Date:</strong> 23 August 2026, Sunday</div>
             <div class="summary-item"><strong>Time:</strong> 4:00 PM to 9:00 PM</div>
-            <div class="summary-item" style="grid-column: span 2;"><strong>Venue:</strong> CCRT Auditorium, Dwarka Sector 7, New Delhi</div>
+            <div class="summary-item" style="grid-column: span 2;"><strong>Venue:</strong> CCRT Auditorium, New Delhi</div>
           </div>
 
           <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">

@@ -138,12 +138,14 @@ async function sendCustomerConfirmationEmail(toEmail, subject, details) {
 // --------------------------------------------------------------------------
 // 1. DATA MODELS & CONTENT REGISTRY
 // --------------------------------------------------------------------------
+// 1. DATA MODELS & CONTENT REGISTRY
+// --------------------------------------------------------------------------
 const CLASS_SCHEDULES = {
   'Kathak': 'Monday & Friday, 4:00 PM – 8:00 PM',
-  'Bollywood': 'Tuesday & Thursday, 4:00 PM – 7:00 PM',
-  'Vocals': 'Wednesday & Saturday',
-  'Fine Arts': 'Online — visit to discuss batches',
-  'Yoga': 'Morning Batch, 7:00 PM'
+  'Bollywood': 'Tuesday & Thursday (Timings to be announced)',
+  'Vocals': 'Batches to be announced',
+  'Fine Arts': 'Batches to be announced (Online & Offline)',
+  'Yoga': 'Monday to Saturday, 7:00 AM'
 };
 
 const DANCE_DATA = {
@@ -155,9 +157,9 @@ const DANCE_DATA = {
       name: 'Kathak',
       onlineAvailable: true,
       modeBadge: '🟢 Available in Offline & Online Batches',
-      onlineNote: 'Learn Kathak from anywhere with our live online classes, or join our offline studio batches for an immersive classroom experience.',
+      onlineNote: 'Learn Kathak from anywhere with our live online classes for students in India and abroad, or join our offline studio batches in Delhi for an immersive classroom experience.',
       shortDescription: 'Classical technique, footwork, rhythm, expression and storytelling.',
-      fullDescription: 'Kathak is one of the eight major forms of Indian classical dance. Learn Kathak from anywhere with our live online classes, or join our offline studio batches for an immersive classroom experience.',
+      fullDescription: 'Kathak is one of the eight major forms of Indian classical dance. Learn Kathak from anywhere with our live online classes for students in India and abroad, or join our offline studio batches in Delhi for an immersive classroom experience.',
       image: 'assets/kathak-class.jpg',
       imagePosition: 'center center',
       ageGroups: ['Children (5–12 yrs)', 'Teenagers (13–17 yrs)', 'Adults (18+ yrs)'],
@@ -195,7 +197,7 @@ const DANCE_DATA = {
         'Group Formations & Performance Framing',
         'Stamina & Body Conditioning'
       ],
-      instructor: 'Senior Dance Choreographer',
+      instructor: 'Simar Mehendiratta (Senior Dance Choreographer)',
       schedule: CLASS_SCHEDULES['Bollywood'],
       schedulePreview: CLASS_SCHEDULES['Bollywood']
     },
@@ -220,7 +222,7 @@ const DANCE_DATA = {
         'Introduction to Classical Ragas',
         'Bhajan, Sugam Sangeet & Performance Training'
       ],
-      instructor: 'Guest Faculty Master Singers',
+      instructor: 'Punit Tiwari Sir (Guest Faculty Master Singers)',
       schedule: CLASS_SCHEDULES['Vocals'],
       schedulePreview: CLASS_SCHEDULES['Vocals']
     },
@@ -231,9 +233,9 @@ const DANCE_DATA = {
       name: 'Fine Arts',
       onlineAvailable: true,
       modeBadge: '🟢 Available in Offline & Online Batches',
-      onlineNote: 'Join our Fine Arts programme either in the studio or through interactive live online classes designed for students across India and abroad.',
+      onlineNote: 'Join our Fine Arts programme either in the Delhi studio or through interactive live online classes designed for students across India and abroad.',
       shortDescription: 'Drawing, composition, color theory and visual creative expression.',
-      fullDescription: 'Develop visual observation and creative confidence through structured drawing, sketching, painting, and perspective techniques. Join our Fine Arts programme either in the studio or through interactive live online classes designed for students across India and abroad.',
+      fullDescription: 'Develop visual observation and creative confidence through structured drawing, sketching, painting, and perspective techniques. Join our Fine Arts programme either in the Delhi studio or through interactive live online classes designed for students across India and abroad.',
       image: 'assets/fine-arts-local.png',
       ageGroups: ['Children (5–12 yrs)', 'Teenagers (13–17 yrs)', 'Adults'],
       levels: ['Beginner', 'Developing', 'Advanced'],
@@ -244,7 +246,7 @@ const DANCE_DATA = {
         'Composition & Spatial Awareness',
         'Exhibition Preparation & Portfolio Guidance'
       ],
-      instructor: 'Senior Art Mentor',
+      instructor: 'Guru Bhagwan Singh (Senior Art Mentor)',
       schedule: CLASS_SCHEDULES['Fine Arts'],
       schedulePreview: CLASS_SCHEDULES['Fine Arts']
     },
@@ -269,18 +271,89 @@ const DANCE_DATA = {
         'Joint Mobility & Flexibility Focus',
         'Guided Relaxation & Mindfulness Meditation'
       ],
-      instructor: 'Certified Yoga Acharya',
+      instructor: 'Mrs. Meena Kuthal (Certified Yoga Acharya)',
       schedule: CLASS_SCHEDULES['Yoga'],
       schedulePreview: CLASS_SCHEDULES['Yoga']
     }
   ],
 
+  faculty: [
+    {
+      name: 'Guru Bhagwan Singh',
+      role: 'Founder, Kathak Master & Senior Art Mentor',
+      discipline: 'Kathak & Fine Arts',
+      image: 'assets/founder-guru-bhagwan-singh.jpg',
+      bio: 'Over 30+ years of classical teaching, choreography, and performance. Committed to cultural education, Kathak lineage preservation, and inclusive training.'
+    },
+    {
+      name: 'Simar Mehendiratta',
+      role: 'Senior Dance Choreographer',
+      discipline: 'Bollywood & Modern Stage',
+      image: 'assets/bollywood-class.jpg',
+      bio: 'Energetic choreography, stage formations, and musicality. Specializing in high-energy Bollywood commercial routines and youth performance preparation.'
+    },
+    {
+      name: 'Punit Tiwari Sir',
+      role: 'Guest Faculty Master Singers',
+      discipline: 'Vocal Music & Swar Practice',
+      image: 'assets/vocals-class.jpg',
+      bio: 'Voice culture, pitch matching, Alankars, and classical Ragas. Guiding students in classical devotion and soulful vocal resonance.'
+    },
+    {
+      name: 'Mrs. Meena Kuthal',
+      role: 'Certified Yoga Acharya',
+      discipline: 'Yoga & Mindful Wellness',
+      image: 'assets/yoga-class.jpg',
+      bio: 'Mindful Asanas, Pranayama breathing, and joint mobility. Leading daily early morning batches strictly at 7:00 AM for holistic physical and mental wellness.'
+    }
+  ],
+
   schedules: [
-    { program: 'Kathak', day: CLASS_SCHEDULES['Kathak'], instructor: 'Guru Bhagwan Singh', availability: 'Available' },
-    { program: 'Bollywood', day: CLASS_SCHEDULES['Bollywood'], instructor: 'Simar Mehendiratta', availability: 'Available' },
-    { program: 'Vocals', day: CLASS_SCHEDULES['Vocals'], instructor: 'Punit Tiwari', availability: 'Available' },
-    { program: 'Fine Arts', day: CLASS_SCHEDULES['Fine Arts'], instructor: 'Guru Bhagwan Singh', availability: 'Available' },
-    { program: 'Yoga', day: CLASS_SCHEDULES['Yoga'], instructor: 'Mrs. Meena Kuthal', availability: 'Available' }
+    {
+      program: 'Kathak',
+      slug: 'kathak',
+      days: ['Monday', 'Friday'],
+      dayText: 'Monday & Friday, 4:00 PM – 8:00 PM',
+      instructor: 'Guru Bhagwan Singh',
+      mode: 'Offline + Online Batches',
+      availability: 'Available'
+    },
+    {
+      program: 'Bollywood',
+      slug: 'bollywood',
+      days: ['Tuesday', 'Thursday'],
+      dayText: 'Tuesday & Thursday (Timings to be announced)',
+      instructor: 'Simar Mehendiratta (Senior Dance Choreographer)',
+      mode: 'Offline Classes Only',
+      availability: 'Available'
+    },
+    {
+      program: 'Vocals',
+      slug: 'vocal-music',
+      days: ['Wednesday', 'Saturday'],
+      dayText: 'Batches to be announced',
+      instructor: 'Punit Tiwari Sir (Guest Faculty Master Singers)',
+      mode: 'Offline Classes Only',
+      availability: 'Available'
+    },
+    {
+      program: 'Fine Arts',
+      slug: 'fine-arts',
+      days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+      dayText: 'Batches to be announced (Online & Offline)',
+      instructor: 'Guru Bhagwan Singh (Senior Art Mentor)',
+      mode: 'Offline + Online Batches',
+      availability: 'Available'
+    },
+    {
+      program: 'Yoga',
+      slug: 'yoga',
+      days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+      dayText: 'Monday to Saturday, 7:00 AM',
+      instructor: 'Mrs. Meena Kuthal (Certified Yoga Acharya)',
+      mode: 'Offline Classes Only',
+      availability: 'Available'
+    }
   ],
 
   events: [
@@ -292,7 +365,8 @@ const DANCE_DATA = {
       date: '23 August 2026',
       day: 'Sunday',
       time: '4:00 PM – 9:00 PM',
-      venue: 'CCRT Auditorium, Dwarka Sector 7, New Delhi',
+      venue: 'CCRT Auditorium, New Delhi',
+      status: 'Past Event / Archive',
       image: 'assets/amrapali.jpg',
       instagramUrl: 'https://www.instagram.com/reel/DbiBr0UpjrT/?igsh=MXAyM2RocGpuaW5yYQ==&igsi=MXAyM2RocGpuaW5yYQ==',
       description: 'Witness the remarkable performances of Dance Darbar students as they present AMRAPALI 2026, an annual showcase celebrating passion, discipline, and artistic expression through Kathak, Bollywood, Vocal Music, Fine Arts, and Yoga.'
@@ -300,12 +374,60 @@ const DANCE_DATA = {
   ],
 
   galleryItems: [
-    { id: 1, category: 'Kathak', title: 'Kathak Classical Tarana & Footwork', subtitle: 'Watch Official Reel | @dance_darbar', image: 'assets/kathak-reel-thumb.jpg', type: 'reel', instagramUrl: 'https://www.instagram.com/reel/DYJ1ehuIzlT/?igsh=cDF0YTlrZDc3ZGN5' },
-    { id: 2, category: 'Bollywood', title: 'Energetic Bollywood Fusion Choreography', subtitle: 'Watch Official Reel | @dance_darbar', image: 'assets/bollywood.jpg', type: 'reel', instagramUrl: 'https://www.instagram.com/reel/DZF57CUhGEC/?igsh=dW9vdnliazIzNXV0&igsi=dW9vdnliazIzNXV0' },
-    { id: 3, category: 'Events', title: 'AMRAPALI 2026 Annual Production Highlights', subtitle: 'Stage Performance Reel | @dance_darbar', image: 'assets/amrapali.jpg', type: 'reel', instagramUrl: 'https://www.instagram.com/reel/DbiBr0UpjrT/?igsh=MXAyM2RocGpuaW5yYQ==&igsi=MXAyM2RocGpuaW5yYQ==' },
-    { id: 4, category: 'Fine Arts', title: 'Fine Arts Canvas & Composition Workshop', subtitle: 'Creative Art Studio | @dance_darbar', image: 'assets/fine-arts.jpg', type: 'photo', instagramUrl: 'https://www.instagram.com/dance_darbar?igsh=MWl6bW4za3NreHhrOA==' },
-    { id: 5, category: 'Yoga', title: 'Morning Asana & Mindfulness Practice', subtitle: 'Wellness Session | @dance_darbar', image: 'assets/yoga.jpg', type: 'photo', instagramUrl: 'https://www.instagram.com/dance_darbar?igsh=MWl6bW4za3NreHhrOA==' },
-    { id: 6, category: 'Vocal Music', title: 'Raga Performance & Tanpura Session', subtitle: 'Vocal Sanctuary | @dance_darbar', image: 'assets/vocal-music.jpg', type: 'reel', instagramUrl: 'https://www.instagram.com/dance_darbar?igsh=MWl6bW4za3NreHhrOA==' }
+    {
+      id: 1,
+      category: 'Kathak',
+      title: 'AMRAPALI 2026 — Kathak Video Highlights',
+      subtitle: 'Watch 2-Video Stage Showcase',
+      image: 'assets/kathak-reel-thumb.jpg',
+      type: 'video_showcase',
+      actionUrl: '#/gallery/amrapali-highlights'
+    },
+    {
+      id: 2,
+      category: 'Bollywood',
+      title: 'Energetic Bollywood Fusion Choreography',
+      subtitle: 'Watch Official Reel | @dance_darbar',
+      image: 'assets/bollywood.jpg',
+      type: 'reel',
+      instagramUrl: 'https://www.instagram.com/reel/DZF57CUhGEC/?igsh=dW9vdnliazIzNXV0&igsi=dW9vdnliazIzNXV0'
+    },
+    {
+      id: 3,
+      category: 'Events',
+      title: 'AMRAPALI 2026 Annual Production Highlights',
+      subtitle: 'Stage Performance Reel | @dance_darbar',
+      image: 'assets/amrapali.jpg',
+      type: 'reel',
+      instagramUrl: 'https://www.instagram.com/reel/DbiBr0UpjrT/?igsh=MXAyM2RocGpuaW5yYQ==&igsi=MXAyM2RocGpuaW5yYQ=='
+    },
+    {
+      id: 4,
+      category: 'Fine Arts',
+      title: 'Fine Arts Canvas & Composition Workshop',
+      subtitle: 'Creative Art Studio | @dance_darbar',
+      image: 'assets/fine-arts-local.png',
+      type: 'photo',
+      instagramUrl: 'https://www.instagram.com/dance_darbar?igsh=MWl6bW4za3NreHhrOA=='
+    },
+    {
+      id: 5,
+      category: 'Yoga',
+      title: 'Morning Asana & Mindfulness Practice',
+      subtitle: 'Wellness Session | @dance_darbar',
+      image: 'assets/yoga.jpg',
+      type: 'photo',
+      instagramUrl: 'https://www.instagram.com/dance_darbar?igsh=MWl6bW4za3NreHhrOA=='
+    },
+    {
+      id: 6,
+      category: 'Vocals',
+      title: 'Raga Performance & Tanpura Session',
+      subtitle: 'Vocal Sanctuary | @dance_darbar',
+      image: 'assets/vocals-class.jpg',
+      type: 'photo',
+      instagramUrl: 'https://www.instagram.com/dance_darbar?igsh=MWl6bW4za3NreHhrOA=='
+    }
   ],
 
   faqs: [
@@ -322,6 +444,10 @@ const DANCE_DATA = {
       a: 'Dance Darbar Kala Sansthan offers disciplined instruction in Kathak, Bollywood, Vocal Music, Fine Arts, and Yoga.'
     },
     {
+      q: 'Are online classes available for students outside Delhi?',
+      a: 'Selected Kathak and Fine Arts programmes are available online, allowing students beyond Delhi, including learners across India and abroad, to participate in structured artistic learning.'
+    },
+    {
       q: 'How do I claim a free trial class seat?',
       a: 'Click "Claim Free Seat" on the header or navigation, fill in the student name, age group, and preferred programme. Our team will contact you with batch timings.'
     },
@@ -336,7 +462,7 @@ const DANCE_DATA = {
       id: 1,
       name: "Priyanka Sharma",
       role: "Parent of Kathak Student (Age 8)",
-      quote: "Guru Bhagwan Singh Ji's discipline and grace have transformed my daughter's confidence. The Kathak footwork and posture training at Dance Darbar are unparalleled in Dwarka.",
+      quote: "Guru Bhagwan Singh Ji's discipline and grace have transformed my daughter's confidence. The Kathak footwork and posture training at Dance Darbar are unparalleled in Delhi.",
       rating: 5
     },
     {
@@ -359,6 +485,29 @@ const DANCE_DATA = {
 // --------------------------------------------------------------------------
 // 2. ROUTER & PAGE RENDERERS
 // --------------------------------------------------------------------------
+const PAGE_TITLES = {
+  '/': 'Dance Darbar Kala Sansthan | Dance Academy & Performing Arts in Delhi',
+  '/programs': 'Dance, Kathak, Yoga & Fine Arts Classes | Dance Darbar',
+  '/programs/kathak': 'Kathak Classes in Delhi & Online | Dance Darbar',
+  '/programs/bollywood': 'Bollywood Dance Classes in Delhi | Dance Darbar',
+  '/programs/fine-arts': 'Fine Arts Classes in Delhi & Online | Dance Darbar',
+  '/programs/yoga': 'Yoga Classes in Delhi | Dance Darbar',
+  '/programs/vocal-music': 'Vocal Music Classes in Delhi | Dance Darbar',
+  '/schedule': 'Class Schedule & Batches | Dance Darbar Kala Sansthan',
+  '/events': 'Dance Events & Performances in Delhi | Dance Darbar',
+  '/wedding-inquiry': 'Wedding & Family Choreography Inquiry | Dance Darbar',
+  '/plan-performance': 'Wedding & Family Choreography Inquiry | Dance Darbar',
+  '/gallery': 'Media & Performance Gallery | Dance Darbar Kala Sansthan',
+  '/gallery/amrapali-highlights': 'AMRAPALI 2026 — Kathak Video Highlights | Dance Darbar',
+  '/about': 'About Dance Darbar Kala Sansthan | Performing Arts Academy in Delhi',
+  '/about-us': 'About Dance Darbar Kala Sansthan | Performing Arts Academy in Delhi',
+  '/contact': 'Contact Dance Darbar Kala Sansthan | Delhi',
+  '/claim-free-seat': 'Claim Your Free Trial Seat | Dance Darbar Kala Sansthan',
+  '/faq': 'Frequently Asked Questions | Dance Darbar Kala Sansthan',
+  '/privacy': 'Privacy Policy | Dance Darbar Kala Sansthan',
+  '/terms': 'Terms & Conditions | Dance Darbar Kala Sansthan'
+};
+
 function renderApp() {
   if (window.cleanupCurtainSimulation) {
     window.cleanupCurtainSimulation();
@@ -367,6 +516,9 @@ function renderApp() {
   const header = document.getElementById('site-header');
   const hash = window.location.hash || '#/';
   const route = hash.replace('#', '');
+
+  // Dynamic Title per route
+  document.title = PAGE_TITLES[route] || (PAGE_TITLES['/' + route.split('/')[1]] || 'Dance Darbar Kala Sansthan | Dance Academy & Performing Arts in Delhi');
 
   if (header) {
     if (route === '/' || route === '') {
@@ -378,12 +530,19 @@ function renderApp() {
     }
   }
 
-  // Active Link Styling
+  // Active Link Styling for all 7 nav routes
   document.querySelectorAll('.nav-link, .mobile-link').forEach(link => {
     const targetRoute = link.getAttribute('data-route');
-    const isAbout = (route === '/about' || route === '/about-us') && (targetRoute === '/about' || targetRoute === '/about-us');
-    const isEvents = (route === '/events' || route.startsWith('/events/') || route === '/wedding-inquiry' || route === '/plan-performance') && targetRoute === '/events';
-    if (isAbout || isEvents || targetRoute === route || (targetRoute !== '/' && route.startsWith(targetRoute))) {
+    let isActive = false;
+    if (targetRoute === '/' && (route === '/' || route === '')) isActive = true;
+    else if (targetRoute === '/programs' && route.startsWith('/programs')) isActive = true;
+    else if (targetRoute === '/schedule' && route.startsWith('/schedule')) isActive = true;
+    else if (targetRoute === '/events' && (route.startsWith('/events') || route === '/wedding-inquiry' || route === '/plan-performance')) isActive = true;
+    else if (targetRoute === '/gallery' && route.startsWith('/gallery')) isActive = true;
+    else if (targetRoute === '/about' && (route === '/about' || route === '/about-us')) isActive = true;
+    else if (targetRoute === '/contact' && route.startsWith('/contact')) isActive = true;
+
+    if (isActive) {
       link.classList.add('active');
     } else {
       link.classList.remove('active');
@@ -402,8 +561,8 @@ function renderApp() {
     const slug = route.split('/programs/')[1];
     appRoot.innerHTML = renderProgramDetailPage(slug);
   } else if (route === '/schedule' || route.startsWith('/schedule')) {
-    window.location.hash = '#/';
-    return;
+    appRoot.innerHTML = renderSchedulePage();
+    initSchedulePageEvents();
   } else if (route === '/events') {
     appRoot.innerHTML = renderEventsPage();
     initWhatWeCreateScroll();
@@ -413,9 +572,12 @@ function renderApp() {
   } else if (route === '/wedding-inquiry' || route === '/plan-performance') {
     appRoot.innerHTML = renderWeddingInquiryPage();
     initWeddingInquiryEvents();
+  } else if (route === '/gallery/amrapali-highlights') {
+    appRoot.innerHTML = renderAmrapaliHighlightsPage();
+    initAmrapaliHighlightsEvents();
   } else if (route === '/gallery' || route.startsWith('/gallery')) {
-    window.location.hash = '#/';
-    return;
+    appRoot.innerHTML = renderGalleryPage();
+    initGalleryPageEvents();
   } else if (route === '/claim-free-seat') {
     appRoot.innerHTML = renderClaimFreeSeatPage();
     initTrialFormEvents();
@@ -456,7 +618,7 @@ function renderHomePage() {
       <div class="hero-video-wrap">
         <iframe
           class="hero-video-iframe"
-          src="https://player.vimeo.com/video/1215238851?background=1&autoplay=1&loop=1&muted=1&autopause=0&quality=1080p&dnt=1"
+          src="https://player.vimeo.com/video/1215238851?background=1&autoplay=1&loop=1&muted=1&autopause=0&quality=1080p&dnt=1#t=15s"
           width="3840"
           height="2160"
           frameborder="0"
@@ -488,13 +650,33 @@ function renderHomePage() {
     </section>
 
     <!-- BRAND STORY / PHILOSOPHY -->
-    <section class="about-brand-section section-padding">
+    <section class="about-brand-section section-padding dance-illustration-pattern">
       <div class="section-container">
         <div style="text-align: center; max-width: 980px; margin: 0 auto;">
           <h2 class="section-heading" style="margin-bottom: 16px;">Every Step Tells a Story.</h2>
           <p class="about-brand-text" style="margin: 0 auto; color: var(--color-muted-text); font-weight: 400;">
             Dance Darbar Kala Sansthan is a premier performing arts sanctuary where artistic discipline, Indian culture, and creative expression unite. Through structured mentorship in Kathak, Bollywood, Vocal Music, Fine Arts, and Yoga, we empower learners of all ages to build posture, confidence, and stage poise. Every step at Dance Darbar nurtures self-belief, grace, and a lifelong passion for artistic mastery.
           </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATISTICS COUNTER -->
+    <section class="stats-section">
+      <div class="section-container">
+        <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr);">
+          <div class="stat-item">
+            <span class="stat-value counter-anim" data-target="5000" data-suffix="+">0+</span>
+            <span class="stat-label">Students Trained</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value counter-anim" data-target="150" data-suffix="+">0+</span>
+            <span class="stat-label">Stage Performances</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">All Ages</span>
+            <span class="stat-label">Learning Community</span>
+          </div>
         </div>
       </div>
     </section>
@@ -584,6 +766,151 @@ function renderHomePage() {
       </div>
     </section>
 
+    <!-- STRUCTURED LEARNING JOURNEY -->
+    <section class="learning-pathway-section">
+      <div class="section-container">
+        <div style="text-align: center;">
+          <span class="eyebrow">STRUCTURED CURRICULUM</span>
+          <h2 class="section-heading">A Guided Pathway From Foundation to Stage.</h2>
+          <p class="lead-text" style="max-width: 640px; margin: 0 auto;">Every student progresses through a disciplined four-stage pathway designed for steady growth, poise, and performance excellence.</p>
+        </div>
+
+        <div class="learning-pathway-grid">
+          <div class="pathway-card">
+            <span class="pathway-step-num">Step 01</span>
+            <h3 class="pathway-step-title">Beginner Foundation</h3>
+            <p class="pathway-step-desc">Core posture, body conditioning, basic rhythm identification, Hasta Mudras, and foundational footwork mechanics.</p>
+          </div>
+          <div class="pathway-card">
+            <span class="pathway-step-num">Step 02</span>
+            <h3 class="pathway-step-title">Technique &amp; Repertoire</h3>
+            <p class="pathway-step-desc">Complex Layakari, Swara pitch training, Asana holds, Toda compositions, and expressive storytelling nuances.</p>
+          </div>
+          <div class="pathway-card">
+            <span class="pathway-step-num">Step 03</span>
+            <h3 class="pathway-step-title">Stage Poise &amp; Rehearsals</h3>
+            <p class="pathway-step-desc">Group synchronization, stage spatial awareness, Ghungroo resonance, and intensive auditorium rehearsals.</p>
+          </div>
+          <div class="pathway-card">
+            <span class="pathway-step-num">Step 04</span>
+            <h3 class="pathway-step-title">Artistic Mastery</h3>
+            <p class="pathway-step-desc">Annual productions like AMRAPALI, solo performance opportunities, portfolio preparation, and lifelong artistry.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT WE CREATE HOME PREVIEW -->
+    <section class="home-wwc-preview">
+      <div class="section-container">
+        <div style="text-align: center;">
+          <span class="eyebrow light">OUR CRAFT</span>
+          <h2 class="section-heading" style="color: #FFFFFF;">What We Create</h2>
+          <p class="lead-text light" style="max-width: 660px; margin: 12px auto 0;">Performances, annual productions, and personalised celebrations—brought to life through dance.</p>
+        </div>
+
+        <div class="home-wwc-grid">
+          <div class="home-wwc-card">
+            <span class="home-wwc-num">01 / STAGE</span>
+            <h3 class="home-wwc-title">Events &amp; Performances</h3>
+            <p class="home-wwc-desc">Live cultural showcases, stage productions, dance festivals, and school &amp; college choreography.</p>
+          </div>
+          <div class="home-wwc-card">
+            <span class="home-wwc-num">02 / ANNUAL</span>
+            <h3 class="home-wwc-title">Academy Annual Programs</h3>
+            <p class="home-wwc-desc">Grand auditorium ballets giving students the professional stage to celebrate their yearly artistic growth.</p>
+          </div>
+          <div class="home-wwc-card">
+            <span class="home-wwc-num">03 / WEDDING</span>
+            <h3 class="home-wwc-title">Wedding &amp; Family Performances</h3>
+            <p class="home-wwc-desc">Personalised choreography for bride, groom, and family sangeet performances designed around your music.</p>
+          </div>
+          <div class="home-wwc-card">
+            <span class="home-wwc-num">04 / SCHOOLS</span>
+            <h3 class="home-wwc-title">School Annual Events</h3>
+            <p class="home-wwc-desc">Choreography for school annual days, inter-school competitions, and synchronized group dance dramas.</p>
+          </div>
+          <div class="home-wwc-card">
+            <span class="home-wwc-num">05 / CELEBRATIONS</span>
+            <h3 class="home-wwc-title">Family &amp; Celebration Performances</h3>
+            <p class="home-wwc-desc">Custom routines for anniversaries, milestone birthdays, and festive family gatherings for all ages.</p>
+          </div>
+          <div class="home-wwc-card">
+            <span class="home-wwc-num">06 / TRADITION</span>
+            <h3 class="home-wwc-title">Cultural Events &amp; Stage Recitals</h3>
+            <p class="home-wwc-desc">Classical dance recitals, Kathak ballets, and devotional choreographies on national cultural stages.</p>
+          </div>
+        </div>
+
+        <div style="text-align: center;">
+          <a href="#/events" class="btn btn-secondary light">Explore What We Create &rarr;</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FACULTY & MENTORSHIP SPOTLIGHT -->
+    <section class="faculty-spotlight-section">
+      <div class="section-container">
+        <div style="text-align: center;">
+          <span class="eyebrow">FACULTY &amp; MENTORSHIP</span>
+          <h2 class="section-heading">Learn From Dedicated Masters.</h2>
+          <p class="lead-text" style="max-width: 600px; margin: 0 auto;">Disciplined practitioners committed to authentic lineage, technical precision, and patient student mentorship.</p>
+        </div>
+
+        <div class="faculty-grid">
+          ${DANCE_DATA.faculty.map(f => `
+            <div class="faculty-card">
+              <div class="faculty-card-media">
+                <img src="${f.image}" alt="${f.name}" class="faculty-card-img" loading="lazy">
+              </div>
+              <div class="faculty-card-info">
+                <h3 class="faculty-card-name">${f.name}</h3>
+                <span class="faculty-card-role">${f.role}</span>
+                <p class="faculty-card-bio">${f.bio}</p>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </section>
+
+    <!-- GALLERY PREVIEW -->
+    <section class="home-gallery-preview-section section-padding" style="background: var(--color-surface); border-top: 1px solid var(--color-border);">
+      <div class="section-container">
+        <div style="text-align: center; margin-bottom: 48px;">
+          <span class="eyebrow">VISUAL ARCHIVE</span>
+          <h2 class="section-heading">Moments from Stage &amp; Studio.</h2>
+          <p class="lead-text" style="max-width: 600px; margin: 0 auto;">Glimpses of authentic training, classical recitals, and energetic celebrations.</p>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 40px;">
+          <a href="#/gallery/amrapali-highlights" style="display: block; text-decoration: none; border-radius: var(--radius-medium); overflow: hidden; background: #000; border: 1px solid var(--color-border); position: relative; height: 260px;">
+            <img src="assets/kathak-reel-thumb.jpg" alt="AMRAPALI Kathak Highlights" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.85; transition: transform 400ms ease;">
+            <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(8,18,30,0.95), transparent 60%); padding: 20px; display: flex; flex-direction: column; justify-content: flex-end;">
+              <span style="font-size: 11px; font-weight: 700; color: #5EBBEA; letter-spacing: 0.1em; text-transform: uppercase;">✦ 2-Video Showcase</span>
+              <h3 style="font-size: 17px; color: #FFFFFF; margin-top: 4px;">Kathak Stage Highlights</h3>
+            </div>
+          </a>
+          <a href="https://www.instagram.com/reel/DZF57CUhGEC/?igsh=dW9vdnliazIzNXV0&igsi=dW9vdnliazIzNXV0" target="_blank" rel="noopener noreferrer" style="display: block; text-decoration: none; border-radius: var(--radius-medium); overflow: hidden; background: #000; border: 1px solid var(--color-border); position: relative; height: 260px;">
+            <img src="assets/bollywood.jpg" alt="Bollywood Highlights" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.85; transition: transform 400ms ease;">
+            <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(8,18,30,0.95), transparent 60%); padding: 20px; display: flex; flex-direction: column; justify-content: flex-end;">
+              <span style="font-size: 11px; font-weight: 700; color: #5EBBEA; letter-spacing: 0.1em; text-transform: uppercase;">✦ Instagram Reel</span>
+              <h3 style="font-size: 17px; color: #FFFFFF; margin-top: 4px;">Bollywood Fusion Choreography</h3>
+            </div>
+          </a>
+          <a href="https://www.instagram.com/reel/DbiBr0UpjrT/?igsh=MXAyM2RocGpuaW5yYQ==&igsi=MXAyM2RocGpuaW5yYQ==" target="_blank" rel="noopener noreferrer" style="display: block; text-decoration: none; border-radius: var(--radius-medium); overflow: hidden; background: #000; border: 1px solid var(--color-border); position: relative; height: 260px;">
+            <img src="assets/amrapali.jpg" alt="AMRAPALI Annual Production" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.85; transition: transform 400ms ease;">
+            <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(8,18,30,0.95), transparent 60%); padding: 20px; display: flex; flex-direction: column; justify-content: flex-end;">
+              <span style="font-size: 11px; font-weight: 700; color: #5EBBEA; letter-spacing: 0.1em; text-transform: uppercase;">✦ Annual Production</span>
+              <h3 style="font-size: 17px; color: #FFFFFF; margin-top: 4px;">AMRAPALI 2026 Production Highlights</h3>
+            </div>
+          </a>
+        </div>
+        <div style="text-align: center;">
+          <a href="#/gallery" class="btn btn-secondary">View Full Gallery &rarr;</a>
+        </div>
+      </div>
+    </section>
+
     <!-- FEATURED EVENT / UPCOMING PERFORMANCE -->
     <section class="featured-event-section">
       <div class="section-container">
@@ -593,7 +920,7 @@ function renderHomePage() {
         <div class="curtain-stage-wrap">
           <div class="curtain-stage" id="stage" tabindex="0" role="region" aria-label="Interactive announcement reveal: Upcoming performance: A NEW STORY TAKES THE STAGE">
             <div class="stage-content">
-              <p class="stage-eyebrow">Upcoming Performance</p>
+              <p class="stage-eyebrow">Upcoming Performance — A NEW STORY TAKES THE STAGE</p>
               <h2 class="stage-heading">Wait, They Are Preparing</h2>
             </div>
 
@@ -611,26 +938,6 @@ function renderHomePage() {
 
           <!-- Desktop texture (compressed) and a smaller mobile-only copy -->
           <img id="curtainImg" src="assets/curtain-texture.jpg" style="display:none" alt="">
-        </div>
-      </div>
-    </section>
-
-    <!-- STATISTICS COUNTER -->
-    <section class="stats-section">
-      <div class="section-container">
-        <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr);">
-          <div class="stat-item">
-            <span class="stat-value counter-anim" data-target="5000" data-suffix="+">0+</span>
-            <span class="stat-label">Students Trained</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-value counter-anim" data-target="150" data-suffix="+">0+</span>
-            <span class="stat-label">Stage Performances</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-value">All Ages</span>
-            <span class="stat-label">Learning Community</span>
-          </div>
         </div>
       </div>
     </section>
@@ -665,8 +972,6 @@ function renderHomePage() {
       </div>
     </section>
 
-
-
     <!-- DUAL FAQ & CONTACT US SPLIT BANNER -->
     <section class="dual-banner-section">
       <div class="dual-banner-grid">
@@ -681,6 +986,19 @@ function renderHomePage() {
         </a>
       </div>
     </section>
+
+    <!-- FINAL CTA SECTION -->
+    <section class="home-final-cta-section" style="padding: 100px 0; background: #08121E; text-align: center; border-top: 1px solid rgba(255,255,255,0.08);">
+      <div class="section-container" style="max-width: 760px; margin: 0 auto; padding: 0 24px;">
+        <span class="eyebrow light">JOIN THE DANCE DARBAR FAMILY</span>
+        <h2 class="section-heading" style="color: #FFFFFF; font-size: clamp(34px, 4.5vw, 56px); margin-top: 8px; margin-bottom: 16px;">Start Your Artistic Journey Today.</h2>
+        <p class="lead-text light" style="margin: 0 auto 36px auto;">Claim your free trial seat in Kathak, Bollywood, Vocal Music, Fine Arts, or Yoga.</p>
+        <a href="#/claim-free-seat" class="btn btn-primary claim-seat-btn" style="padding: 14px 32px; font-size: 15px; display: inline-flex;">
+          <span>Claim Free Trial Seat</span>
+          <svg class="btn-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </section>
   `;
 }
 
@@ -689,9 +1007,9 @@ function renderProgramsPage() {
   return `
     <div style="padding-top: 140px; padding-bottom: 100px;">
       <div class="section-container">
-        <span class="eyebrow">Our Classes</span>
-        <h1 class="section-heading" style="font-size: clamp(38px, 5vw, 64px); margin-bottom: 16px;">Find Your Form of Expression.</h1>
-        <p class="lead-text" style="margin-bottom: 60px;">Explore structured artistic training created for children, teenagers, adults and senior learners across dance, music, art and wellness.</p>
+        <span class="eyebrow">OUR DISCIPLINES</span>
+        <h1 class="section-heading" style="font-size: clamp(38px, 5vw, 64px); margin-bottom: 16px;">Dance, Music, Yoga &amp; Fine Arts Classes</h1>
+        <p class="lead-text" style="margin-bottom: 60px;">Explore structured artistic training created for children, teenagers, adults and senior learners across classical dance, contemporary choreography, vocal music, visual arts, and yogic wellness.</p>
 
         <div style="display: flex; flex-direction: column; gap: 48px;">
           ${DANCE_DATA.programs.map((p, idx) => `
@@ -731,6 +1049,23 @@ function renderProgramsPage() {
               </div>
             </div>
           `).join('')}
+        </div>
+
+        <!-- LEARN FROM ANYWHERE (ONLINE) BANNER -->
+        <div class="learn-anywhere-banner">
+          <div class="learn-anywhere-content">
+            <span class="learn-anywhere-badge">Online Academy</span>
+            <h2 class="learn-anywhere-title">Learn Kathak &amp; Fine Arts From Anywhere</h2>
+            <p class="learn-anywhere-desc">
+              For students outside Delhi, across India, and international learners abroad, Dance Darbar offers dedicated live, interactive online classes in Kathak and Fine Arts. Students receive the same disciplined curriculum, personalized technique correction, and theory guidance from our senior mentors.
+            </p>
+          </div>
+          <div>
+            <a href="#/claim-free-seat" class="btn btn-primary claim-seat-btn" style="padding: 14px 28px;">
+              <span>Claim Online Trial Seat</span>
+              <svg class="btn-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -827,7 +1162,7 @@ function renderEventsPage() {
         <p class="lead-text">Performances, annual productions, and personalised celebrations—brought to life through dance.</p>
       </div>
 
-      <!-- THREE CINEMATIC PANELS -->
+      <!-- SIX CINEMATIC PANELS -->
       <div class="wwc-panels-container">
         <!-- PANEL 01: Events & Performances -->
         <section class="wwc-panel" id="panel-events" data-panel="01">
@@ -936,7 +1271,153 @@ function renderEventsPage() {
             </div>
           </div>
         </section>
+
+        <!-- PANEL 04: School Annual Events -->
+        <section class="wwc-panel" id="panel-schools" data-panel="04">
+          <div class="wwc-panel-bg" style="background-image: url('assets/stage-spotlight-bg.jpg');"></div>
+          <div class="wwc-panel-overlay"></div>
+          <div class="wwc-panel-content">
+            <h2 class="wwc-panel-title">School Annual Events</h2>
+            <p class="wwc-tagline">Inspiring Youth. Transforming Stages.</p>
+            <p class="wwc-description">
+              We collaborate with schools and academic institutions to choreograph large-scale annual day productions, inter-school cultural festivals, and themed dance dramas that celebrate student talent, discipline, and unity.
+            </p>
+
+            <div class="wwc-mobile-image-card">
+              <img src="assets/stage-spotlight-bg.jpg" alt="School Annual Events choreography" loading="lazy">
+              <div class="wwc-mobile-image-overlay"></div>
+            </div>
+
+            <div class="wwc-examples-wrap">
+              <span class="wwc-examples-label">School Choreography Offerings</span>
+              <div class="wwc-examples-list">
+                <span class="wwc-example-pill">Annual Day choreography</span>
+                <span class="wwc-example-pill">Thematic dance dramas</span>
+                <span class="wwc-example-pill">Inter-school competitions</span>
+                <span class="wwc-example-pill">Group synchronization</span>
+                <span class="wwc-example-pill">Costume &amp; prop staging</span>
+                <span class="wwc-example-pill">Teacher &amp; student coaching</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- PANEL 05: Family & Celebration Performances -->
+        <section class="wwc-panel" id="panel-family" data-panel="05">
+          <div class="wwc-panel-bg" style="background-image: url('assets/community-6.jpg');"></div>
+          <div class="wwc-panel-overlay"></div>
+          <div class="wwc-panel-content">
+            <h2 class="wwc-panel-title">Family &amp; Celebration Performances</h2>
+            <p class="wwc-tagline">Every Generation On Stage Together.</p>
+            <p class="wwc-description">
+              Celebrate milestone birthdays, golden anniversaries, and joyous family gatherings with customized dance routines. Designed for all generations—from young children to grandparents—with patient, encouraging rehearsal sessions.
+            </p>
+
+            <div class="wwc-mobile-image-card">
+              <img src="assets/community-6.jpg" alt="Family celebration dance performance" loading="lazy">
+              <div class="wwc-mobile-image-overlay"></div>
+            </div>
+
+            <div class="wwc-examples-wrap">
+              <span class="wwc-examples-label">Celebration Highlights</span>
+              <div class="wwc-examples-list">
+                <span class="wwc-example-pill">Milestone anniversaries</span>
+                <span class="wwc-example-pill">Milestone birthdays</span>
+                <span class="wwc-example-pill">Festive family reunions</span>
+                <span class="wwc-example-pill">Custom family medleys</span>
+                <span class="wwc-example-pill">Gentle routines for elders</span>
+                <span class="wwc-example-pill">High-energy youth segments</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- PANEL 06: Cultural Events & Stage Performances -->
+        <section class="wwc-panel" id="panel-cultural" data-panel="06">
+          <div class="wwc-panel-bg" style="background-image: url('assets/kathak-local.jpg');"></div>
+          <div class="wwc-panel-overlay"></div>
+          <div class="wwc-panel-content">
+            <h2 class="wwc-panel-title">Cultural Events &amp; Stage Performances</h2>
+            <p class="wwc-tagline">Celebrating Heritage. Elevating Culture.</p>
+            <p class="wwc-description">
+              Bringing classical Indian dance, Kathak recitals, and classical ballets to prestigious auditorium stages, cultural festivals, and civic celebrations across Delhi and India.
+            </p>
+
+            <div class="wwc-mobile-image-card">
+              <img src="assets/kathak-local.jpg" alt="Cultural Events & Stage Performances" loading="lazy">
+              <div class="wwc-mobile-image-overlay"></div>
+            </div>
+
+            <div class="wwc-examples-wrap">
+              <span class="wwc-examples-label">Cultural Repertoire</span>
+              <div class="wwc-examples-list">
+                <span class="wwc-example-pill">Classical dance festivals</span>
+                <span class="wwc-example-pill">Traditional Kathak recitals</span>
+                <span class="wwc-example-pill">Devotional choreographies</span>
+                <span class="wwc-example-pill">Civic &amp; cultural celebrations</span>
+                <span class="wwc-example-pill">Art gallery openings</span>
+                <span class="wwc-example-pill">National stage showcases</span>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
+
+      <!-- UPCOMING PRODUCTION MINIMAL DARK SECTION -->
+      <section class="coming-soon-section">
+        <div class="coming-soon-container">
+          <span class="coming-soon-eyebrow">NEXT AUDITORIUM PRODUCTION</span>
+          <h2 class="coming-soon-title">Something New Is Coming.</h2>
+          <p class="coming-soon-subtitle">
+            The artists, faculty, and students of Dance Darbar Kala Sansthan are in studio rehearsals preparing our next major stage production. Stay tuned for dates, venue details, and ticketing announcements.
+          </p>
+          <div style="display: inline-block; padding: 8px 24px; background: rgba(94, 187, 234, 0.15); border: 1px solid #5EBBEA; border-radius: var(--radius-pill); color: #5EBBEA; font-family: var(--font-heading); font-size: 13px; font-weight: 700; letter-spacing: 0.15em;">
+            COMING SOON
+          </div>
+        </div>
+      </section>
+
+      <!-- PAST EVENTS ARCHIVE (AMRAPALI 2026) -->
+      <section class="past-events-section">
+        <div class="section-container">
+          <div style="text-align: center; margin-bottom: 48px;">
+            <span class="eyebrow">ARCHIVE &amp; PREVIOUS PRODUCTIONS</span>
+            <h2 class="section-heading">Past Productions &amp; Highlights</h2>
+            <p class="lead-text" style="max-width: 600px; margin: 0 auto;">Celebrating memorable student showcases and annual ballets presented on Delhi's grandest stages.</p>
+          </div>
+
+          <div class="past-event-card" style="background: var(--color-white); border-radius: var(--radius-large); border: 1px solid var(--color-border); overflow: hidden; display: grid; grid-template-columns: 1fr 1fr; box-shadow: 0 10px 30px rgba(0,0,0,0.06); max-width: 960px; margin: 0 auto;">
+            <div style="position: relative; min-height: 360px;">
+              <img src="assets/amrapali.jpg" alt="AMRAPALI 2026 Annual Student Dance Ballet" style="width: 100%; height: 100%; object-fit: cover;">
+              <div style="position: absolute; top: 20px; left: 20px; background: rgba(8, 18, 30, 0.85); backdrop-filter: blur(8px); padding: 6px 14px; border-radius: var(--radius-pill); color: #FFFFFF; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;">
+                Past Event / Archive
+              </div>
+            </div>
+            <div style="padding: 40px; display: flex; flex-direction: column; justify-content: space-between;">
+              <div>
+                <span class="eyebrow" style="font-size: 11px;">DANCE DARBAR KALA SANSTHAN PRESENTS</span>
+                <h3 style="font-size: 28px; margin-bottom: 12px; color: var(--color-navy);">AMRAPALI 2026</h3>
+                <p style="font-size: 14px; color: var(--color-muted-text); margin-bottom: 20px; line-height: 1.6;">
+                  Witness the remarkable performances of Dance Darbar students as they present AMRAPALI 2026, an annual showcase celebrating passion, discipline, and artistic expression through Kathak, Bollywood, Vocal Music, Fine Arts, and Yoga.
+                </p>
+                <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; font-size: 13.5px; color: var(--color-navy);">
+                  <div><strong>Date:</strong> 23 August 2026 (Sunday)</div>
+                  <div><strong>Venue:</strong> CCRT Auditorium, New Delhi</div>
+                </div>
+              </div>
+              <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+                <button type="button" class="btn btn-secondary" disabled style="opacity: 0.6; cursor: not-allowed;">
+                  Reservation Closed (Seats Full)
+                </button>
+                <a href="https://www.instagram.com/reel/DbiBr0UpjrT/?igsh=MXAyM2RocGpuaW5yYQ==&igsi=MXAyM2RocGpuaW5yYQ==" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="font-size: 13px;">
+                  <span>Watch Reel on Instagram</span>
+                  <svg class="btn-arrow" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   `;
 }
@@ -1077,6 +1558,214 @@ function renderEventDetailPage(slug) {
   `;
 }
 
+// --- SCHEDULE PAGE TEMPLATE ---
+function renderSchedulePage() {
+  return `
+    <div style="padding-top: 140px; padding-bottom: 100px;">
+      <div class="section-container">
+        <span class="eyebrow">TIMETABLE &amp; BATCHES</span>
+        <h1 class="section-heading" style="font-size: clamp(38px, 5vw, 64px); margin-bottom: 16px;">Class Schedule &amp; Batches</h1>
+        <p class="lead-text" style="margin-bottom: 40px; max-width: 720px;">
+          Explore weekly batch timings for Kathak, Bollywood, Vocal Music, Fine Arts, and Yoga. Both offline studio batches in Delhi and interactive online sessions are available.
+        </p>
+
+        <!-- DUAL FILTER SECTION -->
+        <div class="schedule-filter-section">
+          <div class="schedule-filter-row">
+            <div class="schedule-filter-group">
+              <span class="schedule-filter-label">Filter by Programme</span>
+              <div class="schedule-filter-pills" id="program-filter-pills">
+                <button type="button" class="filter-pill-btn active" data-filter-prog="all">All Programmes</button>
+                <button type="button" class="filter-pill-btn" data-filter-prog="Kathak">Kathak</button>
+                <button type="button" class="filter-pill-btn" data-filter-prog="Bollywood">Bollywood</button>
+                <button type="button" class="filter-pill-btn" data-filter-prog="Vocals">Vocals</button>
+                <button type="button" class="filter-pill-btn" data-filter-prog="Fine Arts">Fine Arts</button>
+                <button type="button" class="filter-pill-btn" data-filter-prog="Yoga">Yoga</button>
+              </div>
+            </div>
+
+            <div class="schedule-filter-group">
+              <span class="schedule-filter-label">Filter by Day</span>
+              <div class="schedule-filter-pills" id="day-filter-pills">
+                <button type="button" class="filter-pill-btn active" data-filter-day="all">All Days</button>
+                <button type="button" class="filter-pill-btn" data-filter-day="Monday">Monday</button>
+                <button type="button" class="filter-pill-btn" data-filter-day="Tuesday">Tuesday</button>
+                <button type="button" class="filter-pill-btn" data-filter-day="Wednesday">Wednesday</button>
+                <button type="button" class="filter-pill-btn" data-filter-day="Thursday">Thursday</button>
+                <button type="button" class="filter-pill-btn" data-filter-day="Friday">Friday</button>
+                <button type="button" class="filter-pill-btn" data-filter-day="Saturday">Saturday</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DESKTOP SCHEDULE TABLE -->
+        <div class="schedule-table-wrap schedule-desktop-view">
+          <div class="schedule-header">
+            <span>Programme</span>
+            <span>Days &amp; Timings</span>
+            <span>Mentor</span>
+            <span>Mode</span>
+            <span style="text-align: right;">Action</span>
+          </div>
+          <div id="schedule-rows-container">
+            <!-- Dynamically populated by initSchedulePageEvents() -->
+          </div>
+        </div>
+
+        <!-- MOBILE SCHEDULE CARDS -->
+        <div class="schedule-mobile-view" id="schedule-mobile-cards-container">
+          <!-- Dynamically populated by initSchedulePageEvents() -->
+        </div>
+
+        <!-- YOGA 7:00 AM HIGHLIGHT & NOTICE -->
+        <div style="margin-top: 36px; padding: 24px; background: var(--color-surface); border-radius: var(--radius-medium); border: 1px solid var(--color-border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+          <div>
+            <h4 style="font-size: 16px; margin-bottom: 4px; color: var(--color-navy);">Early Morning Yoga Batches</h4>
+            <p style="font-size: 14px; color: var(--color-muted-text); margin: 0;">Daily morning practice from Monday to Saturday strictly at 7:00 AM led by Mrs. Meena Kuthal (Certified Yoga Acharya).</p>
+          </div>
+          <a href="#/claim-free-seat" class="btn btn-primary claim-seat-btn">
+            <span>Claim Free Seat</span>
+            <svg class="btn-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// --- GALLERY PAGE TEMPLATE ---
+function renderGalleryPage() {
+  return `
+    <div style="padding-top: 140px; padding-bottom: 100px;">
+      <div class="section-container">
+        <div style="text-align: center; margin-bottom: 48px;">
+          <span class="eyebrow">VISUAL ARCHIVE</span>
+          <h1 class="section-heading" style="font-size: clamp(38px, 5vw, 64px); margin-bottom: 16px;">Media &amp; Performance Gallery</h1>
+          <p class="lead-text" style="max-width: 680px; margin: 0 auto;">
+            Explore stage performances, studio rehearsals, and creative highlights across Kathak, Bollywood, Vocal Music, Fine Arts, and Yoga.
+          </p>
+        </div>
+
+        <!-- GALLERY FILTER TABS -->
+        <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 48px;" id="gallery-filter-tabs">
+          <button type="button" class="filter-pill-btn active" data-gallery-cat="all">All Disciplines</button>
+          <button type="button" class="filter-pill-btn" data-gallery-cat="Kathak">Kathak</button>
+          <button type="button" class="filter-pill-btn" data-gallery-cat="Bollywood">Bollywood</button>
+          <button type="button" class="filter-pill-btn" data-gallery-cat="Events">Events</button>
+          <button type="button" class="filter-pill-btn" data-gallery-cat="Fine Arts">Fine Arts</button>
+          <button type="button" class="filter-pill-btn" data-gallery-cat="Yoga">Yoga</button>
+          <button type="button" class="filter-pill-btn" data-gallery-cat="Vocals">Vocals</button>
+        </div>
+
+        <!-- GALLERY ITEMS GRID -->
+        <div class="gallery-grid" id="gallery-items-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 28px;">
+          <!-- Dynamically populated by initGalleryPageEvents() -->
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+const AMRAPALI_VIDEOS = [
+  {
+    id: 1,
+    title: 'Guru Vandana & Tarana — AMRAPALI 2026',
+    subtitle: 'Choreographed by Guru Bhagwan Singh | CCRT Auditorium',
+    src: 'assets/kathak-vid.mp4',
+    poster: 'assets/kathak-reel-thumb.jpg',
+    duration: 'Full Showcase',
+    description: 'The students of Dance Darbar open AMRAPALI 2026 with a reverent Guru Vandana followed by high-speed Tarana footwork and graceful posture sequences.'
+  },
+  {
+    id: 2,
+    title: 'Tatkar & Chakkars — Pure Kathak Technique',
+    subtitle: 'Rhythm, Ghungroo Resonance & Classical Footwork',
+    src: 'assets/kathak-vid.mp4',
+    poster: 'assets/kathak-local.jpg',
+    duration: 'Stage Highlights',
+    description: 'An exhilarating demonstration of classical Kathak rhythm, Layakari, and lightning-fast Chakkars performed by academy senior students.'
+  }
+];
+
+// --- AMRAPALI HIGHLIGHTS 2-VIDEO SHOWCASE TEMPLATE ---
+function renderAmrapaliHighlightsPage() {
+  return `
+    <div style="padding-top: 140px; padding-bottom: 100px;">
+      <div class="section-container">
+        <a href="#/gallery" class="back-link back-to-gallery-link" style="display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--color-primary-dark); margin-bottom: 24px; text-decoration: none;">
+          &larr; Back to Performance Gallery
+        </a>
+
+        <div style="margin-bottom: 36px;">
+          <span class="eyebrow">AMRAPALI 2026 STAGE HIGHLIGHTS</span>
+          <h1 class="section-heading" style="font-size: clamp(34px, 4.5vw, 56px); margin-bottom: 12px;">Kathak Video Showcase</h1>
+          <p class="lead-text" style="max-width: 720px;">
+            Witness the discipline, footwork, and expressive abhinaya of Dance Darbar students on the grand stage of CCRT Auditorium, New Delhi.
+          </p>
+        </div>
+
+        <div class="amrapali-video-showcase-grid">
+          <!-- MAIN VIDEO COLUMN -->
+          <div class="video-main-column">
+            <div class="video-player-container">
+              <video
+                id="amrapali-main-video"
+                src="assets/kathak-vid.mp4"
+                poster="assets/kathak-reel-thumb.jpg"
+                controls
+                playsinline
+                preload="metadata"
+              ></video>
+            </div>
+            <div style="margin-top: 20px; background: var(--color-white); padding: 24px; border-radius: var(--radius-medium); border: 1px solid var(--color-border);">
+              <span class="eyebrow" id="amrapali-active-tag">FEATURED PERFORMANCE</span>
+              <h2 style="font-size: 24px; margin-top: 4px; margin-bottom: 8px; color: var(--color-navy);" id="amrapali-active-title">
+                Guru Vandana &amp; Tarana — AMRAPALI 2026
+              </h2>
+              <p style="font-size: 14.5px; color: var(--color-muted-text); line-height: 1.6; margin: 0;" id="amrapali-active-desc">
+                The students of Dance Darbar open AMRAPALI 2026 with a reverent Guru Vandana followed by high-speed Tarana footwork and graceful posture sequences.
+              </p>
+            </div>
+          </div>
+
+          <!-- PLAYLIST COLUMN -->
+          <div class="video-playlist-column">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+              <h3 style="font-size: 16px; margin: 0; color: var(--color-navy); font-weight: 700;">Showcase Playlist</h3>
+              <span style="font-size: 12px; color: var(--color-muted-text); font-weight: 600;">2 Videos</span>
+            </div>
+            <div class="playlist-cards-list">
+              ${AMRAPALI_VIDEOS.map((v, idx) => `
+                <div class="playlist-item-card ${idx === 0 ? 'active' : ''}" data-video-index="${idx}" role="button" tabindex="0">
+                  <span class="playlist-num">0${idx + 1}</span>
+                  <div class="playlist-thumb-wrap">
+                    <img src="${v.poster}" alt="${v.title}">
+                    <div class="playlist-play-icon">▶</div>
+                  </div>
+                  <div class="playlist-item-info">
+                    <span class="playlist-tag">KATHAK</span>
+                    <h4 class="playlist-item-title">${v.title}</h4>
+                    <span class="playlist-item-sub">${v.duration}</span>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+
+            <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--color-border); text-align: center;">
+              <p style="font-size: 13px; color: var(--color-muted-text); margin-bottom: 14px;">Want to experience learning Kathak at Dance Darbar?</p>
+              <a href="#/claim-free-seat" class="btn btn-primary full-width claim-seat-btn">
+                <span>Claim Free Trial Seat</span>
+                <svg class="btn-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 // --- CLAIM FREE SEAT PAGE TEMPLATE ---
 function renderClaimFreeSeatPage() {
   return `
@@ -1148,7 +1837,7 @@ function renderClaimFreeSeatPage() {
 
               <div class="form-group">
                 <label class="form-label" for="address">Residential Address / Locality *</label>
-                <input type="text" id="address" name="address" class="form-control" placeholder="Enter full address or locality (e.g. Dwarka Sec 7)" required>
+                <input type="text" id="address" name="address" class="form-control" placeholder="Enter full address or locality in Delhi" required>
                 <span class="error-text" id="err-address">Please enter your address or locality.</span>
               </div>
 
@@ -1960,9 +2649,9 @@ function renderContactPage() {
   return `
     <div style="padding-top: 140px; padding-bottom: 100px;">
       <div class="section-container">
-        <span class="eyebrow">Contact Us</span>
-        <h1 class="section-heading" style="margin-bottom: 16px;">Visit, Call or Write to Us.</h1>
-        <p class="lead-text" style="margin-bottom: 44px;">We would love to welcome you to our academy studio in Dwarka, Delhi.</p>
+        <span class="eyebrow">Contact Dance Darbar</span>
+        <h1 class="section-heading" style="margin-bottom: 16px;">Contact Dance Darbar Kala Sansthan in Delhi</h1>
+        <p class="lead-text" style="margin-bottom: 44px;">Looking for dance, music, yoga, or Fine Arts classes in Delhi? Contact Dance Darbar Kala Sansthan for programme information, schedules, trial registration, and academy enquiries.</p>
 
         <!-- EMBEDDED GOOGLE MAP CARD -->
         <div style="background: var(--color-surface); padding: 24px; border-radius: var(--radius-large); border: 1px solid var(--color-border); margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.4);">
@@ -1973,9 +2662,9 @@ function renderContactPage() {
             <div>
               <span class="eyebrow">Studio Location</span>
               <h3 style="font-size: 20px; color: var(--color-navy);">Dance Darbar Kala Sansthan</h3>
-              <p style="font-size: 14px; color: var(--color-muted-text); margin-top: 4px;">Dwarka, New Delhi, India</p>
+              <p style="font-size: 14px; color: var(--color-muted-text); margin-top: 4px;">New Delhi, India</p>
             </div>
-            <a href="https://maps.app.goo.gl/oC6b7UmrGXwJxt4E6?utm_source=chatgpt.com" target="_blank" rel="noopener" class="btn btn-primary" style="gap: 8px;">
+            <a href="https://maps.app.goo.gl/oC6b7UmrGXwJxt4E6" target="_blank" rel="noopener" class="btn btn-primary" style="gap: 8px;">
               <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
               <span>Get Directions in Google Maps</span>
             </a>
@@ -1988,7 +2677,7 @@ function renderContactPage() {
               <h3 style="font-size: 22px; margin-bottom: 20px;">Contact Information</h3>
               <p style="margin-bottom: 16px; font-size: 15px; display: flex; align-items: flex-start; gap: 10px;">
                 <span>📍</span>
-                <span><strong>Address:</strong> <a href="https://maps.app.goo.gl/oC6b7UmrGXwJxt4E6?utm_source=chatgpt.com" target="_blank" rel="noopener" style="color: #5EBBEA; text-decoration: underline; font-weight: 600;">Dance Darbar Kala Sansthan, New Delhi (Open Directions) &rarr;</a></span>
+                <span><strong>Address:</strong> <a href="https://maps.app.goo.gl/oC6b7UmrGXwJxt4E6" target="_blank" rel="noopener" style="color: #5EBBEA; text-decoration: underline; font-weight: 600;">Dance Darbar Kala Sansthan, New Delhi (Open Directions) &rarr;</a></span>
               </p>
               <p style="margin-bottom: 16px; font-size: 15px; display: flex; align-items: center; gap: 10px;">
                 <span>📞</span>
@@ -2093,6 +2782,228 @@ function renderTermsPage() {
 // --------------------------------------------------------------------------
 // 4. INTERACTION INITIALIZERS
 // --------------------------------------------------------------------------
+
+// --- SCHEDULE PAGE DUAL FILTER CONTROLLER ---
+function initSchedulePageEvents() {
+  let selectedProg = 'all';
+  let selectedDay = 'all';
+
+  const rowsContainer = document.getElementById('schedule-rows-container');
+  const cardsContainer = document.getElementById('schedule-mobile-cards-container');
+  const progPills = document.querySelectorAll('#program-filter-pills .filter-pill-btn');
+  const dayPills = document.querySelectorAll('#day-filter-pills .filter-pill-btn');
+
+  function renderFilteredSchedule() {
+    const filtered = DANCE_DATA.schedules.filter(item => {
+      const matchProg = (selectedProg === 'all') || (item.program.toLowerCase() === selectedProg.toLowerCase());
+      const matchDay = (selectedDay === 'all') || (item.days && item.days.includes(selectedDay));
+      return matchProg && matchDay;
+    });
+
+    if (rowsContainer) {
+      if (filtered.length === 0) {
+        rowsContainer.innerHTML = `
+          <div style="padding: 48px; text-align: center; color: var(--color-muted-text);">
+            <p style="font-size: 16px; margin-bottom: 8px;">No batches found for the selected combination.</p>
+            <p style="font-size: 14px;">Try selecting another programme or day filter.</p>
+          </div>
+        `;
+      } else {
+        rowsContainer.innerHTML = filtered.map(item => `
+          <div class="schedule-row">
+            <div>
+              <span class="class-title-text">${item.program}</span>
+            </div>
+            <div>
+              <span style="font-weight: 600; color: var(--color-navy); font-size: 14px;">${item.dayText}</span>
+            </div>
+            <div>
+              <span style="font-size: 14px; color: var(--color-muted-text);">${item.instructor}</span>
+            </div>
+            <div>
+              <span class="status-badge" style="background: ${item.mode.includes('Online') ? 'rgba(34, 197, 94, 0.12)' : 'rgba(94, 187, 234, 0.12)'}; color: ${item.mode.includes('Online') ? '#166534' : 'var(--color-primary-dark)'};">
+                ${item.mode}
+              </span>
+            </div>
+            <div style="text-align: right;">
+              <a href="#/programs/${item.slug}" class="btn btn-secondary" style="padding: 8px 16px; font-size: 13px;">View Details</a>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    if (cardsContainer) {
+      if (filtered.length === 0) {
+        cardsContainer.innerHTML = `
+          <div style="padding: 36px; text-align: center; background: var(--color-white); border-radius: var(--radius-medium); color: var(--color-muted-text);">
+            <p style="font-size: 15px; margin-bottom: 6px;">No batches found for the selected combination.</p>
+            <p style="font-size: 13px;">Try selecting another filter option.</p>
+          </div>
+        `;
+      } else {
+        cardsContainer.innerHTML = filtered.map(item => `
+          <div class="schedule-mobile-card">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+              <h3 class="class-title-text" style="font-size: 18px; margin: 0;">${item.program}</h3>
+              <span class="status-badge" style="font-size: 11px;">${item.mode}</span>
+            </div>
+            <div style="margin-bottom: 8px;">
+              <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--color-muted-text); display: block;">Timing</span>
+              <span style="font-size: 14px; font-weight: 600; color: var(--color-navy);">${item.dayText}</span>
+            </div>
+            <div style="margin-bottom: 16px;">
+              <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--color-muted-text); display: block;">Mentor</span>
+              <span style="font-size: 14px; color: var(--color-muted-text);">${item.instructor}</span>
+            </div>
+            <div style="display: flex; gap: 10px;">
+              <a href="#/programs/${item.slug}" class="btn btn-secondary" style="flex: 1; text-align: center; font-size: 13px; padding: 10px;">View Details</a>
+              <a href="#/claim-free-seat" class="btn btn-primary claim-seat-btn" style="flex: 1; text-align: center; font-size: 13px; padding: 10px;">Claim Seat</a>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+  }
+
+  progPills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      progPills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      selectedProg = pill.getAttribute('data-filter-prog');
+      renderFilteredSchedule();
+    });
+  });
+
+  dayPills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      dayPills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      selectedDay = pill.getAttribute('data-filter-day');
+      renderFilteredSchedule();
+    });
+  });
+
+  renderFilteredSchedule();
+}
+
+// --- GALLERY PAGE CONTROLLER ---
+function initGalleryPageEvents() {
+  const container = document.getElementById('gallery-items-grid');
+  const tabs = document.querySelectorAll('#gallery-filter-tabs .filter-pill-btn');
+  if (!container) return;
+
+  function renderItems(filterCat = 'all') {
+    const items = DANCE_DATA.galleryItems.filter(item => {
+      if (filterCat === 'all') return true;
+      return item.category.toLowerCase() === filterCat.toLowerCase();
+    });
+
+    container.innerHTML = items.map(item => {
+      const isShowcase = item.type === 'video_showcase';
+      const isReel = item.type === 'reel';
+      const linkHref = isShowcase ? item.actionUrl : (item.instagramUrl || '#/gallery');
+      const targetAttr = isShowcase ? '' : 'target="_blank" rel="noopener noreferrer"';
+      const badgeText = isShowcase ? '✦ 2-Video Stage Showcase' : (isReel ? '✦ Watch Reel on Instagram' : '✦ Studio Photo');
+
+      return `
+        <div class="gallery-card" style="background: var(--color-white); border-radius: var(--radius-medium); overflow: hidden; border: 1px solid var(--color-border); box-shadow: 0 4px 18px rgba(0,0,0,0.04); display: flex; flex-direction: column; transition: transform 250ms ease, box-shadow 250ms ease;">
+          <div style="position: relative; height: 240px; overflow: hidden; background: var(--color-navy);">
+            <img src="${item.image}" alt="${item.title}" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 400ms ease;">
+            <div style="position: absolute; top: 14px; left: 14px; background: rgba(8, 18, 30, 0.75); backdrop-filter: blur(8px); padding: 4px 10px; border-radius: var(--radius-pill); color: #FFFFFF; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;">
+              ${item.category}
+            </div>
+            ${isShowcase ? `
+              <div style="position: absolute; bottom: 14px; right: 14px; background: var(--color-primary-dark); color: #FFFFFF; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                ▶
+              </div>
+            ` : ''}
+          </div>
+          <div style="padding: 22px; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <span style="font-size: 11px; font-weight: 700; color: var(--color-primary-dark); text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 6px;">
+                ${badgeText}
+              </span>
+              <h3 style="font-size: 17px; margin-bottom: 8px; color: var(--color-navy); line-height: 1.35;">${item.title}</h3>
+              <p style="font-size: 13px; color: var(--color-muted-text); margin: 0;">${item.subtitle}</p>
+            </div>
+            <div style="margin-top: 18px;">
+              <a href="${linkHref}" ${targetAttr} class="btn ${isShowcase ? 'btn-primary' : 'btn-secondary'}" style="width: 100%; text-align: center; font-size: 13px; padding: 10px;">
+                <span>${isShowcase ? 'Watch Video Showcase' : 'View on Instagram'}</span>
+                <svg class="btn-arrow" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const cat = tab.getAttribute('data-gallery-cat');
+      renderItems(cat);
+    });
+  });
+
+  renderItems('all');
+}
+
+// --- AMRAPALI HIGHLIGHTS CONTROLLER ---
+function initAmrapaliHighlightsEvents() {
+  const videoElem = document.getElementById('amrapali-main-video');
+  const activeTitle = document.getElementById('amrapali-active-title');
+  const activeDesc = document.getElementById('amrapali-active-desc');
+  const playlistItems = document.querySelectorAll('.playlist-item-card');
+
+  playlistItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const idx = parseInt(item.getAttribute('data-video-index'), 10);
+      const v = AMRAPALI_VIDEOS[idx];
+      if (!v || !videoElem) return;
+
+      playlistItems.forEach(p => p.classList.remove('active'));
+      item.classList.add('active');
+
+      videoElem.src = v.src;
+      videoElem.poster = v.poster;
+      if (activeTitle) activeTitle.textContent = v.title;
+      if (activeDesc) activeDesc.textContent = v.description;
+
+      videoElem.play().catch(() => {});
+    });
+  });
+}
+
+// --- OPENING CINEMATIC SPLIT SPLASH SCREEN ---
+function initSplashScreen() {
+  const splash = document.getElementById('splash-screen');
+  if (!splash) return;
+
+  const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let seen = false;
+  try {
+    seen = sessionStorage.getItem('dd_splash_seen') === 'true';
+  } catch (e) {}
+
+  if (seen || prefersReducedMotion) {
+    splash.classList.add('is-dismissed');
+    return;
+  }
+
+  // Display splash for ~1.8s then execute horizontal outward split
+  setTimeout(() => {
+    splash.classList.add('is-split');
+    setTimeout(() => {
+      splash.classList.add('is-dismissed');
+      try {
+        sessionStorage.setItem('dd_splash_seen', 'true');
+      } catch (e) {}
+    }, 850);
+  }, 1800);
+}
 
 // --- Home Page Interactive Video Switcher & FAQs ---
 function initHomePageEvents() {
@@ -3354,7 +4265,7 @@ const AMRAPALI_CONFIG = {
   eventName: 'AMRAPALI 2026',
   eventDate: '23 August 2026, Sunday',
   eventTime: '4:00 PM to 9:00 PM',
-  eventVenue: 'CCRT Auditorium, Dwarka Sector 7, New Delhi'
+  eventVenue: 'CCRT Auditorium, New Delhi'
 };
 
 function getAmrapaliReservationStatus() {
@@ -3482,7 +4393,7 @@ function downloadPersonalizedInvitation(booking) {
   ctx.fillText(`Seats Reserved: ${booking.seatCount}`, 140, 540);
   ctx.fillText(`Date: 23 August 2026 (Sunday)`, 140, 590);
   ctx.fillText(`Time: 4:00 PM – 9:00 PM`, 140, 640);
-  ctx.fillText(`Venue: CCRT Auditorium, Dwarka Sec 7, New Delhi`, 140, 690);
+  ctx.fillText(`Venue: CCRT Auditorium, New Delhi`, 140, 690);
 
   // Status Badge
   ctx.fillStyle = '#166534';
@@ -3626,7 +4537,7 @@ window.processVerifiedPaymentSuccess = function(target) {
     'Attendee Type': target.attendeeType,
     'Event Name': 'AMRAPALI 2026 - Annual Student Dance Ballet',
     'Date & Time': '23 August 2026 (Sunday), 4:00 PM - 9:00 PM',
-    'Venue': 'CCRT Auditorium, Dwarka Sector 7, New Delhi',
+    'Venue': 'CCRT Auditorium, New Delhi',
     'User Device': navigator.userAgent,
     'Message': `Confirmed reservation for ${target.fullName} (${target.seatCount}, ₹${target.totalAmount}). Payment Verified. Txn: ${target.txnId}`
   });
@@ -3635,11 +4546,11 @@ window.processVerifiedPaymentSuccess = function(target) {
   sendCustomerConfirmationEmail(target.email, 'Your AMRAPALI 2026 Seat is Confirmed 🎉', {
     'Reservation ID': target.bookingRef,
     'Payment Status': 'Payment Successful (SUCCESS)',
-    'Event Details': 'AMRAPALI 2026 (23 Aug 2026, CCRT Auditorium Dwarka)',
+    'Event Details': 'AMRAPALI 2026 (23 Aug 2026, CCRT Auditorium New Delhi)',
     'Seat Count': target.seatCount,
     'Transaction ID': target.txnId || `TXN-${target.bookingRef}`,
     'Digital Invitation Card': 'Downloadable from website dashboard',
-    'Contact Information': 'dancedarbar96@gmail.com | +91 98711 39600'
+    'Contact Information': 'dancedarbar96@gmail.com | +91 99586 59933'
   });
 };
 
@@ -4289,6 +5200,7 @@ function exportToCSV(filename, rows) {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
+  initSplashScreen();
   initAmrapaliModalEvents();
 
   // Sticky Navbar on Scroll
